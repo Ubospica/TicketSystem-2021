@@ -8,7 +8,7 @@
 
 class MainClass {
 public:
-	void Init(int argc, char *argv[]) {
+	static void init(int argc, char *argv[]) {
 	
 	}
 };

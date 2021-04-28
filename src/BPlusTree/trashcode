@@ -1,0 +1,150 @@
+
+//	template <typename Key, typename Value, size_t M>
+//	int BPlusTree<Key, Value, M>::find(int pos, const Key &vKey) {
+//		Node cur;
+//		read(pos, cur);
+//		if (cur.cnt == 0) {
+//			return -1;
+//		}
+//		int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey) - cur.vKey;
+//		if (!cur.isLeaf) { //simple node
+//			return find(cur.son[pl], vKey);
+//		}
+//		else {
+//			if (pl == 0 || cur.vKey[pl - 1] != vKey || cur.son[pl - 1] == -1) {
+//				return -1;
+//			}
+//			else {
+//				return cur.son[pl - 1];
+//			}
+//		}
+//	}
+
+
+	template <typename Key, typename Value, size_t M>
+	int BPlusTree<Key, Value, M>::insert(int pos, Key &vKey, int &vSon) {
+		Node cur;
+		read(pos, cur);
+		if(cur.isLeaf) {
+			int pl = std::lower_bound(cur.vKey, cur.vKey + cur.cnt, vKey) - cur.vKey;
+			if (pl < cur.cnt && cur.vKey[pl] == vKey) {
+				if (cur.son[pl] >= 0) {
+					return false;
+				}
+				else {
+					cur.son[pl] = vSon;
+					write(pos, cur);
+					vSon = -1;
+					return true;
+				}
+			}
+			else {
+				for (int i = cur.cnt - 1; i >= pl; --i) {
+					cur.vKey[i + 1] = cur.vKey[i];
+					cur.son[i + 1] = cur.son[i];
+				}
+				cur.vKey[pl] = vKey;
+				cur.son[pl] = vSon;
+				++cur.cnt;
+				if (cur.cnt < M) {
+					write(pos, cur);
+					vSon = -1;
+					return true;
+				}
+				else { //split
+					Node newNd {M - M / 2, 0, 1, pos, cur.next};
+					//1-M 1-m/2, m/2+1-m
+					//0 - m/2-1, m/2 - m-1
+					std::memcpy(newNd.vKey, cur.vKey + M / 2, newNd.cnt * sizeof(Key));
+					std::memcpy(newNd.son, cur.son + M / 2, newNd.cnt * sizeof(int));
+					cur.cnt = M / 2;
+
+					treeDt.seekp(0, std::ios::end);
+					int newP = treeDt.tellp();
+					write(-1, newNd);
+
+					if (cur.next != -1) {
+						Node nextNd;
+						read(cur.next, nextNd);
+						nextNd.prev = newP;
+						write(cur.next, nextNd);
+					}
+					cur.next = newP;
+
+					if (!cur.isRoot) {
+						write(pos, cur);
+						vKey = newNd.vKey[0], vSon = newP;
+					} else {
+						cur.isRoot = 0;
+						Node newRoot{1, 1, 0, -1, -1, {newNd.vKey[0]}, {pos, newP}};
+						treeDt.seekp(0, std::ios::end);
+						root = treeDt.tellp();
+						write(-1, newRoot);
+						write(pos, cur);
+						write(0, root); //
+						++height;
+						treeDt.seekp(sizeof(int), std::ios::cur);
+						write(-2, height);
+						vSon = -1;
+					}
+					return true;
+				}
+			}
+		}
+		else { // non leaf
+			int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey) - cur.vKey;
+			if (insert(cur.son[pl], vKey, vSon) == false) {
+				return false;
+			}
+			else if (vSon == -1) {
+				return true;
+			}
+			else {//insert: son[pl+1] = get1 vkey[pl]=get2
+				for (int i = cur.cnt - 1; i >= pl; --i) {
+					cur.vKey[i + 1] = cur.vKey[i];
+					cur.son[i + 2] = cur.son[i + 1];
+				}
+				cur.vKey[pl] = vKey;
+				cur.son[pl + 1] = vSon;
+				++cur.cnt;
+				if (cur.cnt < M) {
+					write(pos, cur); //
+					vSon = -1;
+					return true;
+				}
+				else {
+					Node newNd {M - M / 2 - 1, 0, 0};
+					//1-M 1-m/2, m/2+2-m
+					//vkey:0 - m/2-1, m/2, m/2+1 - m-1
+					//son: 0, m/2; m/2+1-m
+					std::memcpy(newNd.vKey, cur.vKey + M / 2 + 1, newNd.cnt * sizeof(Key));
+					std::memcpy(newNd.son, cur.son + M / 2 + 1, (newNd.cnt + 1) * sizeof(int));
+					cur.cnt = M / 2;
+					if (!cur.isRoot) {
+						write(pos, cur);
+						treeDt.seekp(0, std::ios::end);
+						int newP = treeDt.tellp();
+						write(-1, newNd);
+						vKey = cur.vKey[cur.cnt];
+						vSon = newP;
+					} else {
+						cur.isRoot = 0;
+						write(pos, cur);
+						Node newRoot{1, 1, 0, -1, -1, {cur.vKey[cur.cnt]}, {pos}}; //
+						treeDt.seekp(0, std::ios::end);
+						int newP = treeDt.tellp();
+						newRoot.son[1] = newP;
+						write(-1, newNd);
+						root = treeDt.tellp();
+						write(-1, newRoot);
+						write(0, root); //
+						++height;
+						treeDt.seekp(sizeof(int), std::ios::cur);
+						write(-2, height);
+						vSon = -1;
+					}
+					return true;
+				}
+			}
+		}
+	}

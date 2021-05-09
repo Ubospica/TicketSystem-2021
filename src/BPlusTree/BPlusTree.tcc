@@ -335,15 +335,15 @@ namespace Ticket {
 	}
 	
 	template <typename Key, typename Value, size_t M>
-	bool BPlusTree<Key, Value, M>::erase(const Key &vl) {
+	int BPlusTree<Key, Value, M>::erase(const Key &vl) {
 		if (erase(root, vl) == 1) {
 			--size;
 			treeDt.seekp(sizeof(int), std::ios::beg);
 			write(-2, size);
-			return true;
+			return 1;
 		}
 		else {
-			return false;
+			return -1;
 		}
 	}
 	

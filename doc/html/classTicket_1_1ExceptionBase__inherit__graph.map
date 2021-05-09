@@ -1,0 +1,9 @@
+<map id="Ticket::ExceptionBase" name="Ticket::ExceptionBase">
+<area shape="rect" id="node1" title=" " alt="" coords="168,107,333,133"/>
+<area shape="rect" id="node3" href="$classTicket_1_1NoOptionError.html" title=" " alt="" coords="387,5,548,32"/>
+<area shape="rect" id="node4" href="$classTicket_1_1PermissionError.html" title=" " alt="" coords="381,56,553,83"/>
+<area shape="rect" id="node5" href="$classTicket_1_1RunningError.html" title=" " alt="" coords="391,107,544,133"/>
+<area shape="rect" id="node6" href="$classTicket_1_1RuntimeError.html" title=" " alt="" coords="390,157,545,184"/>
+<area shape="rect" id="node7" href="$classTicket_1_1SyntaxError.html" title=" " alt="" coords="395,208,540,235"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,107,120,133"/>
+</map>

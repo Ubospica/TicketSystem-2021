@@ -15,26 +15,96 @@
 #include <tuple>
 
 namespace Ticket{
-
+	
+	/**
+	 * @brief 数据库
+	 *
+	 * 数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value）
+	 * @tparam Key 键
+	 * @tparam Value 值
+	 * @tparam M 块的大小，默认100
+	 */
 	template <typename Key, typename Value, size_t M = 100>
 	class BPlusTree {
 	private:
 		struct Node;
 	public:
+		/**
+		 * 构造函数
+		 * @param name 数据库名字，一个字符串，决定保存的文件名
+		 */
 		explicit BPlusTree(const std::string& name);
 		~BPlusTree() = default;
+		/**
+		 * 查找某个值
+		 * @tparam Comp 请保持默认即可
+		 * @param vl 值
+		 * @return 不存在返回-1，否则返回valueDt文件中value的位置
+		 * @par Example
+		 * @code
+		 * int pos = find(make_pair(1,2);
+		 * @endcode
+		 */
 		template <typename Comp = std::less<Key> > int find(const Key &vl);
+		/**
+		 * 返回valueDt文件中pValue位置的值，和find()配合使用
+		 * @param pValue
+		 * @return 值
+		 */
 		Value getVal(int pValue);
+		/**
+		 * 修改valueDt文件中pValue位置的值为newVal
+		 * @param pValue
+		 * @param newVal
+		 */
 		void modifyVal(int pValue, const Value &newVal);
+		/**
+		 * 向数据库中插入一个新值，同时插入B+树中和valueDt中
+		 * @param vl key
+		 * @param vr value
+		 * @return 如果失败返回-1，否则返回valueDt中插入vr的位置
+		 */
 		int insert(const Key &vl, const Value &vr);
+		/**
+		 * 向数据库中插入一个新值，仅仅修改B+树，并使得叶子节点中指向value文件的位置为Pos <br>
+		 * 这个是为了实现一个需求：一个valueDt对应多种索引。此时仅在第一棵B+树中插入，其余树中保存指向第一棵树中valueDt的索引即可
+		 * @param vl key
+		 * @param pos 位置
+		 * @return 如果失败返回-1，否则返回pos
+		 */
 		int insertIndex(const Key &vl, int pos);
-		bool erase(const Key &vl);
+		/**
+		 * 删除某个值
+		 * @param vl 删除的值
+		 * @return 删除成功返回1，否则（如vl不存在）返回-1； （-1是为了和其他函数保持一致）
+		 */
+		int erase(const Key &vl);
 //		std::vector<std::tuple<Key, int>> route();
+		/**
+		 * 模糊查找：可以先不使用，之后可能改接口（类似stl）
+		 *
+		 * 传入Comp运算符（Comp需要是比<弱的比较函数），然后返回所有在Comp意义下等于val的值
+		 * @tparam Comp 重载小于号。Comp需要是一个仿函数类
+		 * @param val
+		 * @return 一个vector，保存所有模糊查找的结果
+		 * @par Example
+		 * @code
+		 * struct Comp {
+		 * 	bool operator()(pair<int,int> a, pair<int,int> b) {
+		 * 		return a.first<b.first;
+		 * 	}
+		 * }
+		 * auto res = bpt.route<Comp>(make_pair(1,0)); //查找所有第一维是1的值
+		 * @endcode
+		 */
 		template <typename Comp = std::less<Key> > std::vector<int> route(const Key &val);
 		
 		//debug
 		void print (const Node &p);
 		void print (int pos);
+		/**
+		 * 打印整棵树
+		 */
 		void print ();
 		
 	private:

@@ -17,8 +17,7 @@
 namespace Ticket{
 	
 	/**
-	 * @brief 数据库
-	 *
+	 * @brief 数据库 <br>
 	 * 数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value）
 	 * @tparam Key 键
 	 * @tparam Value 值

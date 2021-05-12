@@ -76,7 +76,8 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>数据库  
+<p>数据库 <br  />
+ 数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value）  
  <a href="classTicket_1_1BPlusTree.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="BPlusTree_8hpp_source.html">BPlusTree.hpp</a>&gt;</code></p>
@@ -159,8 +160,9 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename Key, typename Value, size_t M = 100&gt;<br />
 class Ticket::BPlusTree&lt; Key, Value, M &gt;</h3>
 
-<p>数据库 </p>
-<p>数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value） </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>数据库 <br  />
+ 数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value） </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Key</td><td>键 </td></tr>
     <tr><td class="paramname">Value</td><td>值 </td></tr>
@@ -804,7 +806,7 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>一个vector，保存所有模糊查找的结果 </dd></dl>
-<dl class="section user"><dt>example</dt><dd><div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code" href="structComp.html">Comp</a> {</div>
+<dl class="section user"><dt>Example</dt><dd><div class="fragment"><div class="line"><span class="keyword">struct </span><a class="code" href="structComp.html">Comp</a> {</div>
 <div class="line">    <span class="keywordtype">bool</span> operator()(pair&lt;int,int&gt; a, pair&lt;int,int&gt; b) {</div>
 <div class="line">        <span class="keywordflow">return</span> a.first&lt;b.first;</div>
 <div class="line">    }</div>

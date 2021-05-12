@@ -5,6 +5,7 @@
 
 #include "Exception.hpp"
 #include "String.hpp"
+#include "Time.hpp"
 
 #include <iostream>
 #include <string>

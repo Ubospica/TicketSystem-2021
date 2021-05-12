@@ -1,5 +1,5 @@
 
-add_library(Tools String.cpp)
+add_library(Tools String.cpp Time.cpp)
 target_include_directories(Tools INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(ToolsTest test.cpp)

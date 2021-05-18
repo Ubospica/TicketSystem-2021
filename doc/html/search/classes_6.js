@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['runningerror_74',['RunningError',['../classTicket_1_1RunningError.html',1,'Ticket']]],
-  ['runtimeerror_75',['RuntimeError',['../classTicket_1_1RuntimeError.html',1,'Ticket']]]
+  ['nooptionerror_89',['NoOptionError',['../classTicket_1_1NoOptionError.html',1,'Ticket']]]
 ];

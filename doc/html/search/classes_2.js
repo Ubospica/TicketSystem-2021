@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['exceptionbase_69',['ExceptionBase',['../classTicket_1_1ExceptionBase.html',1,'Ticket']]]
+  ['date_85',['Date',['../structTicket_1_1Date.html',1,'Ticket']]]
 ];

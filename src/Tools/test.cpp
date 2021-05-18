@@ -6,6 +6,7 @@
 #include "Exception.hpp"
 #include "String.hpp"
 #include "Time.hpp"
+#include "FileIO.hpp"
 
 #include <iostream>
 #include <string>
@@ -14,11 +15,13 @@
 int main() {
 	using namespace Ticket;
 	using namespace std;
-	String a;
-	cin>>a;
-	String b;
-	cin>>b;
-	cout<<(a>b)<<' ';
-	swap(a,b);
-	cout<<a<<' '<<b<<'\n';
+//	FileIO a("1223");
+	int v = 444, w;
+//	a.write(FileIO::END, v);
+//	a.close();
+	FileIO b("1223");
+	b.read(FileIO::BEG, w);
+	cout<<w<<'\n';
 }
+
+

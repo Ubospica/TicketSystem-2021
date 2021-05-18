@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['string_76',['String',['../structTicket_1_1String.html',1,'Ticket']]],
-  ['syntaxerror_77',['SyntaxError',['../classTicket_1_1SyntaxError.html',1,'Ticket']]]
+  ['permissionerror_90',['PermissionError',['../classTicket_1_1PermissionError.html',1,'Ticket']]],
+  ['pos_91',['Pos',['../classTicket_1_1BPlusTree_1_1Pos.html',1,'Ticket::BPlusTree']]]
 ];

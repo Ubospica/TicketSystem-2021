@@ -19,11 +19,23 @@ namespace Ticket{
 	/**
 	 * @brief 数据库 <br>
 	 * 数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value）
+	 *
+	 * @note Index only mode. Usage:
+	 * @code
+	 * BPlusTree<int,int,1> bpt;
+	 * //usable func:
+	 * insertIndex(Key, int)
+	 * erase(Key)
+	 * find(Key)
+	 * print()
+	 * @endcode
+	 *
 	 * @tparam Key 键
 	 * @tparam Value 值
+	 * @tparam NO_VALUE_FLAG 如果是1表示Index only mode
 	 * @tparam M 块的大小，默认100
 	 */
-	template <typename Key, typename Value, size_t M = 100>
+	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 100>
 	class BPlusTree {
 	private:
 		struct Node;

@@ -6,8 +6,8 @@
 
 namespace Ticket {
 	
-	template <typename Key, typename Value, size_t M>
-	struct BPlusTree<Key, Value, M>::Node{
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	struct BPlusTree<Key, Value, NO_VALUE_FLAG, M>::Node{
 		int cnt = 0;
 		bool isRoot = false, isLeaf = false;
 		int prev = -1, next = -1;
@@ -17,25 +17,25 @@ namespace Ticket {
 	
 	
 	//-2 cur
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename T>
-	inline void BPlusTree<Key, Value, M>::read(int pos, T &cur, std::fstream &fs) {
+	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur, std::fstream &fs) {
 		if(pos >= 0){
 			fs.seekg(pos);
 		}
 		fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
 	}
 	
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename T>
-	inline void BPlusTree<Key, Value, M>::read(int pos, T &cur) {
+	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur) {
 		read(pos, cur, treeDt);
 	}
 	
 	//pos: -1 end; -2 cur
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename T>
-	inline void BPlusTree<Key, Value, M>::write(int pos, const T &cur, std::fstream &fs) {
+	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur, std::fstream &fs) {
 		if(pos >= 0){
 			fs.seekp(pos);
 		}
@@ -45,25 +45,22 @@ namespace Ticket {
 		fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
 	}
 	
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename T>
-	inline void BPlusTree<Key, Value, M>::write(int pos, const T &cur) {
+	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur) {
 		write(pos, cur, treeDt);
 	}
 	
-	template <typename Key, typename Value, size_t M>
-	BPlusTree<Key, Value, M>::BPlusTree(const std::string& name) {
-		std::string s1 = name + "Index.dat", s2 = name + "Data.dat";
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::BPlusTree(const std::string& name) {
+		std::string s1 = name + "Index.dat";
 		auto fl = std::ios::in | std::ios::out | std::ios::binary;
 		treeDt.open(s1, fl);
-		valueDt.open(s2, fl);
-		if ((!treeDt) || (!valueDt)) { //file not exists
+		if (!treeDt) { //file not exists
 			//trashy cpp grammar! `std::ofstream(s1)` won't compile
 			std::ofstream(static_cast<std::string>(s1));
-			std::ofstream(static_cast<std::string>(s2));
 			treeDt.open(s1, fl);
-			valueDt.open(s2, fl);
-			if ((!treeDt) || (!valueDt)) {
+			if (!treeDt) {
 				throw RuntimeError("File system error");
 			}
 			init();
@@ -73,11 +70,23 @@ namespace Ticket {
 			read(Pos::POS_SIZE, size);
 			read(Pos::POS_HEIGHT, height);
 		}
+		if (!NO_VALUE_FLAG) {
+			std::string s2 = name + "Data.dat";
+			valueDt.open(s2, fl);
+			if (!valueDt) { //file not exists
+				//trashy cpp grammar! `std::ofstream(s1)` won't compile
+				std::ofstream(static_cast<std::string>(s2));
+				valueDt.open(s2, fl);
+				if (!valueDt) {
+					throw RuntimeError("File system error");
+				}
+			}
+		}
 	}
 	
 	
-	template <typename Key, typename Value, size_t M>
-	void BPlusTree<Key, Value, M>::init() {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::init() {
 		root = sizeof(root) * 3;
 		height = size = 0;
 		write(0, root);
@@ -90,9 +99,9 @@ namespace Ticket {
 	//returns node in the index
 	//(-1, 0) if not found
 	//(pos, p) if found; the val should be node[pos].vSon[p]
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
-	std::tuple<int,int> BPlusTree<Key, Value, M>::findIndex(int pos, const Key &vKey) {
+	std::tuple<int,int> BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findIndex(int pos, const Key &vKey) {
 		Node cur;
 		read(pos, cur);
 		if (cur.cnt == 0) {
@@ -113,9 +122,9 @@ namespace Ticket {
 	}
 	
 	//-1 if not found
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
-	int BPlusTree<Key, Value, M>::find(int pos, const Key &vKey) {
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::find(int pos, const Key &vKey) {
 		auto res = findIndex<Comp>(pos, vKey);
 		if (std::get<0>(res) == -1) {
 			return -1;
@@ -128,30 +137,30 @@ namespace Ticket {
 	}
 
 	
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
-	int BPlusTree<Key, Value, M>::find(const Key &vl) {
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::find(const Key &vl) {
 		return find<Comp>(root, vl);
 	}
 	
 	//pValue should >= 0
-	template <typename Key, typename Value, size_t M>
-	Value BPlusTree<Key, Value, M>::getVal(int pValue) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	Value BPlusTree<Key, Value, NO_VALUE_FLAG, M>::getVal(int pValue) {
 		Value res;
 		read(pValue, res, valueDt);
 		return res;
 	}
 	
-	template <typename Key, typename Value, size_t M>
-	void BPlusTree<Key, Value, M>::modifyVal(int pValue, const Value &newVal) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::modifyVal(int pValue, const Value &newVal) {
 		write(pValue, newVal, valueDt);
 	}
 	
 	
 	//vSon == -1: don't have to insert nodes
 	//return -1 if fails, 1 if succeeded
-	template <typename Key, typename Value, size_t M>
-	int BPlusTree<Key, Value, M>::insert(int pos, Key &vKey, int &vSon) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::insert(int pos, Key &vKey, int &vSon) {
 		Node cur;
 		read(pos, cur);
 		if(cur.isLeaf) {
@@ -276,8 +285,8 @@ namespace Ticket {
 		}
 	}
 	
-	template <typename Key, typename Value, size_t M>
-	int BPlusTree<Key, Value, M>::insertIndex(const Key &vl, int pos) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::insertIndex(const Key &vl, int pos) {
 		Key vKey(vl);
 		int pos1 = pos;
 		if (insert(root, vKey, pos1) == 1) {
@@ -290,8 +299,8 @@ namespace Ticket {
 		}
 	}
 	
-	template <typename Key, typename Value, size_t M>
-	int BPlusTree<Key, Value, M>::insert(const Key &vl, const Value &vr) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::insert(const Key &vl, const Value &vr) {
 		valueDt.seekp(0, std::ios::end); //
 		Key vKey(vl);
 		int pValue = valueDt.tellp(), vSon = pValue;
@@ -311,8 +320,8 @@ namespace Ticket {
 	// an idiotic & easily-implemented version
 	// cuz i cannot erase the data (RValve) in "Data.dat"
 	// so erasing index only is useless
-	template <typename Key, typename Value, size_t M>
-	bool BPlusTree<Key, Value, M>::erase(int pos, const Key &vKey) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	bool BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(int pos, const Key &vKey) {
 		Node cur;
 		read(pos, cur);
 		if (cur.cnt == 0) {
@@ -334,8 +343,8 @@ namespace Ticket {
 		}
 	}
 	
-	template <typename Key, typename Value, size_t M>
-	int BPlusTree<Key, Value, M>::erase(const Key &vl) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(const Key &vl) {
 		if (erase(root, vl) == 1) {
 			--size;
 			treeDt.seekp(sizeof(int), std::ios::beg);
@@ -347,9 +356,9 @@ namespace Ticket {
 		}
 	}
 	
-	template <typename Key, typename Value, size_t M>
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
-	auto BPlusTree<Key, Value, M>::route(const Key &val) ->
+	auto BPlusTree<Key, Value, NO_VALUE_FLAG, M>::route(const Key &val) ->
 		std::vector<int> {
 		std::vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
@@ -383,8 +392,8 @@ namespace Ticket {
 	}
 
 	
-	template <typename Key, typename Value, size_t M>
-	void BPlusTree<Key, Value, M>::print (const BPlusTree::Node &p) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::print (const BPlusTree::Node &p) {
 		using namespace std;
 		cerr << "cnt=" << p.cnt << " isroot=" << p.isRoot << " isLeaf=" << p.isLeaf
 				<< " prev=" << p.prev << " next=" << p.next<<"\n";
@@ -399,8 +408,8 @@ namespace Ticket {
 //		}
 //		cerr << '\n';
 	}
-	template <typename Key, typename Value, size_t M>
-	void BPlusTree<Key, Value, M>::print (int pos) {
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::print (int pos) {
 		using namespace std;
 		if (pos == 36 || pos == 460) {
 			cerr << "tmp";
@@ -414,8 +423,13 @@ namespace Ticket {
 			cerr << "real value is ";
 			for (int i = 0; i < cur.cnt; ++i) {
 				if (cur.son[i] >= 0) {
-					read(cur.son[i], vr, valueDt);
-					cerr << vr << ' ';
+					if (NO_VALUE_FLAG) {
+						cerr << cur.son[i] << ' ';
+					}
+					else {
+						read(cur.son[i], vr, valueDt);
+						cerr << vr << ' ';
+					}
 				}
 				else {
 					cerr << "-1 ";
@@ -430,9 +444,9 @@ namespace Ticket {
 		}
 	}
 	
-	template <typename Key, typename Value, size_t M>
-	void BPlusTree<Key, Value, M>::print () {
-		std::cerr << "root=" << root << "\n";
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::print () {
+		std::cerr << "root=" << root << " has value = " << !NO_VALUE_FLAG << "\n";
 		print(root);
 		std::cerr<<"\n\n";
 	}

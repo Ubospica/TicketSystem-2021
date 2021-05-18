@@ -68,6 +68,7 @@ namespace Ticket {
 				res.dd -= monthDays[res.mm];
 				++res.mm;
 			}
+			return res;
 		}
 		
 		Date& operator+=(const Date &another) {

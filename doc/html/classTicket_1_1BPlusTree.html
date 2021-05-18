@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.17"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>My Project: Ticket::BPlusTree&lt; Key, Value, M &gt; Class Template Reference</title>
+<title>My Project: Ticket::BPlusTree&lt; Key, Value, NO_VALUE_FLAG, M &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classTicket_1_1BPlusTree-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Ticket::BPlusTree&lt; Key, Value, M &gt; Class Template Reference</div>  </div>
+<div class="title">Ticket::BPlusTree&lt; Key, Value, NO_VALUE_FLAG, M &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -89,101 +89,109 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ade5f1d225dbef09be5480bb6d9bfaecc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ade5f1d225dbef09be5480bb6d9bfaecc">BPlusTree</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:ade5f1d225dbef09be5480bb6d9bfaecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbcc6b0b1a34a74e7f12decd28df798a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#abbcc6b0b1a34a74e7f12decd28df798a">~BPlusTree</a> ()=default</td></tr>
-<tr class="separator:abbcc6b0b1a34a74e7f12decd28df798a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17a7c4bf9f85829996eda4010806e49b"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
-<tr class="memitem:a17a7c4bf9f85829996eda4010806e49b"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a17a7c4bf9f85829996eda4010806e49b">find</a> (const Key &amp;vl)</td></tr>
-<tr class="separator:a17a7c4bf9f85829996eda4010806e49b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaac8ab9451bc283a891d1c9dc9476cbf"><td class="memItemLeft" align="right" valign="top">Value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#aaac8ab9451bc283a891d1c9dc9476cbf">getVal</a> (int pValue)</td></tr>
-<tr class="separator:aaac8ab9451bc283a891d1c9dc9476cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f6f463e4c1b340617854366d56367d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a7f6f463e4c1b340617854366d56367d6">modifyVal</a> (int pValue, const Value &amp;newVal)</td></tr>
-<tr class="separator:a7f6f463e4c1b340617854366d56367d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a433adb8473f75929895edefe0d8c343e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a433adb8473f75929895edefe0d8c343e">insert</a> (const Key &amp;vl, const Value &amp;vr)</td></tr>
-<tr class="separator:a433adb8473f75929895edefe0d8c343e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe8d2ccb0acc8609563baad2cba33674"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#abe8d2ccb0acc8609563baad2cba33674">insertIndex</a> (const Key &amp;vl, int pos)</td></tr>
-<tr class="separator:abe8d2ccb0acc8609563baad2cba33674"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae080148631e43d51faec23442271e4ca"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae080148631e43d51faec23442271e4ca">erase</a> (const Key &amp;vl)</td></tr>
-<tr class="separator:ae080148631e43d51faec23442271e4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefd5883d3955321de1938bc768d7454a"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
-<tr class="memitem:aefd5883d3955321de1938bc768d7454a"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#aefd5883d3955321de1938bc768d7454a">route</a> (const Key &amp;val)</td></tr>
-<tr class="separator:aefd5883d3955321de1938bc768d7454a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38d9cbe023521edad6214faf02022109"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a38d9cbe023521edad6214faf02022109">print</a> (const Node &amp;p)</td></tr>
-<tr class="separator:a38d9cbe023521edad6214faf02022109"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d97a17d948fc88f33d1a3f3da8f83fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a4d97a17d948fc88f33d1a3f3da8f83fc">print</a> (int pos)</td></tr>
-<tr class="separator:a4d97a17d948fc88f33d1a3f3da8f83fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d2216af37a7a0c78e1637698c093523"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a7d2216af37a7a0c78e1637698c093523">print</a> ()</td></tr>
-<tr class="separator:a7d2216af37a7a0c78e1637698c093523"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae98c2ef15f1357772e4bdd1e5c725c3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae98c2ef15f1357772e4bdd1e5c725c3e">BPlusTree</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:ae98c2ef15f1357772e4bdd1e5c725c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a859ee31dc81ac20e4a5c59ccb8b3ed80"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a859ee31dc81ac20e4a5c59ccb8b3ed80">~BPlusTree</a> ()=default</td></tr>
+<tr class="separator:a859ee31dc81ac20e4a5c59ccb8b3ed80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf1bd78643e6ce0dc02cebf6210127ce"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
+<tr class="memitem:aaf1bd78643e6ce0dc02cebf6210127ce"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#aaf1bd78643e6ce0dc02cebf6210127ce">find</a> (const Key &amp;vl)</td></tr>
+<tr class="separator:aaf1bd78643e6ce0dc02cebf6210127ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85889e7bac3fc9b705382f0f0251d14c"><td class="memItemLeft" align="right" valign="top">Value&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a85889e7bac3fc9b705382f0f0251d14c">getVal</a> (int pValue)</td></tr>
+<tr class="separator:a85889e7bac3fc9b705382f0f0251d14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e441cff713dbc7c75cb7044b9b95342"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a3e441cff713dbc7c75cb7044b9b95342">modifyVal</a> (int pValue, const Value &amp;newVal)</td></tr>
+<tr class="separator:a3e441cff713dbc7c75cb7044b9b95342"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd9cc2747b919e9d31b3cffa1585866f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#afd9cc2747b919e9d31b3cffa1585866f">insert</a> (const Key &amp;vl, const Value &amp;vr)</td></tr>
+<tr class="separator:afd9cc2747b919e9d31b3cffa1585866f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a4d505bd0351f92c5e7378e0353bbaf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a4a4d505bd0351f92c5e7378e0353bbaf">insertIndex</a> (const Key &amp;vl, int pos)</td></tr>
+<tr class="separator:a4a4d505bd0351f92c5e7378e0353bbaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f6f40acb1dc10377e3647e1e552b76b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a7f6f40acb1dc10377e3647e1e552b76b">erase</a> (const Key &amp;vl)</td></tr>
+<tr class="separator:a7f6f40acb1dc10377e3647e1e552b76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32cec9c1429437170d7ca26753aac7ad"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
+<tr class="memitem:a32cec9c1429437170d7ca26753aac7ad"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a32cec9c1429437170d7ca26753aac7ad">route</a> (const Key &amp;val)</td></tr>
+<tr class="separator:a32cec9c1429437170d7ca26753aac7ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e71591dc3dd1b6c8f2b0078253d46d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a4e71591dc3dd1b6c8f2b0078253d46d8">print</a> (const Node &amp;p)</td></tr>
+<tr class="separator:a4e71591dc3dd1b6c8f2b0078253d46d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0954e062bb398015f2715a49908fe28b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a0954e062bb398015f2715a49908fe28b">print</a> (int pos)</td></tr>
+<tr class="separator:a0954e062bb398015f2715a49908fe28b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a841068e3008a0b3c9291eda8a67d1b4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a841068e3008a0b3c9291eda8a67d1b4c">print</a> ()</td></tr>
+<tr class="separator:a841068e3008a0b3c9291eda8a67d1b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:acf67814ab1a1daaa4c18db6ecd0f28d9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:acf67814ab1a1daaa4c18db6ecd0f28d9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#acf67814ab1a1daaa4c18db6ecd0f28d9">read</a> (int pos, T &amp;cur, std::fstream &amp;fs)</td></tr>
-<tr class="separator:acf67814ab1a1daaa4c18db6ecd0f28d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae87648a030cb11c6c1cce177f93cc4ea"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae87648a030cb11c6c1cce177f93cc4ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae87648a030cb11c6c1cce177f93cc4ea">read</a> (int pos, T &amp;cur)</td></tr>
-<tr class="separator:ae87648a030cb11c6c1cce177f93cc4ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b2a1e356c260ec397377e1d1b97750d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a0b2a1e356c260ec397377e1d1b97750d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a0b2a1e356c260ec397377e1d1b97750d">write</a> (int pos, const T &amp;cur, std::fstream &amp;fs)</td></tr>
-<tr class="separator:a0b2a1e356c260ec397377e1d1b97750d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a317c42b97f489fa8f887fa7bcccd2fca"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a317c42b97f489fa8f887fa7bcccd2fca"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a317c42b97f489fa8f887fa7bcccd2fca">write</a> (int pos, const T &amp;cur)</td></tr>
-<tr class="separator:a317c42b97f489fa8f887fa7bcccd2fca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b8f0ad1a69adc16e4bed9ce05ee381e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a0b8f0ad1a69adc16e4bed9ce05ee381e">init</a> ()</td></tr>
-<tr class="separator:a0b8f0ad1a69adc16e4bed9ce05ee381e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0d1819468bb6417820a88ee3863d3fb"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
-<tr class="memitem:ae0d1819468bb6417820a88ee3863d3fb"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae0d1819468bb6417820a88ee3863d3fb">find</a> (int pos, const Key &amp;vKey)</td></tr>
-<tr class="separator:ae0d1819468bb6417820a88ee3863d3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acde599cd5327cf510052aa9d24f00e43"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
-<tr class="memitem:acde599cd5327cf510052aa9d24f00e43"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; int, int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#acde599cd5327cf510052aa9d24f00e43">findIndex</a> (int pos, const Key &amp;vKey)</td></tr>
-<tr class="separator:acde599cd5327cf510052aa9d24f00e43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ad1069ac83f65d484ebb1801e9ca4d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a2ad1069ac83f65d484ebb1801e9ca4d6">insert</a> (int pos, Key &amp;vKey, int &amp;vSon)</td></tr>
-<tr class="separator:a2ad1069ac83f65d484ebb1801e9ca4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed544abb80d05dcc9b402d7b5ed89fb1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#aed544abb80d05dcc9b402d7b5ed89fb1">erase</a> (int pos, const Key &amp;vKey)</td></tr>
-<tr class="separator:aed544abb80d05dcc9b402d7b5ed89fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cc45968dcaffabc0e1f73562fb59680"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a7cc45968dcaffabc0e1f73562fb59680"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a7cc45968dcaffabc0e1f73562fb59680">read</a> (int pos, T &amp;cur, std::fstream &amp;fs)</td></tr>
+<tr class="separator:a7cc45968dcaffabc0e1f73562fb59680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adca49f2b819b436ad5bc31fdf122b4eb"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:adca49f2b819b436ad5bc31fdf122b4eb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#adca49f2b819b436ad5bc31fdf122b4eb">read</a> (int pos, T &amp;cur)</td></tr>
+<tr class="separator:adca49f2b819b436ad5bc31fdf122b4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a759faca9b1055b878eeede9d8c0b366c"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a759faca9b1055b878eeede9d8c0b366c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a759faca9b1055b878eeede9d8c0b366c">write</a> (int pos, const T &amp;cur, std::fstream &amp;fs)</td></tr>
+<tr class="separator:a759faca9b1055b878eeede9d8c0b366c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d8cb5f2b3eb6e517e49f16cbc76be6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ac8d8cb5f2b3eb6e517e49f16cbc76be6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ac8d8cb5f2b3eb6e517e49f16cbc76be6">write</a> (int pos, const T &amp;cur)</td></tr>
+<tr class="separator:ac8d8cb5f2b3eb6e517e49f16cbc76be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2535b3c6bdb4e627df6936343ccd5b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae2535b3c6bdb4e627df6936343ccd5b8">init</a> ()</td></tr>
+<tr class="separator:ae2535b3c6bdb4e627df6936343ccd5b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40e282f9cc97ebb62c76821edb2cbe4d"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
+<tr class="memitem:a40e282f9cc97ebb62c76821edb2cbe4d"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a40e282f9cc97ebb62c76821edb2cbe4d">find</a> (int pos, const Key &amp;vKey)</td></tr>
+<tr class="separator:a40e282f9cc97ebb62c76821edb2cbe4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e0e3b0686fc4922e59dee5e6d32e8a3"><td class="memTemplParams" colspan="2">template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </td></tr>
+<tr class="memitem:a3e0e3b0686fc4922e59dee5e6d32e8a3"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; int, int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a3e0e3b0686fc4922e59dee5e6d32e8a3">findIndex</a> (int pos, const Key &amp;vKey)</td></tr>
+<tr class="separator:a3e0e3b0686fc4922e59dee5e6d32e8a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6e20c42aa4401c0d628cfd0efdab406"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#af6e20c42aa4401c0d628cfd0efdab406">insert</a> (int pos, Key &amp;vKey, int &amp;vSon)</td></tr>
+<tr class="separator:af6e20c42aa4401c0d628cfd0efdab406"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a898b1ab2abd32d8204d5fc2658f3637e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a898b1ab2abd32d8204d5fc2658f3637e">erase</a> (int pos, const Key &amp;vKey)</td></tr>
+<tr class="separator:a898b1ab2abd32d8204d5fc2658f3637e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a64116006f04215c6323c94d2bec113eb"><td class="memItemLeft" align="right" valign="top">std::fstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a64116006f04215c6323c94d2bec113eb">treeDt</a></td></tr>
-<tr class="separator:a64116006f04215c6323c94d2bec113eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28a8104a045043a4c1909489dd57fe68"><td class="memItemLeft" align="right" valign="top">std::fstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a28a8104a045043a4c1909489dd57fe68">valueDt</a></td></tr>
-<tr class="separator:a28a8104a045043a4c1909489dd57fe68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5c613e71a329ff2bf38aa6fc8f78163"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae5c613e71a329ff2bf38aa6fc8f78163">root</a></td></tr>
-<tr class="separator:ae5c613e71a329ff2bf38aa6fc8f78163"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32b1fc9929d732d45ea5455896dbae95"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a32b1fc9929d732d45ea5455896dbae95">height</a></td></tr>
-<tr class="separator:a32b1fc9929d732d45ea5455896dbae95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8689ea5ab291d1f1ffd28998150bbee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ae8689ea5ab291d1f1ffd28998150bbee">size</a></td></tr>
-<tr class="separator:ae8689ea5ab291d1f1ffd28998150bbee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d51cecec2c1af38eb3b871e330ac3e2"><td class="memItemLeft" align="right" valign="top">std::fstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a7d51cecec2c1af38eb3b871e330ac3e2">treeDt</a></td></tr>
+<tr class="separator:a7d51cecec2c1af38eb3b871e330ac3e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89427044ae4bdf50e42241e3d040ca35"><td class="memItemLeft" align="right" valign="top">std::fstream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a89427044ae4bdf50e42241e3d040ca35">valueDt</a></td></tr>
+<tr class="separator:a89427044ae4bdf50e42241e3d040ca35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33963c69c916fc63c583d82922ae59de"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#a33963c69c916fc63c583d82922ae59de">root</a></td></tr>
+<tr class="separator:a33963c69c916fc63c583d82922ae59de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac74ffc603b7a2f8a68badf2ada282f48"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#ac74ffc603b7a2f8a68badf2ada282f48">height</a></td></tr>
+<tr class="separator:ac74ffc603b7a2f8a68badf2ada282f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4c867e1c65d3ec25c78487ba9826182"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1BPlusTree.html#aa4c867e1c65d3ec25c78487ba9826182">size</a></td></tr>
+<tr class="separator:aa4c867e1c65d3ec25c78487ba9826182"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;typename Key, typename Value, size_t M = 100&gt;<br />
-class Ticket::BPlusTree&lt; Key, Value, M &gt;</h3>
+<div class="textblock"><h3>template&lt;typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 100&gt;<br />
+class Ticket::BPlusTree&lt; Key, Value, NO_VALUE_FLAG, M &gt;</h3>
 
 <p>数据库 <br  />
  数据保存在两个文件中：treeDt（保存树节点以及指向Value文件中位置的指针），valueDt（保存所有Value） </p>
+<dl class="section note"><dt>Note</dt><dd>Index only mode. Usage: <div class="fragment"><div class="line">BPlusTree&lt;int,int,1&gt; bpt;</div>
+<div class="line"><span class="comment">//usable func:</span></div>
+<div class="line"><a class="code" href="classTicket_1_1BPlusTree.html#a4a4d505bd0351f92c5e7378e0353bbaf">insertIndex</a>(Key, <span class="keywordtype">int</span>)</div>
+<div class="line"><a class="code" href="classTicket_1_1BPlusTree.html#a7f6f40acb1dc10377e3647e1e552b76b">erase</a>(Key)</div>
+<div class="line"><a class="code" href="classTicket_1_1BPlusTree.html#aaf1bd78643e6ce0dc02cebf6210127ce">find</a>(Key)</div>
+<div class="line"><a class="code" href="classTicket_1_1BPlusTree.html#a841068e3008a0b3c9291eda8a67d1b4c">print</a>()</div>
+</div><!-- fragment --></dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Key</td><td>键 </td></tr>
     <tr><td class="paramname">Value</td><td>值 </td></tr>
+    <tr><td class="paramname">NO_VALUE_FLAG</td><td>如果是1表示Index only mode </td></tr>
     <tr><td class="paramname">M</td><td>块的大小，默认100 </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ade5f1d225dbef09be5480bb6d9bfaecc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade5f1d225dbef09be5480bb6d9bfaecc">&#9670;&nbsp;</a></span>BPlusTree()</h2>
+<a id="ae98c2ef15f1357772e4bdd1e5c725c3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae98c2ef15f1357772e4bdd1e5c725c3e">&#9670;&nbsp;</a></span>BPlusTree()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::<a class="el" href="classTicket_1_1BPlusTree.html">BPlusTree</a> </td>
+          <td class="memname"><a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::<a class="el" href="classTicket_1_1BPlusTree.html">BPlusTree</a> </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -205,19 +213,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="abbcc6b0b1a34a74e7f12decd28df798a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbcc6b0b1a34a74e7f12decd28df798a">&#9670;&nbsp;</a></span>~BPlusTree()</h2>
+<a id="a859ee31dc81ac20e4a5c59ccb8b3ed80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a859ee31dc81ac20e4a5c59ccb8b3ed80">&#9670;&nbsp;</a></span>~BPlusTree()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::~<a class="el" href="classTicket_1_1BPlusTree.html">BPlusTree</a> </td>
+          <td class="memname"><a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::~<a class="el" href="classTicket_1_1BPlusTree.html">BPlusTree</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -233,16 +241,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae080148631e43d51faec23442271e4ca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae080148631e43d51faec23442271e4ca">&#9670;&nbsp;</a></span>erase() <span class="overload">[1/2]</span></h2>
+<a id="a7f6f40acb1dc10377e3647e1e552b76b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f6f40acb1dc10377e3647e1e552b76b">&#9670;&nbsp;</a></span>erase() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::erase </td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::erase </td>
           <td>(</td>
           <td class="paramtype">const Key &amp;&#160;</td>
           <td class="paramname"><em>vl</em></td><td>)</td>
@@ -260,19 +268,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="aed544abb80d05dcc9b402d7b5ed89fb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed544abb80d05dcc9b402d7b5ed89fb1">&#9670;&nbsp;</a></span>erase() <span class="overload">[2/2]</span></h2>
+<a id="a898b1ab2abd32d8204d5fc2658f3637e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a898b1ab2abd32d8204d5fc2658f3637e">&#9670;&nbsp;</a></span>erase() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::erase </td>
+          <td class="memname">bool <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::erase </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -298,18 +306,18 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a17a7c4bf9f85829996eda4010806e49b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17a7c4bf9f85829996eda4010806e49b">&#9670;&nbsp;</a></span>find() <span class="overload">[1/2]</span></h2>
+<a id="aaf1bd78643e6ce0dc02cebf6210127ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf1bd78643e6ce0dc02cebf6210127ce">&#9670;&nbsp;</a></span>find() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::find </td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::find </td>
           <td>(</td>
           <td class="paramtype">const Key &amp;&#160;</td>
           <td class="paramname"><em>vl</em></td><td>)</td>
@@ -330,18 +338,18 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>不存在返回-1，否则返回valueDt文件中value的位置 </dd></dl>
-<dl class="section user"><dt>Example</dt><dd><div class="fragment"><div class="line"><span class="keywordtype">int</span> pos = <a class="code" href="classTicket_1_1BPlusTree.html#a17a7c4bf9f85829996eda4010806e49b">find</a>(make_pair(1,2);</div>
+<dl class="section user"><dt>Example</dt><dd><div class="fragment"><div class="line"><span class="keywordtype">int</span> pos = <a class="code" href="classTicket_1_1BPlusTree.html#aaf1bd78643e6ce0dc02cebf6210127ce">find</a>(make_pair(1,2);</div>
 </div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
-<a id="ae0d1819468bb6417820a88ee3863d3fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0d1819468bb6417820a88ee3863d3fb">&#9670;&nbsp;</a></span>find() <span class="overload">[2/2]</span></h2>
+<a id="a40e282f9cc97ebb62c76821edb2cbe4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40e282f9cc97ebb62c76821edb2cbe4d">&#9670;&nbsp;</a></span>find() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
 <table class="mlabels">
@@ -349,7 +357,7 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::find </td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::find </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -375,13 +383,13 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
 
 </div>
 </div>
-<a id="acde599cd5327cf510052aa9d24f00e43"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acde599cd5327cf510052aa9d24f00e43">&#9670;&nbsp;</a></span>findIndex()</h2>
+<a id="a3e0e3b0686fc4922e59dee5e6d32e8a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e0e3b0686fc4922e59dee5e6d32e8a3">&#9670;&nbsp;</a></span>findIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
 <table class="mlabels">
@@ -389,7 +397,7 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::tuple&lt;int,int&gt; <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::findIndex </td>
+          <td class="memname">std::tuple&lt;int,int&gt; <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::findIndex </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -415,16 +423,16 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
 
 </div>
 </div>
-<a id="aaac8ab9451bc283a891d1c9dc9476cbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaac8ab9451bc283a891d1c9dc9476cbf">&#9670;&nbsp;</a></span>getVal()</h2>
+<a id="a85889e7bac3fc9b705382f0f0251d14c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85889e7bac3fc9b705382f0f0251d14c">&#9670;&nbsp;</a></span>getVal()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Value <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::getVal </td>
+          <td class="memname">Value <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::getVal </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pValue</em></td><td>)</td>
@@ -442,19 +450,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a0b8f0ad1a69adc16e4bed9ce05ee381e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b8f0ad1a69adc16e4bed9ce05ee381e">&#9670;&nbsp;</a></span>init()</h2>
+<a id="ae2535b3c6bdb4e627df6936343ccd5b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2535b3c6bdb4e627df6936343ccd5b8">&#9670;&nbsp;</a></span>init()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::init </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::init </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -469,16 +477,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a433adb8473f75929895edefe0d8c343e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a433adb8473f75929895edefe0d8c343e">&#9670;&nbsp;</a></span>insert() <span class="overload">[1/2]</span></h2>
+<a id="afd9cc2747b919e9d31b3cffa1585866f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd9cc2747b919e9d31b3cffa1585866f">&#9670;&nbsp;</a></span>insert() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::insert </td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::insert </td>
           <td>(</td>
           <td class="paramtype">const Key &amp;&#160;</td>
           <td class="paramname"><em>vl</em>, </td>
@@ -507,19 +515,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a2ad1069ac83f65d484ebb1801e9ca4d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ad1069ac83f65d484ebb1801e9ca4d6">&#9670;&nbsp;</a></span>insert() <span class="overload">[2/2]</span></h2>
+<a id="af6e20c42aa4401c0d628cfd0efdab406"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6e20c42aa4401c0d628cfd0efdab406">&#9670;&nbsp;</a></span>insert() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::insert </td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::insert </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -551,16 +559,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="abe8d2ccb0acc8609563baad2cba33674"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe8d2ccb0acc8609563baad2cba33674">&#9670;&nbsp;</a></span>insertIndex()</h2>
+<a id="a4a4d505bd0351f92c5e7378e0353bbaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a4d505bd0351f92c5e7378e0353bbaf">&#9670;&nbsp;</a></span>insertIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::insertIndex </td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::insertIndex </td>
           <td>(</td>
           <td class="paramtype">const Key &amp;&#160;</td>
           <td class="paramname"><em>vl</em>, </td>
@@ -590,16 +598,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a7f6f463e4c1b340617854366d56367d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f6f463e4c1b340617854366d56367d6">&#9670;&nbsp;</a></span>modifyVal()</h2>
+<a id="a3e441cff713dbc7c75cb7044b9b95342"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e441cff713dbc7c75cb7044b9b95342">&#9670;&nbsp;</a></span>modifyVal()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::modifyVal </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::modifyVal </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pValue</em>, </td>
@@ -627,16 +635,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a7d2216af37a7a0c78e1637698c093523"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d2216af37a7a0c78e1637698c093523">&#9670;&nbsp;</a></span>print() <span class="overload">[1/3]</span></h2>
+<a id="a841068e3008a0b3c9291eda8a67d1b4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a841068e3008a0b3c9291eda8a67d1b4c">&#9670;&nbsp;</a></span>print() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::print </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::print </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -647,16 +655,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a38d9cbe023521edad6214faf02022109"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38d9cbe023521edad6214faf02022109">&#9670;&nbsp;</a></span>print() <span class="overload">[2/3]</span></h2>
+<a id="a4e71591dc3dd1b6c8f2b0078253d46d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e71591dc3dd1b6c8f2b0078253d46d8">&#9670;&nbsp;</a></span>print() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::print </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::print </td>
           <td>(</td>
           <td class="paramtype">const Node &amp;&#160;</td>
           <td class="paramname"><em>p</em></td><td>)</td>
@@ -667,16 +675,16 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a4d97a17d948fc88f33d1a3f3da8f83fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d97a17d948fc88f33d1a3f3da8f83fc">&#9670;&nbsp;</a></span>print() <span class="overload">[3/3]</span></h2>
+<a id="a0954e062bb398015f2715a49908fe28b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0954e062bb398015f2715a49908fe28b">&#9670;&nbsp;</a></span>print() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::print </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::print </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em></td><td>)</td>
@@ -687,13 +695,13 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="ae87648a030cb11c6c1cce177f93cc4ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae87648a030cb11c6c1cce177f93cc4ea">&#9670;&nbsp;</a></span>read() <span class="overload">[1/2]</span></h2>
+<a id="adca49f2b819b436ad5bc31fdf122b4eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adca49f2b819b436ad5bc31fdf122b4eb">&#9670;&nbsp;</a></span>read() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <table class="mlabels">
@@ -701,7 +709,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::read </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::read </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -727,13 +735,13 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="acf67814ab1a1daaa4c18db6ecd0f28d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf67814ab1a1daaa4c18db6ecd0f28d9">&#9670;&nbsp;</a></span>read() <span class="overload">[2/2]</span></h2>
+<a id="a7cc45968dcaffabc0e1f73562fb59680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cc45968dcaffabc0e1f73562fb59680">&#9670;&nbsp;</a></span>read() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <table class="mlabels">
@@ -741,7 +749,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::read </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::read </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -773,18 +781,18 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="aefd5883d3955321de1938bc768d7454a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aefd5883d3955321de1938bc768d7454a">&#9670;&nbsp;</a></span>route()</h2>
+<a id="a32cec9c1429437170d7ca26753aac7ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32cec9c1429437170d7ca26753aac7ad">&#9670;&nbsp;</a></span>route()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;int&gt; <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::route </td>
+          <td class="memname">std::vector&lt;int&gt; <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::route </td>
           <td>(</td>
           <td class="paramtype">const Key &amp;&#160;</td>
           <td class="paramname"><em>val</em></td><td>)</td>
@@ -816,13 +824,13 @@ template&lt;typename Comp  = std::less&lt;Key&gt;&gt; </div>
 
 </div>
 </div>
-<a id="a317c42b97f489fa8f887fa7bcccd2fca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a317c42b97f489fa8f887fa7bcccd2fca">&#9670;&nbsp;</a></span>write() <span class="overload">[1/2]</span></h2>
+<a id="ac8d8cb5f2b3eb6e517e49f16cbc76be6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8d8cb5f2b3eb6e517e49f16cbc76be6">&#9670;&nbsp;</a></span>write() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <table class="mlabels">
@@ -830,7 +838,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::write </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::write </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -856,13 +864,13 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a0b2a1e356c260ec397377e1d1b97750d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b2a1e356c260ec397377e1d1b97750d">&#9670;&nbsp;</a></span>write() <span class="overload">[2/2]</span></h2>
+<a id="a759faca9b1055b878eeede9d8c0b366c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a759faca9b1055b878eeede9d8c0b366c">&#9670;&nbsp;</a></span>write() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
 <table class="mlabels">
@@ -870,7 +878,7 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::write </td>
+          <td class="memname">void <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::write </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>pos</em>, </td>
@@ -903,19 +911,19 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a32b1fc9929d732d45ea5455896dbae95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32b1fc9929d732d45ea5455896dbae95">&#9670;&nbsp;</a></span>height</h2>
+<a id="ac74ffc603b7a2f8a68badf2ada282f48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac74ffc603b7a2f8a68badf2ada282f48">&#9670;&nbsp;</a></span>height</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::height</td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::height</td>
         </tr>
       </table>
   </td>
@@ -927,19 +935,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="ae5c613e71a329ff2bf38aa6fc8f78163"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5c613e71a329ff2bf38aa6fc8f78163">&#9670;&nbsp;</a></span>root</h2>
+<a id="a33963c69c916fc63c583d82922ae59de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33963c69c916fc63c583d82922ae59de">&#9670;&nbsp;</a></span>root</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::root</td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::root</td>
         </tr>
       </table>
   </td>
@@ -951,19 +959,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="ae8689ea5ab291d1f1ffd28998150bbee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8689ea5ab291d1f1ffd28998150bbee">&#9670;&nbsp;</a></span>size</h2>
+<a id="aa4c867e1c65d3ec25c78487ba9826182"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4c867e1c65d3ec25c78487ba9826182">&#9670;&nbsp;</a></span>size</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::size</td>
+          <td class="memname">int <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::size</td>
         </tr>
       </table>
   </td>
@@ -975,19 +983,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a64116006f04215c6323c94d2bec113eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64116006f04215c6323c94d2bec113eb">&#9670;&nbsp;</a></span>treeDt</h2>
+<a id="a7d51cecec2c1af38eb3b871e330ac3e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d51cecec2c1af38eb3b871e330ac3e2">&#9670;&nbsp;</a></span>treeDt</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::fstream <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::treeDt</td>
+          <td class="memname">std::fstream <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::treeDt</td>
         </tr>
       </table>
   </td>
@@ -999,19 +1007,19 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 
 </div>
 </div>
-<a id="a28a8104a045043a4c1909489dd57fe68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28a8104a045043a4c1909489dd57fe68">&#9670;&nbsp;</a></span>valueDt</h2>
+<a id="a89427044ae4bdf50e42241e3d040ca35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89427044ae4bdf50e42241e3d040ca35">&#9670;&nbsp;</a></span>valueDt</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
+template&lt;typename Key , typename Value , int NO_VALUE_FLAG = 0, size_t M = 100&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::fstream <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, M &gt;::valueDt</td>
+          <td class="memname">std::fstream <a class="el" href="classTicket_1_1BPlusTree.html">Ticket::BPlusTree</a>&lt; Key, Value, NO_VALUE_FLAG, M &gt;::valueDt</td>
         </tr>
       </table>
   </td>
@@ -1027,8 +1035,11 @@ template&lt;typename Key , typename Value , size_t M = 100&gt; </div>
 <li>src/BPlusTree/<a class="el" href="BPlusTree_8hpp_source.html">BPlusTree.hpp</a></li>
 </ul>
 </div><!-- contents -->
+<div class="ttc" id="aclassTicket_1_1BPlusTree_html_a4a4d505bd0351f92c5e7378e0353bbaf"><div class="ttname"><a href="classTicket_1_1BPlusTree.html#a4a4d505bd0351f92c5e7378e0353bbaf">Ticket::BPlusTree::insertIndex</a></div><div class="ttdeci">int insertIndex(const Key &amp;vl, int pos)</div></div>
+<div class="ttc" id="aclassTicket_1_1BPlusTree_html_a841068e3008a0b3c9291eda8a67d1b4c"><div class="ttname"><a href="classTicket_1_1BPlusTree.html#a841068e3008a0b3c9291eda8a67d1b4c">Ticket::BPlusTree::print</a></div><div class="ttdeci">void print()</div></div>
 <div class="ttc" id="astructComp_html"><div class="ttname"><a href="structComp.html">Comp</a></div><div class="ttdef"><b>Definition:</b> test.cpp:13</div></div>
-<div class="ttc" id="aclassTicket_1_1BPlusTree_html_a17a7c4bf9f85829996eda4010806e49b"><div class="ttname"><a href="classTicket_1_1BPlusTree.html#a17a7c4bf9f85829996eda4010806e49b">Ticket::BPlusTree::find</a></div><div class="ttdeci">int find(const Key &amp;vl)</div></div>
+<div class="ttc" id="aclassTicket_1_1BPlusTree_html_a7f6f40acb1dc10377e3647e1e552b76b"><div class="ttname"><a href="classTicket_1_1BPlusTree.html#a7f6f40acb1dc10377e3647e1e552b76b">Ticket::BPlusTree::erase</a></div><div class="ttdeci">int erase(const Key &amp;vl)</div></div>
+<div class="ttc" id="aclassTicket_1_1BPlusTree_html_aaf1bd78643e6ce0dc02cebf6210127ce"><div class="ttname"><a href="classTicket_1_1BPlusTree.html#aaf1bd78643e6ce0dc02cebf6210127ce">Ticket::BPlusTree::find</a></div><div class="ttdeci">int find(const Key &amp;vl)</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['main_101',['main',['../BPlusTree_2test_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;test.cpp'],['../main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;main.cpp'],['../Tools_2test_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;test.cpp']]],
-  ['modifyval_102',['modifyVal',['../classTicket_1_1BPlusTree.html#a7f6f463e4c1b340617854366d56367d6',1,'Ticket::BPlusTree']]]
+  ['init_122',['init',['../classTicket_1_1BPlusTree.html#ae2535b3c6bdb4e627df6936343ccd5b8',1,'Ticket::BPlusTree::init()'],['../classTicket_1_1MainClass.html#aebbcd3809051fb1ba0d15c60ab421cab',1,'Ticket::MainClass::init()']]],
+  ['insert_123',['insert',['../classTicket_1_1BPlusTree.html#afd9cc2747b919e9d31b3cffa1585866f',1,'Ticket::BPlusTree::insert(const Key &amp;vl, const Value &amp;vr)'],['../classTicket_1_1BPlusTree.html#af6e20c42aa4401c0d628cfd0efdab406',1,'Ticket::BPlusTree::insert(int pos, Key &amp;vKey, int &amp;vSon)']]],
+  ['insertindex_124',['insertIndex',['../classTicket_1_1BPlusTree.html#a4a4d505bd0351f92c5e7378e0353bbaf',1,'Ticket::BPlusTree']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_161',['size',['../classTicket_1_1BPlusTree.html#aa4c867e1c65d3ec25c78487ba9826182',1,'Ticket::BPlusTree']]]
+  ['root_178',['root',['../classTicket_1_1BPlusTree.html#a33963c69c916fc63c583d82922ae59de',1,'Ticket::BPlusTree']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['whatstr_164',['whatStr',['../classTicket_1_1ExceptionBase.html#a79db05679e5c6fdefc97ea09ace807a5',1,'Ticket::ExceptionBase']]]
+  ['valuedt_181',['valueDt',['../classTicket_1_1BPlusTree.html#a89427044ae4bdf50e42241e3d040ca35',1,'Ticket::BPlusTree']]]
 ];

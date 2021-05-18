@@ -19,10 +19,17 @@ namespace Ticket {
 		bool firstOpen = false;
 		
 	public:
+		/**
+		 * @brief position constants
+		 */
 		enum Pos {
 			END = -1, CUR = -2, BEG = 0,
 		};
 		
+		/**
+		 * constructor
+		 * @param name file name
+		 */
 		explicit FileIO(const std::string &name) {
 			constexpr auto fl = std::ios::in | std::ios::out | std::ios::binary;
 			fs.open(name, fl);
@@ -37,12 +44,16 @@ namespace Ticket {
 			}
 		}
 		
+		/**
+		 * check if the file is opened for the first time
+		 * @return true when is opened first; false otherwise
+		 */
 		bool isFirstOpen() {
 			return firstOpen;
 		}
 		
 		/**
-		 * read value from fs
+		 * read value from fstream
 		 * @tparam T
 		 * @param pos Pos::CUR (-2) or >= 0
 		 * @param cur value
@@ -72,6 +83,10 @@ namespace Ticket {
 			fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
 		}
 		
+		/**
+		 * move position pointer
+		 * @param pos >=0 or Pos::END
+		 */
 		void movePos(int pos) {
 			if (pos >= 0) {
 				fs.seekp(pos, std::ios::beg);
@@ -81,14 +96,25 @@ namespace Ticket {
 			}
 		}
 		
+		/**
+		 * move pointer forward
+		 * @param pos the distance that the pointer is moved forward for
+		 */
 		void moveForward(int pos) {
 			fs.seekp(pos, std::ios::cur);
 		}
 		
+		/**
+		 * show current pointer
+		 * @return
+		 */
 		size_t tellPos() {
 			return fs.tellp();
 		}
 		
+		/**
+		 * close the fstream
+		 */
 		void close() {
 			fs.close();
 		}

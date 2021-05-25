@@ -81,7 +81,7 @@ namespace Ticket {
 			return *this;
 		}
 		
-		int cmpDate(const Date &another) const {
+		[[nodiscard]] int cmpDate(const Date &another) const {
 			if (mm == another.mm) {
 				return dd < another.dd ? -1 : dd == another.dd ? 0 : 1;
 			}

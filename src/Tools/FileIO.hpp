@@ -10,9 +10,15 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 namespace Ticket {
 	
+	/**
+	 * file IO class
+	 *
+	 * maintains three things : a filestream, a read&write pointer, and a flag showing whether the file is opened for the first time
+	 */
 	class FileIO {
 	private:
 		std::fstream fs;
@@ -48,7 +54,7 @@ namespace Ticket {
 		 * check if the file is opened for the first time
 		 * @return true when is opened first; false otherwise
 		 */
-		bool isFirstOpen() {
+		bool isFirstOpen() const {
 			return firstOpen;
 		}
 		

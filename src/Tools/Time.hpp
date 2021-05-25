@@ -81,6 +81,15 @@ namespace Ticket {
 			return *this;
 		}
 		
+		int cmpDate(const Date &another) const {
+			if (mm == another.mm) {
+				return dd < another.dd ? -1 : dd == another.dd ? 0 : 1;
+			}
+			else {
+				return mm < another.mm ? -1 : 1;
+			}
+		}
+		
 		[[nodiscard]] std::string to_string() const override {
 			std::stringstream ss;
 			ss << std::setw(2) << std::setfill('0') << std::right;

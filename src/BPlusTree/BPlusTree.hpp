@@ -110,6 +110,16 @@ namespace Ticket{
 		 */
 		template <typename Comp = std::less<Key> > std::vector<int> route(const Key &val);
 		
+		/**
+		 * @return size of keys in bpt
+		 */
+		int getSize() const {
+			return size;
+		}
+		bool isEmpty() const {
+			return size == 0;
+		}
+		
 		//debug
 		void print (const Node &p);
 		void print (int pos);

@@ -7,21 +7,17 @@
 #include "String.hpp"
 #include "Time.hpp"
 #include "FileIO.hpp"
+#include "Vector.hpp"
 
-#include <iostream>
-#include <string>
+//#include <iostream>
+//#include <string>
 
 
 int main() {
 	using namespace Ticket;
-	using namespace std;
-//	FileIO a("1223");
-	int v = 444, w;
-//	a.write(FileIO::END, v);
-//	a.close();
-	FileIO b("1223");
-	b.read(FileIO::BEG, w);
-	cout<<w<<'\n';
+	vector<int> a;
+	a.push_back(1);
+	a.front();
 }
 
 

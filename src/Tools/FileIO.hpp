@@ -40,6 +40,7 @@ namespace Ticket {
 		 */
 		explicit FileIO(const std::string &name) {
 			open(name);
+//			std::vector<int> a;
 		}
 		
 		FileIO& operator=(FileIO &&another) = default;

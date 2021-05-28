@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_179',['size',['../classTicket_1_1BPlusTree.html#aa4c867e1c65d3ec25c78487ba9826182',1,'Ticket::BPlusTree']]]
+  ['next_323',['next',['../structlist_1_1Node.html#a11b096cb1a7150a717ddc5e76316b04a',1,'list::Node']]]
 ];

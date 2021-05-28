@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['clear_4',['clear',['../structTicket_1_1String.html#a62b779e438b7055964d84fd0f893832c',1,'Ticket::String']]],
-  ['close_5',['close',['../classTicket_1_1FileIO.html#a4bc6e4f9e6cddce41df5738ada3cddab',1,'Ticket::FileIO']]],
-  ['cmakelists_2etxt_6',['CMakeLists.txt',['../BPlusTree_2CMakeLists_8txt.html',1,'(Global Namespace)'],['../Tools_2CMakeLists_8txt.html',1,'(Global Namespace)']]],
-  ['comp_7',['Comp',['../structComp.html',1,'']]],
-  ['comp1_8',['Comp1',['../structComp1.html',1,'']]],
-  ['cur_9',['CUR',['../classTicket_1_1BPlusTree_1_1Pos.html#a3e84347cb98543ad68877d5e882733d3',1,'Ticket::BPlusTree::Pos::CUR()'],['../classTicket_1_1FileIO.html#a3fedfd15b3dbf3bf6955bc57f2fd60eda2b883cc4091efb72b0fadd186efc3444',1,'Ticket::FileIO::CUR()']]]
+  ['backend_27',['Backend',['../namespaceBackend.html',1,'']]],
+  ['backendreadme_2emd_28',['BackEndReadMe.md',['../BackEndReadMe_8md.html',1,'']]],
+  ['beg_29',['BEG',['../classTicket_1_1FileIO.html#a3fedfd15b3dbf3bf6955bc57f2fd60eda0c00fa734be2bffa559cad2d348f611c',1,'Ticket::FileIO']]],
+  ['begin_30',['begin',['../classBackend_1_1map.html#a8e95d19ca0713e1c14ab337999f177ac',1,'Backend::map']]],
+  ['bplustree_31',['BPlusTree',['../classTicket_1_1BPlusTree.html',1,'Ticket::BPlusTree&lt; Key, Value, NO_VALUE_FLAG, M &gt;'],['../classTicket_1_1BPlusTree.html#ae98c2ef15f1357772e4bdd1e5c725c3e',1,'Ticket::BPlusTree::BPlusTree()']]],
+  ['bplustree_2ehpp_32',['BPlusTree.hpp',['../BPlusTree_8hpp.html',1,'']]],
+  ['backendreadme_33',['BackEndReadMe',['../md_src_BackEndReadMe.html',1,'']]]
 ];

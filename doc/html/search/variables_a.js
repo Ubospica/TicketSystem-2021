@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['valuedt_181',['valueDt',['../classTicket_1_1BPlusTree.html#a89427044ae4bdf50e42241e3d040ca35',1,'Ticket::BPlusTree']]]
+  ['root_328',['root',['../classTicket_1_1BPlusTree.html#a33963c69c916fc63c583d82922ae59de',1,'Ticket::BPlusTree']]]
 ];

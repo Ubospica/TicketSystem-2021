@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['empty_13',['empty',['../structTicket_1_1String.html#a4f65f05526cf11b217a4a125859a0e5b',1,'Ticket::String']]],
-  ['end_14',['END',['../classTicket_1_1BPlusTree_1_1Pos.html#a42a197b2171305b406fccd728f718afc',1,'Ticket::BPlusTree::Pos::END()'],['../classTicket_1_1FileIO.html#a3fedfd15b3dbf3bf6955bc57f2fd60edaa6b598a19d8294df4470677e485800e3',1,'Ticket::FileIO::END()']]],
-  ['erase_15',['erase',['../classTicket_1_1BPlusTree.html#a7f6f40acb1dc10377e3647e1e552b76b',1,'Ticket::BPlusTree::erase(const Key &amp;vl)'],['../classTicket_1_1BPlusTree.html#a898b1ab2abd32d8204d5fc2658f3637e',1,'Ticket::BPlusTree::erase(int pos, const Key &amp;vKey)']]],
-  ['exception_2ehpp_16',['Exception.hpp',['../Exception_8hpp.html',1,'']]],
-  ['exceptionbase_17',['ExceptionBase',['../classTicket_1_1ExceptionBase.html',1,'Ticket::ExceptionBase'],['../classTicket_1_1ExceptionBase.html#a7b8d66d461f8300e097758aebc4ce3a3',1,'Ticket::ExceptionBase::ExceptionBase()']]]
+  ['data_46',['data',['../structTicket_1_1String.html#aa8ded1934bf016e57c70eae82825698e',1,'Ticket::String']]],
+  ['date_47',['Date',['../structTicket_1_1Date.html',1,'Ticket::Date'],['../structTicket_1_1Date.html#a55e2bf39acebb1dc107bf2d554611f73',1,'Ticket::Date::Date()=default'],['../structTicket_1_1Date.html#a2057e05cbee0ec3c4723134836ab8429',1,'Ticket::Date::Date(int mm, int dd, int h, int m)'],['../structTicket_1_1Date.html#a0a1ed1e3294c38cd3f953396b9a1c75e',1,'Ticket::Date::Date(const Time &amp;base)']]],
+  ['dd_48',['dd',['../structTicket_1_1Date.html#a6092aff397c54d68bd49e01052ace9b7',1,'Ticket::Date']]],
+  ['detail_49',['detail',['../classBackend_1_1exception.html#a9810d0419e6d803cafb98aafe59ab0eb',1,'Backend::exception']]]
 ];

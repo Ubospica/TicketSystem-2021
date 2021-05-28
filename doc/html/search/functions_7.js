@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['init_133',['init',['../classTicket_1_1BPlusTree.html#ae2535b3c6bdb4e627df6936343ccd5b8',1,'Ticket::BPlusTree::init()'],['../classTicket_1_1MainClass.html#aebbcd3809051fb1ba0d15c60ab421cab',1,'Ticket::MainClass::init()']]],
-  ['insert_134',['insert',['../classTicket_1_1BPlusTree.html#afd9cc2747b919e9d31b3cffa1585866f',1,'Ticket::BPlusTree::insert(const Key &amp;vl, const Value &amp;vr)'],['../classTicket_1_1BPlusTree.html#af6e20c42aa4401c0d628cfd0efdab406',1,'Ticket::BPlusTree::insert(int pos, Key &amp;vKey, int &amp;vSon)']]],
-  ['insertindex_135',['insertIndex',['../classTicket_1_1BPlusTree.html#a4a4d505bd0351f92c5e7378e0353bbaf',1,'Ticket::BPlusTree']]],
-  ['isfirstopen_136',['isFirstOpen',['../classTicket_1_1FileIO.html#a8968c866ff86eebcd57e441489af21e6',1,'Ticket::FileIO']]]
+  ['getsize_252',['getSize',['../classTicket_1_1BPlusTree.html#ace0460f9b93be6a9963055f26d3267e1',1,'Ticket::BPlusTree']]],
+  ['getval_253',['getVal',['../classTicket_1_1BPlusTree.html#a85889e7bac3fc9b705382f0f0251d14c',1,'Ticket::BPlusTree']]]
 ];

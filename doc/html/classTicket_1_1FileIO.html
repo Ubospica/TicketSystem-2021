@@ -88,10 +88,16 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:af8ab0767b7091990d5eabadf583bfee0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#af8ab0767b7091990d5eabadf583bfee0">FileIO</a> ()=default</td></tr>
+<tr class="separator:af8ab0767b7091990d5eabadf583bfee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fd42791cb663b7d220ddd81d46e3791"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#a3fd42791cb663b7d220ddd81d46e3791">FileIO</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a3fd42791cb663b7d220ddd81d46e3791"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8968c866ff86eebcd57e441489af21e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#a8968c866ff86eebcd57e441489af21e6">isFirstOpen</a> ()</td></tr>
-<tr class="separator:a8968c866ff86eebcd57e441489af21e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad79498f1ddd201cd5a896ff1ddfadb83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTicket_1_1FileIO.html">FileIO</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#ad79498f1ddd201cd5a896ff1ddfadb83">operator=</a> (<a class="el" href="classTicket_1_1FileIO.html">FileIO</a> &amp;&amp;another)=default</td></tr>
+<tr class="separator:ad79498f1ddd201cd5a896ff1ddfadb83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80e87a2f02642c5c9b167ce0bb2298db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#a80e87a2f02642c5c9b167ce0bb2298db">open</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a80e87a2f02642c5c9b167ce0bb2298db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65e572bfda7caea5aa7b72c3e2f443cf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#a65e572bfda7caea5aa7b72c3e2f443cf">isFirstOpen</a> () const</td></tr>
+<tr class="separator:a65e572bfda7caea5aa7b72c3e2f443cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee0ef2389455f56f2cab99d683b551fc"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aee0ef2389455f56f2cab99d683b551fc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#aee0ef2389455f56f2cab99d683b551fc">read</a> (int pos, T &amp;cur)</td></tr>
 <tr class="separator:aee0ef2389455f56f2cab99d683b551fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,7 +122,10 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a972fcea6748d69825f8602839e2fd560"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTicket_1_1FileIO.html#a972fcea6748d69825f8602839e2fd560">firstOpen</a> = false</td></tr>
 <tr class="separator:a972fcea6748d69825f8602839e2fd560"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>file IO class</p>
+<p>maintains three things : a filestream, a read&amp;write pointer, and a flag showing whether the file is opened for the first time </p>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a3fedfd15b3dbf3bf6955bc57f2fd60ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3fedfd15b3dbf3bf6955bc57f2fd60ed">&#9670;&nbsp;</a></span>Pos</h2>
 
@@ -139,8 +148,33 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="af8ab0767b7091990d5eabadf583bfee0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8ab0767b7091990d5eabadf583bfee0">&#9670;&nbsp;</a></span>FileIO() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Ticket::FileIO::FileIO </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a3fd42791cb663b7d220ddd81d46e3791"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fd42791cb663b7d220ddd81d46e3791">&#9670;&nbsp;</a></span>FileIO()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fd42791cb663b7d220ddd81d46e3791">&#9670;&nbsp;</a></span>FileIO() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,8 +257,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8968c866ff86eebcd57e441489af21e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8968c866ff86eebcd57e441489af21e6">&#9670;&nbsp;</a></span>isFirstOpen()</h2>
+<a id="a65e572bfda7caea5aa7b72c3e2f443cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65e572bfda7caea5aa7b72c3e2f443cf">&#9670;&nbsp;</a></span>isFirstOpen()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,7 +270,7 @@ Private Attributes</h2></td></tr>
           <td class="memname">bool Ticket::FileIO::isFirstOpen </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -310,6 +344,58 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a80e87a2f02642c5c9b167ce0bb2298db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80e87a2f02642c5c9b167ce0bb2298db">&#9670;&nbsp;</a></span>open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Ticket::FileIO::open </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad79498f1ddd201cd5a896ff1ddfadb83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad79498f1ddd201cd5a896ff1ddfadb83">&#9670;&nbsp;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classTicket_1_1FileIO.html">FileIO</a>&amp; Ticket::FileIO::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTicket_1_1FileIO.html">FileIO</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>another</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

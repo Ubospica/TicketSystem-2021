@@ -4,7 +4,7 @@
 
 
 #include "BPlusTree.hpp"
-#include "String.cpp"
+#include "Tools/String.cpp"
 
 #include <iostream>
 #include <string>
@@ -21,10 +21,10 @@ struct Comp1{
 	}
 };
 int main() {
-	freopen("Test2.in", "r", stdin);
+//	freopen("Test2.in", "r", stdin);
 	using namespace Ticket;
 	using namespace std;
-	BPlusTree<String, int, 3> bps("ww");
+	BPlusTree<String, int, 0, 3> bps("ww");
 	int o, v;
 	String s;
 	cout<<boolalpha;
@@ -45,7 +45,7 @@ int main() {
 		else if (o == 3) {
 			cin>>s;
 			cout << bps.erase(s) << '\n';
-//			bps.print();
+			bps.print();
 		}
 		else if (o == 4) {
 			cin>>s;

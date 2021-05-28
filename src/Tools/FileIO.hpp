@@ -32,11 +32,21 @@ namespace Ticket {
 			END = -1, CUR = -2, BEG = 0,
 		};
 		
+		FileIO() = default;
+		
 		/**
 		 * constructor
 		 * @param name file name
 		 */
 		explicit FileIO(const std::string &name) {
+			open(name);
+		}
+		
+		FileIO& operator=(FileIO &&another) = default;
+		
+		void open(const std::string &name) {
+			fs.close();
+			fs.clear();
 			constexpr auto fl = std::ios::in | std::ios::out | std::ios::binary;
 			fs.open(name, fl);
 			if (!fs) {

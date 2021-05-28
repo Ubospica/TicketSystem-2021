@@ -5,14 +5,16 @@
 #ifndef BOOKSTORE_2021_BPLUSTREE_HPP
 #define BOOKSTORE_2021_BPLUSTREE_HPP
 
-#include "Exception.hpp"
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
 #include <cstring>
-#include <tuple>
+
+#include "Tools/Exception.hpp"
+#include "Tools/FileIO.hpp"
+#include "Tools/Utility.hpp"
 
 namespace Ticket{
 	
@@ -129,24 +131,23 @@ namespace Ticket{
 		void print ();
 		
 	private:
-		std::fstream treeDt, valueDt;
+		FileIO treeDt, valueDt;
 		int root, height, size;
 		
-		template <typename T> inline void read(int pos, T &cur, std::fstream &fs);
-		template <typename T> inline void read(int pos, T &cur);
-		
-		template <typename T> inline void write(int pos, const T &cur, std::fstream &fs);
-		template <typename T> inline void write(int pos, const T &cur);
+//		template <typename T> inline void read(int pos, T &cur, FileIO &fs);
+//		template <typename T> inline void read(int pos, T &cur);
+//
+//		template <typename T> inline void write(int pos, const T &cur, FileIO &fs);
+//		template <typename T> inline void write(int pos, const T &cur);
 		
 		void init();
 		template <typename Comp = std::less<Key> > int find(int pos, const Key &vKey);
-		template <typename Comp = std::less<Key> > std::tuple<int,int> findIndex(int pos, const Key &vKey);
+		template <typename Comp = std::less<Key> > Pair<int, int> findIndex(int pos, const Key &vKey);
 		int insert(int pos, Key &vKey, int &vSon);
-		bool erase(int pos, const Key &vKey);
+		int erase(int pos, const Key &vKey);
 		
-		class Pos {
-		public:
-			static const int END = -1, CUR = -2;
+		struct Pos {
+//			static const int END = -1, CUR = -2;
 			static const int POS_ROOT = 0, POS_SIZE = sizeof(root), POS_HEIGHT = sizeof(int) * 2;
 		};
 	};

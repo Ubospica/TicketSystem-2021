@@ -44,6 +44,8 @@ namespace Ticket {
 		
 		Date (int mm, int dd, int h, int m) : mm(mm), dd(dd), Time(h, m) { }
 		
+		Date (const Time &base) : Time(base) {}
+		
 		bool operator<(const Date &another) const {
 			return mm != another.mm ? mm < another.mm :
 				dd != another.dd ? dd < another.dd :

@@ -5,6 +5,8 @@
 #ifndef TICKETSYSTEM_2021_HASHMAP_HPP
 #define TICKETSYSTEM_2021_HASHMAP_HPP
 
+#include <cstddef>
+
 //hashmap:size_t -> size_t
 template<size_t sz>
 class HashMap {

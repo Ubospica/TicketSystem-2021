@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include "Tools/Utility.hpp"
 
 namespace Ticket {
 	
@@ -16,72 +17,85 @@ namespace Ticket {
 	};
 	
 	
-	//-2 cur
-	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	template <typename T>
-	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur, std::fstream &fs) {
-		if(pos >= 0){
-			fs.seekg(pos);
-		}
-		fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
-	}
-	
-	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	template <typename T>
-	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur) {
-		read(pos, cur, treeDt);
-	}
-	
-	//pos: -1 end; -2 cur
-	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	template <typename T>
-	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur, std::fstream &fs) {
-		if(pos >= 0){
-			fs.seekp(pos);
-		}
-		else if(pos == Pos::END) {
-			fs.seekp(0, std::ios::end);
-		}
-		fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
-	}
-	
-	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	template <typename T>
-	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur) {
-		write(pos, cur, treeDt);
-	}
+//	//-2 cur
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur, FileIO &fs) {
+//		if(pos >= 0){
+//			fs.seekg(pos);
+//		}
+//		fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
+//	}
+//
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur) {
+//		read(pos, cur, treeDt);
+//	}
+//
+//	//pos: -1 end; -2 cur
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur, std::fstream &fs) {
+//		if(pos >= 0){
+//			fs.seekp(pos);
+//		}
+//		else if(pos == Pos::END) {
+//			fs.seekp(0, std::ios::end);
+//		}
+//		fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
+//	}
+//
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur) {
+//		write(pos, cur, treeDt);
+//	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::BPlusTree(const std::string& name) {
-		std::string s1 = name + "Index.dat";
-		auto fl = std::ios::in | std::ios::out | std::ios::binary;
-		treeDt.open(s1, fl);
-		if (!treeDt) { //file not exists
-			//trashy cpp grammar! `std::ofstream(s1)` won't compile
-			std::ofstream(static_cast<std::string>(s1));
-			treeDt.open(s1, fl);
-			if (!treeDt) {
-				throw RuntimeError("File system error");
-			}
+		treeDt.open(name + "Index.dat");
+		if (treeDt.isFirstOpen()) {
 			init();
 		}
 		else {
-			read(0, root);
-			read(Pos::POS_SIZE, size);
-			read(Pos::POS_HEIGHT, height);
+			treeDt.read(Pos::POS_ROOT, root);
+			treeDt.read(Pos::POS_SIZE, size);
+			treeDt.read(Pos::POS_HEIGHT, height);
 		}
+		
 		if (!NO_VALUE_FLAG) {
-			std::string s2 = name + "Data.dat";
-			valueDt.open(s2, fl);
-			if (!valueDt) { //file not exists
-				//trashy cpp grammar! `std::ofstream(s1)` won't compile
-				std::ofstream(static_cast<std::string>(s2));
-				valueDt.open(s2, fl);
-				if (!valueDt) {
-					throw RuntimeError("File system error");
-				}
-			}
+			valueDt.open(name + "Data.dat");
 		}
+//		std::string s1 = name + "Index.dat";
+//		auto fl = std::ios::in | std::ios::out | std::ios::binary;
+//		treeDt.open(s1, fl);
+//		if (!treeDt) { //file not exists
+//			//trashy cpp grammar! `std::ofstream(s1)` won't compile
+//			std::ofstream(static_cast<std::string>(s1));
+//			treeDt.open(s1, fl);
+//			if (!treeDt) {
+//				throw RuntimeError("File system error");
+//			}
+//			init();
+//		}
+//		else {
+//			read(0, root);
+//			read(Pos::POS_SIZE, size);
+//			read(Pos::POS_HEIGHT, height);
+//		}
+//		if (!NO_VALUE_FLAG) {
+//			std::string s2 = name + "Data.dat";
+//			valueDt.open(s2, fl);
+//			if (!valueDt) { //file not exists
+//				//trashy cpp grammar! `std::ofstream(s1)` won't compile
+//				std::ofstream(static_cast<std::string>(s2));
+//				valueDt.open(s2, fl);
+//				if (!valueDt) {
+//					throw RuntimeError("File system error");
+//				}
+//			}
+//		}
 	}
 	
 	
@@ -89,11 +103,11 @@ namespace Ticket {
 	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::init() {
 		root = sizeof(root) * 3;
 		height = size = 0;
-		write(0, root);
-		write(Pos::POS_SIZE, size);
-		write(Pos::POS_HEIGHT, height);
+		treeDt.write(Pos::POS_ROOT, root);
+		treeDt.write(Pos::POS_SIZE, size);
+		treeDt.write(Pos::POS_HEIGHT, height);
 		Node newRt {0, 1, 1};
-		write(Pos::END, newRt);
+		treeDt.write(FileIO::END, newRt);
 	}
 	
 	//returns node in the index
@@ -101,11 +115,11 @@ namespace Ticket {
 	//(pos, p) if found; the val should be node[pos].vSon[p]
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
-	std::tuple<int,int> BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findIndex(int pos, const Key &vKey) {
+	Pair<int,int> BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findIndex(int pos, const Key &vKey) {
 		Node cur;
-		read(pos, cur);
+		treeDt.read(pos, cur);
 		if (cur.cnt == 0) {
-			return std::make_tuple(-1, 0);
+			return MakePair(-1, 0);
 		}
 		int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey, Comp()) - cur.vKey;
 		if (!cur.isLeaf) { //simple node
@@ -113,10 +127,10 @@ namespace Ticket {
 		}
 		else {
 			if (pl == 0 || Comp()(cur.vKey[pl - 1], vKey)) {
-				return std::make_tuple(-1, 0);
+				return MakePair(-1, 0);
 			}
 			else {
-				return std::make_tuple(pos, pl - 1);
+				return MakePair(pos, pl - 1);
 			}
 		}
 	}
@@ -126,13 +140,13 @@ namespace Ticket {
 	template <typename Comp>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::find(int pos, const Key &vKey) {
 		auto res = findIndex<Comp>(pos, vKey);
-		if (std::get<0>(res) == -1) {
+		if (res.first == -1) {
 			return -1;
 		}
 		else {
 			Node cur;
-			read(std::get<0>(res), cur);
-			return cur.son[std::get<1>(res)];
+			treeDt.read(res.first, cur);
+			return cur.son[res.second];
 		}
 	}
 
@@ -147,13 +161,13 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	Value BPlusTree<Key, Value, NO_VALUE_FLAG, M>::getVal(int pValue) {
 		Value res;
-		read(pValue, res, valueDt);
+		valueDt.read(pValue, res);
 		return res;
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::modifyVal(int pValue, const Value &newVal) {
-		write(pValue, newVal, valueDt);
+		valueDt.write(pValue, newVal);
 	}
 	
 	
@@ -162,7 +176,7 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::insert(int pos, Key &vKey, int &vSon) {
 		Node cur;
-		read(pos, cur);
+		treeDt.read(pos, cur);
 		if(cur.isLeaf) {
 			int pl = std::lower_bound(cur.vKey, cur.vKey + cur.cnt, vKey) - cur.vKey;
 			if (pl < cur.cnt && cur.vKey[pl] == vKey) {
@@ -171,7 +185,7 @@ namespace Ticket {
 				}
 				else {
 					cur.son[pl] = vSon;
-					write(pos, cur);
+					treeDt.write(pos, cur);
 					vSon = -1;
 					return 1;
 				}
@@ -185,7 +199,7 @@ namespace Ticket {
 				cur.son[pl] = vSon;
 				++cur.cnt;
 				if (cur.cnt < M) {
-					write(pos, cur);
+					treeDt.write(pos, cur);
 					vSon = -1;
 					return 1;
 				}
@@ -197,31 +211,34 @@ namespace Ticket {
 					std::memcpy(newNd.son, cur.son + M / 2, newNd.cnt * sizeof(int));
 					cur.cnt = M / 2;
 					
-					treeDt.seekp(0, std::ios::end);
-					int newP = treeDt.tellp();
-					write(Pos::END, newNd);
+					//treeDt.seekp(0, std::ios::end);
+					treeDt.movePos(FileIO::END);
+					int newP = treeDt.tellPos();
+					treeDt.write(FileIO::CUR, newNd);
 					
 					if (cur.next != -1) {
 						Node nextNd;
-						read(cur.next, nextNd);
+						treeDt.read(cur.next, nextNd);
 						nextNd.prev = newP;
-						write(cur.next, nextNd);
+						treeDt.write(cur.next, nextNd);
 					}
 					cur.next = newP;
 					
 					if (!cur.isRoot) {
-						write(pos, cur);
+						treeDt.write(pos, cur);
 						vKey = newNd.vKey[0], vSon = newP;
 					} else {
 						cur.isRoot = 0;
 						Node newRoot{1, 1, 0, -1, -1, {newNd.vKey[0]}, {pos, newP}};
-						treeDt.seekp(0, std::ios::end);
-						root = treeDt.tellp();
-						write(Pos::END, newRoot);
-						write(pos, cur);
-						write(Pos::POS_ROOT, root); //
+						//treeDt.seekp(0, std::ios::end);
+						//root = treeDt.tellp();
+						treeDt.movePos(FileIO::END);
+						root = treeDt.tellPos();
+						treeDt.write(FileIO::END, newRoot);
+						treeDt.write(pos, cur);
+						treeDt.write(Pos::POS_ROOT, root); //
 						++height;
-						write(Pos::POS_HEIGHT, height);
+						treeDt.write(Pos::POS_HEIGHT, height);
 						vSon = -1;
 					}
 					return 1;
@@ -245,7 +262,7 @@ namespace Ticket {
 				cur.son[pl + 1] = vSon;
 				++cur.cnt;
 				if (cur.cnt < M) {
-					write(pos, cur); //
+					treeDt.write(pos, cur); //
 					vSon = -1;
 					return 1;
 				}
@@ -258,25 +275,29 @@ namespace Ticket {
 					std::memcpy(newNd.son, cur.son + M / 2 + 1, (newNd.cnt + 1) * sizeof(int));
 					cur.cnt = M / 2;
 					if (!cur.isRoot) {
-						write(pos, cur);
-						treeDt.seekp(0, std::ios::end);
-						int newP = treeDt.tellp();
-						write(Pos::END, newNd);
+						treeDt.write(pos, cur);
+//						treeDt.seekp(0, std::ios::end);
+//						int newP = treeDt.tellp();
+						treeDt.movePos(FileIO::END);
+						int newP = treeDt.tellPos();
+						treeDt.write(FileIO::END, newNd);
 						vKey = cur.vKey[cur.cnt];
 						vSon = newP;
 					} else {
 						cur.isRoot = 0;
-						write(pos, cur);
+						treeDt.write(pos, cur);
 						Node newRoot{1, 1, 0, -1, -1, {cur.vKey[cur.cnt]}, {pos}}; //
-						treeDt.seekp(0, std::ios::end);
-						int newP = treeDt.tellp();
+//						treeDt.seekp(0, std::ios::end);
+//						int newP = treeDt.tellp();
+						treeDt.movePos(FileIO::END);
+						int newP = treeDt.tellPos();
 						newRoot.son[1] = newP;
-						write(Pos::END, newNd);
-						root = treeDt.tellp();
-						write(Pos::END, newRoot);
-						write(Pos::POS_ROOT, root); //
+						treeDt.write(FileIO::END, newNd);
+						root = treeDt.tellPos();
+						treeDt.write(FileIO::END, newRoot);
+						treeDt.write(Pos::POS_ROOT, root); //
 						++height;
-						write(Pos::POS_HEIGHT, height);
+						treeDt.write(Pos::POS_HEIGHT, height);
 						vSon = -1;
 					}
 					return 1;
@@ -291,7 +312,7 @@ namespace Ticket {
 		int pos1 = pos;
 		if (insert(root, vKey, pos1) == 1) {
 			++size;
-			write(Pos::POS_SIZE, size);
+			treeDt.write(Pos::POS_SIZE, size);
 			return pos;
 		}
 		else {
@@ -301,13 +322,14 @@ namespace Ticket {
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::insert(const Key &vl, const Value &vr) {
-		valueDt.seekp(0, std::ios::end); //
+//		valueDt.seekp(0, std::ios::end); //
+		valueDt.movePos(FileIO::END);
 		Key vKey(vl);
-		int pValue = valueDt.tellp(), vSon = pValue;
+		int pValue = valueDt.tellPos(), vSon = pValue;
 		if (insert(root, vKey, vSon) == 1) {
-			write(Pos::END, vr, valueDt);
+			valueDt.write(FileIO::END, vr);
 			++size;
-			write(Pos::POS_SIZE, size);
+			valueDt.write(Pos::POS_SIZE, size);
 			return pValue;
 		}
 		else {
@@ -321,9 +343,9 @@ namespace Ticket {
 	// cuz i cannot erase the data (RValve) in "Data.dat"
 	// so erasing index only is useless
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	bool BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(int pos, const Key &vKey) {
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(int pos, const Key &vKey) {
 		Node cur;
-		read(pos, cur);
+		treeDt.read(pos, cur);
 		if (cur.cnt == 0) {
 			return -1;
 		}
@@ -337,7 +359,7 @@ namespace Ticket {
 			}
 			else {
 				cur.son[pl - 1] = -1;
-				write(pos, cur);
+				treeDt.write(pos, cur);
 				return 1;
 			}
 		}
@@ -345,10 +367,13 @@ namespace Ticket {
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(const Key &vl) {
-		if (erase(root, vl) == 1) {
+		int tmp = erase(root, vl);
+//		if (erase(root, vl) == 1) {
+		if (tmp == 1) {
 			--size;
-			treeDt.seekp(sizeof(int), std::ios::beg);
-			write(-2, size);
+			treeDt.write(Pos::POS_SIZE, size);
+//			treeDt.seekp(sizeof(int), std::ios::beg);
+//			write(-2, size);
 			return 1;
 		}
 		else {
@@ -362,11 +387,11 @@ namespace Ticket {
 		std::vector<int> {
 		std::vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
-		if (std::get<0>(pos0) == -1) {
+		if (pos0.first == -1) {
 			return res;
 		}
 		Node cur;
-		read(std::get<0>(pos0), cur);
+		treeDt.read(pos0.first, cur);
 		auto checkAndAdd = [&res, &val] (const Node &cur) {
 			for (int i = 0; i < cur.cnt; ++i) {
 				bool a = Comp()(cur.vKey[i], val), b = Comp()(val, cur.vKey[i]);
@@ -376,16 +401,16 @@ namespace Ticket {
 			}
 		};
 		checkAndAdd(cur);
-		auto tmp = std::get<0>(pos0);
+		auto tmp = pos0.first;//std::get<0>(pos0);
 		while (cur.next != -1 && !Comp()(cur.vKey[cur.cnt], val) && !Comp()(val, cur.vKey[cur.cnt])) {
 			tmp = cur.next;
-			read(tmp, cur);
+			treeDt.read(tmp, cur);
 			checkAndAdd(cur);
 		}
-		tmp = std::get<0>(pos0);
+		tmp = pos0.first;// = std::get<0>(pos0);
 		while (cur.prev != -1 && !Comp()(cur.vKey[0], val) && !Comp()(val, cur.vKey[0])) {
 			tmp = cur.prev;
-			read(tmp, cur);
+			treeDt.read(tmp, cur);
 			checkAndAdd(cur);
 		}
 		return res;
@@ -411,11 +436,8 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::print (int pos) {
 		using namespace std;
-		if (pos == 36 || pos == 460) {
-			cerr << "tmp";
-		}
 		Node cur;
-		read(pos, cur);
+		treeDt.read(pos, cur);
 		cerr << "pos = " << pos << " ";
 		print(cur);
 		if (cur.isLeaf) {
@@ -427,7 +449,7 @@ namespace Ticket {
 						cerr << cur.son[i] << ' ';
 					}
 					else {
-						read(cur.son[i], vr, valueDt);
+						valueDt.read(cur.son[i], vr);
 						cerr << vr << ' ';
 					}
 				}

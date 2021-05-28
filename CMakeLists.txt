@@ -3,8 +3,11 @@ project(TicketSystem_2021)
 
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories(src/)
+
 add_executable(TicketSystem_2021
         src/main.cpp)
+
 
 add_subdirectory(src/Tools)
 add_subdirectory(src/BPlusTree)

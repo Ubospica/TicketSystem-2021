@@ -45,7 +45,7 @@ int main() {
 		else if (o == 3) {
 			cin>>s;
 			cout << bps.erase(s) << '\n';
-			bps.print();
+//			bps.print();
 		}
 		else if (o == 4) {
 			cin>>s;

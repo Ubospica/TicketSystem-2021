@@ -7,44 +7,44 @@
 
 namespace Ticket {
 	template<typename T1, typename T2>
-	struct Pair {
+	struct pair {
 		T1 first;
 		T2 second;
-		Pair() : first(), second() {}
-		Pair(const T1 &a, const T2 &b) : first(a), second(b) {}
+		pair() : first(), second() {}
+		pair(const T1 &a, const T2 &b) : first(a), second(b) {}
 	};
 	template<typename T1, typename T2>
-	Pair<T1, T2> MakePair(const T1 &a, const T2 &b) {
-		return Pair(a, b);
+	pair<T1, T2> make_pair(const T1 &a, const T2 &b) {
+		return pair(a, b);
 	}
 	
 	template<typename T1, typename T2>
-	bool operator<(const Pair<T1, T2> &lhs, const Pair<T1, T2> &rhs) {
+	bool operator<(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
 		return lhs.first != rhs.first ? lhs.first < rhs.first : lhs.second < rhs.second;
 	}
 	
 	template<typename T1, typename T2>
-	bool operator>(const Pair<T1, T2> &lhs, const Pair<T1, T2> &rhs) {
+	bool operator>(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
 		return lhs.first != rhs.first ? lhs.first > rhs.first : lhs.second > rhs.second;
 	}
 	
 	template<typename T1, typename T2>
-	bool operator==(const Pair<T1, T2> &lhs, const Pair<T1, T2> &rhs) {
+	bool operator==(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
 		return lhs.first == rhs.first && lhs.second == rhs.second;
 	}
 	
 	template<typename T1, typename T2>
-	bool operator!=(const Pair<T1, T2> &lhs, const Pair<T1, T2> &rhs) {
+	bool operator!=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
 		return !(lhs == rhs);
 	}
 	
 	template<typename T1, typename T2>
-	bool operator<=(const Pair<T1, T2> &lhs, const Pair<T1, T2> &rhs) {
+	bool operator<=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
 		return !(lhs > rhs);
 	}
 	
 	template<typename T1, typename T2>
-	bool operator>=(const Pair<T1, T2> &lhs, const Pair<T1, T2> &rhs) {
+	bool operator>=(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs) {
 		return !(lhs < rhs);
 	}
 }

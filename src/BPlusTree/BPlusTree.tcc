@@ -115,11 +115,11 @@ namespace Ticket {
 	//(pos, p) if found; the val should be node[pos].vSon[p]
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
-	Pair<int,int> BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findIndex(int pos, const Key &vKey) {
+	pair<int,int> BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findIndex(int pos, const Key &vKey) {
 		Node cur;
 		treeDt.read(pos, cur);
 		if (cur.cnt == 0) {
-			return MakePair(-1, 0);
+			return make_pair(-1, 0);
 		}
 		int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey, Comp()) - cur.vKey;
 		if (!cur.isLeaf) { //simple node
@@ -127,10 +127,10 @@ namespace Ticket {
 		}
 		else {
 			if (pl == 0 || Comp()(cur.vKey[pl - 1], vKey)) {
-				return MakePair(-1, 0);
+				return make_pair(-1, 0);
 			}
 			else {
-				return MakePair(pos, pl - 1);
+				return make_pair(pos, pl - 1);
 			}
 		}
 	}

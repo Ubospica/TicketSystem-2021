@@ -5,15 +5,21 @@
 #ifndef TICKETSYSTEM_2021_LIST_HPP
 #define TICKETSYSTEM_2021_LIST_HPP
 
+#include <iostream>
 template<typename T>
-class list {
-private:
+class List {
+public:
 	struct Node {
-		T value;
+		T value = {};
 		Node *prev = nullptr, *next = nullptr;
 	};
 	Node *head = nullptr, *end = nullptr;
-public:
+	List() {
+		head = new Node;
+		end = new Node;
+		head -> next = end;
+		end -> prev = head;
+	}
 //	struct iterator {
 //		Node *node;
 //		iterator() : node(nullptr) {}
@@ -61,21 +67,57 @@ public:
 //		}
 //	};
 	
-	void insert(Node *&val, T v) { //insert after val
-		Node *newNd = new Node(v);
-		if (val == nullptr) {
-			val = newNd;
-		}
-		else {
-			newNd -> prev = val;
-			newNd -> next = val -> next;
-			val -> next = newNd;
-		}
-		if (newNd -> next == nullptr) {
-			end = newNd;
+	Node* insert(Node *val, T v) { //insert after val
+		Node *newNd = new Node{v};
+		newNd -> prev = val;
+		newNd -> next = val -> next;
+		val -> next -> prev = newNd;
+		val -> next = newNd;
+		return newNd;
+	}
+	void erase(Node *val) {
+		val -> prev -> next = val -> next;
+		val -> next -> prev = val -> prev;
+//		val -> prev = val -> next = nullptr;
+		delete val;
+	}
+	Node *insertNode(Node *val, Node *newNd) {
+		newNd -> prev = val;
+		newNd -> next = val -> next;
+		val -> next -> prev = newNd;
+		val -> next = newNd;
+		return newNd;
+	}
+	void eraseNoDelete(Node *val) {
+		val -> prev -> next = val -> next;
+		val -> next -> prev = val -> prev;
+	}
+	void deallocate(Node *&val) {
+		if (val != nullptr) {
+			delete val;
+			val = nullptr;
 		}
 	}
+	~List() {
+		Node *current = head;
+		while (current != nullptr) {
+			auto tmp = current;
+			current = current -> next;
+			delete tmp;
+		}
+		head = end = nullptr;
+	}
 	
+	void print() {
+		Node *current = head;
+		std::cerr << "head = " << head << " end = " << end << '\n';
+		while (current != nullptr) {
+			std::cerr << "cur = " << current << " pr = " << current -> prev << " ne = " << current -> next << '\n';
+			std::cerr << "val: " << current -> value << '\n';
+			current = current -> next;
+		}
+		std::cerr << '\n';
+	}
 };
 
 

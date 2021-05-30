@@ -6,15 +6,15 @@
 #define TICKETSYSTEM_2021_HASHMAP_HPP
 
 #include <cstddef>
-
-//hashmap:size_t -> size_t
-template<size_t sz>
-class HashMap {
-private:
-	int value[sz];
-public:
-
-};
+//
+////hashmap:size_t -> size_t
+//template<size_t sz>
+//class HashMap {
+//private:
+//	int value[sz];
+//public:
+//
+//};
 
 
 #endif //TICKETSYSTEM_2021_HASHMAP_HPP

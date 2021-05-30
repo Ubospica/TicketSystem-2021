@@ -142,7 +142,7 @@ namespace Ticket{
 		
 		void init();
 		template <typename Comp = std::less<Key> > int find(int pos, const Key &vKey);
-		template <typename Comp = std::less<Key> > Pair<int, int> findIndex(int pos, const Key &vKey);
+		template <typename Comp = std::less<Key> > pair<int, int> findIndex(int pos, const Key &vKey);
 		int insert(int pos, Key &vKey, int &vSon);
 		int erase(int pos, const Key &vKey);
 		

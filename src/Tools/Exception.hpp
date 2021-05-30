@@ -39,6 +39,24 @@ namespace Ticket {
 	class RuntimeError : public ExceptionBase {
 		using ExceptionBase::ExceptionBase;
 	};
+	
+	// container exception
+	class index_out_of_bound : public ExceptionBase {
+		/* __________________________ */
+	};
+	
+	class runtime_error : public ExceptionBase {
+		/* __________________________ */
+	};
+	
+	class invalid_iterator : public ExceptionBase {
+		/* __________________________ */
+	};
+	
+	class container_is_empty : public ExceptionBase {
+		/* __________________________ */
+	};
+	
 }
 
 #endif //BOOKSTORE_2021_EXCEPTION_HPP

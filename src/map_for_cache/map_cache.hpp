@@ -2,11 +2,14 @@
 #define SJTU_MAP_HPP
 #include <functional>
 #include <cstddef>
+#include <iostream>
+
 //#include "utility.hpp"
 //#include "exceptions.hpp"
-#include<iostream>
-namespace Backend {
+#include "Tools/Utility.hpp"
 
+namespace Backend {
+	using Ticket::pair;
     class exception {
     protected:
         const std::string variant = "";
@@ -44,7 +47,7 @@ template<
 	class Compare = std::less<Key>
 > class map {
 public:
-    typedef std::pair<const Key, T> value_type;
+    typedef pair<Key, T> value_type;
 private:
     struct _AVLNode{
         value_type * _data;
@@ -487,7 +490,7 @@ public:
         _size=0;
 	    _root_of_tree=nullptr;
 	}
-	std::pair<iterator, bool> insert(const value_type &value) {
+	pair<iterator, bool> insert(const value_type &value) {
 	    bool is_insert;
 	    _AVLNode* _ans=_insert__AVLNode(value,_root_of_tree,nullptr,is_insert);
 	    iterator _res(this,_ans);

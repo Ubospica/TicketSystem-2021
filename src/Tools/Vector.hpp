@@ -12,23 +12,7 @@
 
 namespace Ticket {
 	
-	//exceptions
-	class index_out_of_bound : public ExceptionBase {
-		/* __________________________ */
-	};
-	
-	class runtime_error : public ExceptionBase {
-		/* __________________________ */
-	};
-	
-	class invalid_iterator : public ExceptionBase {
-		/* __________________________ */
-	};
-	
-	class container_is_empty : public ExceptionBase {
-		/* __________________________ */
-	};
-	
+
 	/**
 	 * a data container like std::vector
 	 * store data in a successive memory and support random access.

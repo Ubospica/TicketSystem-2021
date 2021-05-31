@@ -8,15 +8,21 @@
 #include "Time.hpp"
 #include "FileIO.hpp"
 #include "Vector.hpp"
+#include "Algorithm.hpp"
 
 
 int main() {
 	using namespace Ticket;
 	using std::cin;
 	using std::cout;
-	Date tmp (1,21,1,3);
-	for (int i = 1; i <= 10; ++i) ++tmp;
-	cout << tmp << '\n';
+	vector<int> v;
+	for (int i = 1; i <= 100; ++i) {
+		v.push_back(std::rand());
+	}
+	Algorithm::sort(v.begin(), v.end());
+	for (auto i : v) {
+		cout << i << '\n';
+	}
 }
 
 

@@ -94,6 +94,20 @@ namespace Ticket {
 			return *this;
 		}
 		
+		// mm == 6 or 7
+		[[nodiscard]] int calcMinute() const {
+			if (mm == 6) {
+				return (dd * 24 + hr) * 60 + mi;
+			}
+			else {
+				return ((monthDays[mm - 1] + dd) * 24 + hr) * 60 + mi;
+			}
+		}
+		
+		[[nodiscard]] int diffMinute(const Date &b) const {
+			return calcMinute() - b.calcMinute();
+		}
+		
 		[[nodiscard]] int cmpDate(const Date &another) const {
 			if (mm == another.mm) {
 				return dd < another.dd ? -1 : dd == another.dd ? 0 : 1;

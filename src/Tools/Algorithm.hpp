@@ -28,45 +28,79 @@ namespace Ticket {
 	
 	class Algorithm {
 	public:
-		template <typename Iter>
-		static void iter_swap(const Iter &lhs, const Iter &rhs) {
-			using T = typename iterator_traits<Iter>::value_type;
-			T tmp = std::move(*lhs);
-			*lhs = std::move(*rhs);
-			*rhs = std::move(tmp);
+		template <typename T>
+		static void swap(const T &lhs, const T &rhs) {
+			T tmp = std::move(lhs);
+			lhs = std::move(rhs);
+			rhs = std::move(tmp);
 		}
 		
-		template <typename T>
-		const T& _median(const T &a, const T &b, const T &c) {
-			if (a < b) {
-				if (b <= c) {
+	private:
+		template <typename T, typename Comp>
+		static const T& _median(const T &a, const T &b, const T &c, Comp cmp) {
+			if (cmp(a, b)) { // a < b
+				if (cmp(b, c)) { // b < c
 					return b;
-				}//a < b; b > c;
+				}//a < b; b >= c;
 				else {
-					if (a < c) return c;
+					if (cmp(a, c)) return c;
 					else return a;
 				}
 			}
 			else {// a >= b
-				if (b >= c) {
+				if (cmp(c, b)) { // c < b <= a
 					return b;
 				}
 				else {//a >= b; b < c
-					if (a < c) return a;
+					if (cmp(a, c)) return a; //a < c
 					else return c;
 				}
 			}
 		}
 		
-		template <typename Iter, typename T>
-		void _partition(Iter first, Iter last, T pivot) {
-		
+		template <typename Iter, typename T, typename Comp>
+		static Iter _partition(Iter first, Iter last, T pivot, Comp cmp) {
+			while (true) {
+				while (cmp(*first, pivot)) ++first;
+				--last;
+				while (cmp(pivot, *last)) --last;
+				if (!(first < last)) {
+					return first;
+				}
+				swap(*first, *last);
+				++first;
+			}
 		}
 		
+		template <typename Iter, typename Comp>
+		static void _sort(Iter beg, Iter end, Comp cmp) {
+			while (end - beg > 1) {
+				Iter cut = _partition(beg, end,
+						  _median(*beg, *(beg + (end - beg) / 2),*(beg - 1), cmp), cmp);
+				if (cut - beg >= end - cut) {
+					_sort(cut, end, cmp);
+					end = cut;
+				}
+				else {
+					_sort(beg, cut, cmp);
+					beg = cut;
+				}
+			}
+		}
+	
+	public:
+		/**
+		 * Quick sort
+		 * @tparam Iter type of iterator
+		 * @tparam Comp type of compare function
+		 * @param beg
+		 * @param end
+		 * @param cmp
+		 */
 		template <typename Iter,
 				typename Comp = less<typename iterator_traits<Iter>::value_type>>
 		static void sort(Iter beg, Iter end, Comp cmp = Comp()) {
-		
+			_sort(beg, end, cmp);
 		}
 	};
 	

@@ -11,8 +11,14 @@
 #include <iostream>
 
 namespace Ticket {
+	/**
+	 * String with fixed length
+	 * @tparam LENGTH maximum length of string
+	 */
+	
+	template <size_t LENGTH>
 	struct String {
-		char data[50]{0};
+		char data[LENGTH]{0};
 		
 		String() = default;
 		
@@ -86,6 +92,7 @@ namespace Ticket {
 			return data[p];
 		}
 	};
+	
 }
 
 

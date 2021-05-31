@@ -23,10 +23,12 @@ namespace Ticket {
 		}
 		
 		[[nodiscard]] virtual std::string to_string() const {
-			std::stringstream ss;
-			ss << std::setw(2) << std::setfill('0') << std::right;
-			ss << hr << ':' << mi;
-			return ss.str();
+			char tmp[20];
+			sprintf(tmp, "%02d:%02d", hr, mi);
+//			std::stringstream ss;
+//			ss << std::setw(2) << std::setfill('0') << std::right;
+//			ss << hr << ':' << mi;
+			return tmp;
 		}
 		
 		friend std::ostream& operator<<(std::ostream &os, const Time &one) {
@@ -38,7 +40,7 @@ namespace Ticket {
 	struct Date : public Time {
 		int mm = 0, dd = 0;
 		
-		constexpr static int monthDays[] {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+		constexpr static int monthDays[] { 100'000, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		
 		Date () = default;
 		
@@ -66,7 +68,7 @@ namespace Ticket {
 				res.hr -= 24;
 				++res.dd;
 			}
-			if (res.dd >= monthDays[res.mm]) {
+			if (res.dd > monthDays[res.mm]) {
 				res.dd -= monthDays[res.mm];
 				++res.mm;
 			}
@@ -102,10 +104,12 @@ namespace Ticket {
 		}
 		
 		[[nodiscard]] std::string to_string() const override {
-			std::stringstream ss;
-			ss << std::setw(2) << std::setfill('0') << std::right;
-			ss << mm << '-' << dd;
-			return ss.str() + Time::to_string();
+			char tmp[20];
+			sprintf(tmp, "%02d-%02d", mm, dd);
+//			std::stringstream ss;
+//			ss << std::setw(2) << std::setfill('0') << std::right;
+//			ss << mm << '-' << dd;
+			return std::string(tmp) + ' ' + Time::to_string();
 		}
 		
 		friend std::ostream& operator<<(std::ostream &os, const Date &one) {

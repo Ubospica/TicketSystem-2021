@@ -16,11 +16,11 @@ namespace Ticket {
 		
 		String() = default;
 		
-		explicit String(char *str) {
+		String(char *str) {
 			strcpy(data, str);
 		}
 		
-		explicit String(const std::string &s1) {
+		String(const std::string &s1) {
 			strcpy(data, s1.c_str());
 		}
 		

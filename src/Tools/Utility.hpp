@@ -15,7 +15,7 @@ namespace Ticket {
 	};
 	template<typename T1, typename T2>
 	pair<T1, T2> make_pair(const T1 &a, const T2 &b) {
-		return pair(a, b);
+		return pair<T1, T2>(a, b);
 	}
 	
 	template<typename T1, typename T2>

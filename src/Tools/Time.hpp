@@ -78,6 +78,15 @@ namespace Ticket {
 			return *this;
 		}
 		
+		Date operator+(const int &minutes) const {
+			return *this + Date(0, minutes/1440, (minutes % 1440) / 60, minutes % 60);
+		}
+		
+		Date& operator+=(const int &minutes) {
+			*this = *this + minutes;
+			return *this;
+		}
+		
 		Date& operator++() {
 			*this += Date(0, 1, 0, 0);
 			return *this;

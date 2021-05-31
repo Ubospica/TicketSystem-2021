@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 //#include <map>
 
 #include "Exception.hpp"
@@ -188,7 +189,7 @@ namespace Ticket {
 		List<CacheNode> cache;
 		map<int, List<CacheNode>::Node*> cacheIndex;
 		int cacheCnt = 0;
-		static const int cacheSize = 4;
+		static const int cacheSize = 1000;
 
 		template<typename T>
 		void _insertCache(int pos, T *value) {

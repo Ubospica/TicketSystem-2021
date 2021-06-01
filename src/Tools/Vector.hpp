@@ -39,13 +39,14 @@ namespace Ticket {
 			 *
 			 */
 			value_type *pos = nullptr;
-			source_type &source;
+			source_type *source = nullptr;
 		public:
 			/**
 			 * return a new iterator which pointer n-next elements
 			 * as well as operator-
 			 */
-			iterator_base(value_type *pos, source_type &source) : pos(pos), source(source) { }
+			iterator_base() = default;
+			iterator_base(value_type *pos, source_type *source) : pos(pos), source(source) { }
 			
 			iterator_base operator+(const int &n) const {
 				return iterator_base{pos + n, source};
@@ -56,7 +57,7 @@ namespace Ticket {
 			// return the distance between two iterators,
 			// if these two iterators point to different vectors, throw invaild_iterator.
 			int operator-(const iterator_base &rhs) const {
-				if (&source != &rhs.source) {
+				if (source == nullptr || source != rhs.source) {
 					throw invalid_iterator();
 				}
 				return pos - rhs.pos;
@@ -128,12 +129,22 @@ namespace Ticket {
 			bool operator!=(const iterator_base<another_value_type, another_source_type> &rhs) const {
 				return pos != rhs.pos;
 			}
-//			bool operator!=(const iterator &rhs) const {
-//				return pos != rhs.pos;
-//			}
-//			bool operator!=(const const_iterator &rhs) const {
-//				return pos != rhs.pos;
-//			}
+			template <typename another_value_type, typename another_source_type>
+			bool operator<(const iterator_base<another_value_type, another_source_type> &rhs) const {
+				return pos < rhs.pos;
+			}
+			template <typename another_value_type, typename another_source_type>
+			bool operator>(const iterator_base<another_value_type, another_source_type> &rhs) const {
+				return pos > rhs.pos;
+			}
+			template <typename another_value_type, typename another_source_type>
+			bool operator<=(const iterator_base<another_value_type, another_source_type> &rhs) const {
+				return pos <= rhs.pos;
+			}
+			template <typename another_value_type, typename another_source_type>
+			bool operator>=(const iterator_base<another_value_type, another_source_type> &rhs) const {
+				return pos <= rhs.pos;
+			}
 		};
 		void destruct() {
 			if (arr != nullptr) {
@@ -253,19 +264,19 @@ namespace Ticket {
 		 * returns an iterator to the beginning.
 		 */
 		iterator begin() {
-			return iterator(arr, *this);
+			return iterator(arr, this);
 		}
 		const_iterator cbegin() const {
-			return const_iterator(arr, *this);
+			return const_iterator(arr, this);
 		}
 		/**
 		 * returns an iterator to the end.
 		 */
 		iterator end() {
-			return iterator(arr + sz, *this);
+			return iterator(arr + sz, this);
 		}
 		const_iterator cend() const {
-			return const_iterator(arr + sz, *this);
+			return const_iterator(arr + sz, this);
 		}
 		/**
 		 * checks whether the container is empty

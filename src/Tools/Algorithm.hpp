@@ -5,6 +5,8 @@
 #ifndef TICKETSYSTEM_2021_ALGORITHM_HPP
 #define TICKETSYSTEM_2021_ALGORITHM_HPP
 
+#include <iostream>
+#include <functional>
 #include <utility>
 
 namespace Ticket {
@@ -16,7 +18,7 @@ namespace Ticket {
 	 */
 	template <typename Iter>
 	struct iterator_traits {
-		using value_type = decltype(*Iter()); /// type of Iter::operator*()
+		using value_type = typename std::remove_reference<decltype(*(Iter()))>::type; /// type of Iter::operator*()
 	};
 	
 	template <typename Type>
@@ -29,7 +31,7 @@ namespace Ticket {
 	class Algorithm {
 	public:
 		template <typename T>
-		static void swap(const T &lhs, const T &rhs) {
+		static void swap(T &lhs, T &rhs) {
 			T tmp = std::move(lhs);
 			lhs = std::move(rhs);
 			rhs = std::move(tmp);
@@ -75,8 +77,13 @@ namespace Ticket {
 		template <typename Iter, typename Comp>
 		static void _sort(Iter beg, Iter end, Comp cmp) {
 			while (end - beg > 1) {
+//				std::cerr << "end - beg = " << end - beg << '\n';
+//				if (end - beg == 2) {
+//					if (cmp(*(end - 1), *beg)) swap(*beg, *(end - 1));
+//					return;
+//				}
 				Iter cut = _partition(beg, end,
-						  _median(*beg, *(beg + (end - beg) / 2),*(beg - 1), cmp), cmp);
+						  _median(*beg, *(beg + (end - beg) / 2), *(end - 1), cmp), cmp);
 				if (cut - beg >= end - cut) {
 					_sort(cut, end, cmp);
 					end = cut;
@@ -96,6 +103,7 @@ namespace Ticket {
 		 * @param beg
 		 * @param end
 		 * @param cmp
+		 * @
 		 */
 		template <typename Iter,
 				typename Comp = less<typename iterator_traits<Iter>::value_type>>

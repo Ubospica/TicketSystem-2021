@@ -17,9 +17,9 @@ int main() {
 	using std::cout;
 	vector<int> v;
 	for (int i = 1; i <= 100; ++i) {
-		v.push_back(std::rand());
+		v.push_back(std::rand()%5);
 	}
-	Algorithm::sort(v.begin(), v.end());
+	Algorithm::sort(v.begin(), v.end(), std::greater<int>());
 	for (auto i : v) {
 		cout << i << '\n';
 	}

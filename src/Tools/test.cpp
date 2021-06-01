@@ -16,7 +16,7 @@ int main() {
 	using std::cin;
 	using std::cout;
 	vector<int> v;
-	for (int i = 1; i <= 100; ++i) {
+	for (int i = 1; i <= 5; ++i) {
 		v.push_back(std::rand()%5);
 	}
 	Algorithm::sort(v.begin(), v.end(), std::greater<int>());

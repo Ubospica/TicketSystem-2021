@@ -77,11 +77,6 @@ namespace Ticket {
 		template <typename Iter, typename Comp>
 		static void _sort(Iter beg, Iter end, Comp cmp) {
 			while (end - beg > 1) {
-//				std::cerr << "end - beg = " << end - beg << '\n';
-//				if (end - beg == 2) {
-//					if (cmp(*(end - 1), *beg)) swap(*beg, *(end - 1));
-//					return;
-//				}
 				Iter cut = _partition(beg, end,
 						  _median(*beg, *(beg + (end - beg) / 2), *(end - 1), cmp), cmp);
 				if (cut - beg >= end - cut) {
@@ -103,7 +98,7 @@ namespace Ticket {
 		 * @param beg
 		 * @param end
 		 * @param cmp
-		 * @
+		 *
 		 */
 		template <typename Iter,
 				typename Comp = less<typename iterator_traits<Iter>::value_type>>

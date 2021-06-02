@@ -7,7 +7,6 @@
 
 #include "Exception.hpp"
 
-#include <climits>
 #include <cstddef>
 
 namespace Ticket {
@@ -34,8 +33,11 @@ namespace Ticket {
 		template <typename Type, typename source_type>
 		class iterator_base {
 		public:
+			using difference_type = std::ptrdiff_t;
 			using value_type = Type;
-			using difference_type = size_t;
+			using pointer = Type*;
+			using reference = Type&;
+			using iterator_category = std::output_iterator_tag;
 		private:
 			/**
 			 * data members

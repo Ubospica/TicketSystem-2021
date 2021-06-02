@@ -1,0 +1,3 @@
+D:/Train_Ticket_Test/Test_Train/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/Train_Ticket_Test/Test_Train/cmake-build-debug/CMakeFiles/Test_Train_1_.dir
+D:/Train_Ticket_Test/Test_Train/cmake-build-debug/CMakeFiles/edit_cache.dir

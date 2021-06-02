@@ -28,6 +28,7 @@ namespace Backend {
         void query_transfer(Cmd_Que * cmd,std::ostream & os);
         void query_ticket(Cmd_Que * cmd,std::ostream & os);
         void add_train(Cmd_Que * cmd,std::ostream & os);
+        void query_train(Cmd_Que * cmd,std::ostream & os);
 
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
@@ -88,9 +89,39 @@ namespace Backend {
     void Main::OP(Backend::Cmd_Que *cmdQue,std::ostream & os) {
         const std::string todo = cmdQue->top();
         cmdQue->pop();
+        if(todo=="query_ticket") query_ticket(cmdQue,os);
+        else if(todo=="add_train") add_train(cmdQue,os);
+        else if(todo=="query_train") query_train(cmdQue,os);
+        else if(todo=="release_train") release_train(cmdQue,os);
+        else if(todo=="delete_train") delete_train(cmdQue,os);
+        else if(todo=="query_transfer") query_transfer(cmdQue,os);
     }
 
     //火车部分
+    void Main::query_train(Cmd_Que *cmd, std::ostream &os) {
+        Ticket::String<20> Train_ID=cmd->top();
+        cmd->pop();
+        std::string tmp=cmd->top();
+        cmd->pop();
+        Ticket::Date Date;
+        while(1){
+            int mm = 0, dd = 0, x = 0;
+            for (int i = 0; i < 2; ++i, ++x) {
+                mm *= 10;
+                mm += tmp[x] - '0';
+            }
+            ++x;
+            for (int i = 0; i < 2; ++i, ++x) {
+                dd *= 10;
+                dd += tmp[x] - '0';
+            }
+            Date.dd = dd;
+            Date.mm = mm;
+            break;
+        }
+        if(train_op.query_train(Train_ID,Date,os)){}
+        else os<<'-'<<'1'<<'\n';
+    }
     void Main::query_ticket(Cmd_Que * cmd,std::ostream & os){
         Ticket::String<40> Sta=cmd->top();
         cmd->pop();
@@ -117,7 +148,8 @@ namespace Backend {
         char type;
         if(cmd->top()[0]=='t') type='T';
         else type='P';
-        train_op.query_ticket(Sta,End,Date,type,os);
+        if(train_op.query_ticket(Sta,End,Date,type,os)){}
+        else os<<'-'<<'1'<<'\n';
     }
     void Main::query_transfer(Cmd_Que * cmd,std::ostream & os){
         Ticket::String<40> Sta=cmd->top();
@@ -145,19 +177,22 @@ namespace Backend {
         char type;
         if(cmd->top()[0]=='t') type='T';
         else type='P';
-        train_op.query_transfer(Sta,End,Date,type,os);
+        if(train_op.query_transfer(Sta,End,Date,type,os)){}
+        else os<<'-'<<'1'<<'\n';
     }
 
     void Main::release_train(Cmd_Que * cmd,std::ostream & os){
         Ticket::String<20> Train_ID=cmd->top();
         cmd->pop();
-        train_op.release_train(Train_ID);
+        if(train_op.release_train(Train_ID)) os<<'0'<<'\n';
+        else os<<'-'<<'1'<<'\n';
     }
 
     void Main::delete_train(Cmd_Que * cmd,std::ostream & os){
         Ticket::String<20> Train_ID=cmd->top();
         cmd->pop();
-        train_op.delete_train(Train_ID);
+        if(train_op.delete_train(Train_ID)) os<<'0'<<'\n';
+        else os<<'-'<<'1'<<'\n';
     }
 
     void Main::add_train(Cmd_Que * cmd,std::ostream & os){
@@ -171,6 +206,7 @@ namespace Backend {
         int price[station_num];
         int traveltimes[station_num];
         int stoppover[station_num];
+        price[0]=traveltimes[0]=stoppover[0]=stoppover[station_num-1]=0;
         std::string tmp=cmd->top();
         cmd->pop();
         int pointer=0;
@@ -278,7 +314,8 @@ namespace Backend {
             break;
         }
         char type=cmd->top()[0];
-        train_op.add_train(Train_ID,station_num,seat_num,Stations,price,start_time,traveltimes,stoppover,Date,type);
+        if(train_op.add_train(Train_ID,station_num,seat_num,Stations,price,start_time,traveltimes,stoppover,Date,type)) os<<'0'<<'\n';
+        else os<<'-'<<'1'<<'\n';
     }
 
     //订单部分

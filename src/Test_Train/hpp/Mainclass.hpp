@@ -29,6 +29,13 @@ namespace Backend {
         void query_ticket(Cmd_Que * cmd,std::ostream & os);
         void add_train(Cmd_Que * cmd,std::ostream & os);
         void query_train(Cmd_Que * cmd,std::ostream & os);
+        void login(Backend::Cmd_Que *cmdQue,std::ostream & os);
+        void logout(Backend::Cmd_Que *cmdQue,std::ostream & os);
+        void modifyprofile(Backend::Cmd_Que *cmdQue,std::ostream & os);
+        void adduser(Backend::Cmd_Que *cmdQue,std::ostream & os);
+        void queryprofile(Backend::Cmd_Que *cmdQue,std::ostream & os);
+
+        void OP(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
@@ -45,7 +52,22 @@ namespace Backend {
         std::string BPT_user_name();
         std::string BPT_station_name();
         void initialize(){};
-        void OP(Backend::Cmd_Que *cmdQue,std::ostream & os);
+
+
+        void Run(std::istream & is,std::ostream & os){
+            Cmd_Que * cmd=new Cmd_Que;
+            std::string todo;
+            try {
+                while (true) {
+                    is >> todo;
+                    process(cmd, todo);
+                    OP(cmd, os);
+                    cmd->clear();
+
+                }
+            }catch(End){}
+            delete cmd;
+        }
     };
 }
 namespace Backend {
@@ -80,10 +102,10 @@ namespace Backend {
 
 
     //void add_train(Backend::Cmd_Que *cmdQue);
-//    Ticket::Date Main::stringtodate(const std::string & str){
-//    }
+    Ticket::Date Main::stringtodate(const std::string & str){
+    }
     //Ticket::Date Main::stringtodate(const Ticket::String str){};
-//    Ticket::Time Main::stringtotime(const std::string & str){}
+    Ticket::Time Main::stringtotime(const std::string & str){}
     //Ticket::Time Main::stringtotime(const Ticket::String str){};
 
     void Main::OP(Backend::Cmd_Que *cmdQue,std::ostream & os) {
@@ -95,7 +117,102 @@ namespace Backend {
         else if(todo=="release_train") release_train(cmdQue,os);
         else if(todo=="delete_train") delete_train(cmdQue,os);
         else if(todo=="query_transfer") query_transfer(cmdQue,os);
+        else if (todo == "login") {login(cmdQue,os);}
+        else if (todo == "logout") {logout(cmdQue,os);}
+        else if (todo == "modify_profile") {modifyprofile(cmdQue,os);}
+        else if (todo == "add_user") {adduser(cmdQue,os);}
+        else if(todo=="query_profile"){queryprofile(cmdQue,os);}
+        else if(todo=="query_order"){query_order(cmdQue,os);}
+        else if(todo=="refund_ticket") {refund_ticket(cmdQue,os);}
+        else if(todo=="buy_ticket"){buy_ticket(cmdQue,os);}
     }
+
+    void Main::login(Backend::Cmd_Que *cmdQue,std::ostream & os){
+        std::string tmp[2];
+        //cmdQue->print();
+        for(int i=0;i<2;i++){
+            tmp[i]=cmdQue->top();
+            cmdQue->pop();
+        }
+        // std::cout<<"?"<<"\n";
+        if(log_op.login(tmp[0],tmp[1])) os<<'0'<<'\n';
+        else os<<'-'<<'1'<<'\n';
+    }
+
+    void Main::queryprofile(Backend::Cmd_Que *cmdQue,std::ostream & os){
+        std::string tmp[2];
+        //cmdQue->print();
+        for(int i=0;i<2;i++){
+            tmp[i]=cmdQue->top();
+            cmdQue->pop();
+        }
+        if(log_op.show_user(tmp[0],tmp[1],os)){}
+        else os<<'-'<<'1'<<'\n';
+    }
+
+    void Main::logout(Backend::Cmd_Que *cmdQue,std::ostream & os) {
+        if(log_op.logout(cmdQue->top())) os<<'0'<<'\n';
+        else os<<'-'<<'1'<<'\n';
+    }
+
+    void Main::modifyprofile(Backend::Cmd_Que *cmdQue,std::ostream & os) {
+        std::string c,u;
+        std::string strs[3];
+        bool kind[4];
+        int pri=-1;
+        //  cmdQue->print();
+        c=cmdQue->top();
+        cmdQue->pop();
+        u=cmdQue->top();
+        cmdQue->pop();
+        int sz=cmdQue->size();
+        for(int i=0;i<4;i++) kind[i]=false;
+        for(int i=0;i<sz;i++){
+            if(cmdQue->top_type()=='p'){
+                kind[0]=true;
+                strs[0]=cmdQue->top();
+                cmdQue->pop();
+            }
+            else if(cmdQue->top_type()=='n'){
+                kind[1]=true;
+                strs[1]=cmdQue->top();
+                cmdQue->pop();
+            }
+            else if(cmdQue->top_type()=='m'){
+                kind[2]=true;
+                strs[2]=cmdQue->top();
+                cmdQue->pop();
+            }
+            else if(cmdQue->top_type()=='g'){
+                kind[3]=true;
+                //  std::cout<<'!'<<'\n';
+                pri=stringtoint(cmdQue->top());
+                // std::cout<<pri<<"\n";
+                cmdQue->pop();
+            }
+            else{
+                std::cerr<<"Main::Modify";
+                throw Ticket::WrongOperation();
+            }
+        }
+        // for(int i=0;i<4;i++)
+        //   if(kind[i]) std::cout<<i<<"\n";
+        if(log_op.modify(c,kind,u,strs,pri,os)){}
+        else os<<'-'<<'1'<<'\n';
+    }
+
+    void Main::adduser(Backend::Cmd_Que *cmdQue,std::ostream & os) {
+        std::string tmp[5];
+        //cmdQue->print();
+        for(int i=0;i<5;i++){
+            tmp[i]=cmdQue->top();
+            cmdQue->pop();
+        }
+        int pri=stringtoint(cmdQue->top());
+        if(log_op.add_user(tmp[0],tmp[1],tmp[2],tmp[3],tmp[4],pri)) os<<'0'<<'\n';
+        else os<<'-'<<'1'<<'\n';
+    }
+
 
     //火车部分
     void Main::query_train(Cmd_Que *cmd, std::ostream &os) {

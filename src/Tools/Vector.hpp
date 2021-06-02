@@ -31,8 +31,11 @@ namespace Ticket {
 		 * you can see RandomAccessIterator at CppReference for help.
 		 */
 //		class const_iterator;
-		template <typename value_type, typename source_type>
+		template <typename Type, typename source_type>
 		class iterator_base {
+		public:
+			using value_type = Type;
+			using difference_type = size_t;
 		private:
 			/**
 			 * data members

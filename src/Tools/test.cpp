@@ -9,6 +9,7 @@
 #include "FileIO.hpp"
 #include "Vector.hpp"
 #include "Algorithm.hpp"
+#include <algorithm>
 
 
 int main() {
@@ -19,7 +20,7 @@ int main() {
 	for (int i = 1; i <= 5; ++i) {
 		v.push_back(std::rand()%5);
 	}
-	Algorithm::sort(v.begin(), v.end(), std::greater<int>());
+	std::sort(v.begin(), v.end(), std::greater<int>());
 	for (auto i : v) {
 		cout << i << '\n';
 	}

@@ -160,7 +160,7 @@ void Delete_Train(){
 void Query_Train(){
     Backend::Main test;
     Backend::Cmd_Que * cmdQue=new Backend::Cmd_Que;
-    for(int i=0;i<100;i++) {
+    for(int i=0;i<1000;i++) {
         // std::cout<<i<<"\n";
         string todo = new_train(i);
         Backend::process(cmdQue, todo);
@@ -180,17 +180,17 @@ void Query_Train(){
         test.OP(cmdQue, std::cout);
         cmdQue->clear();
     }*/
-/*    std::cout<<"-----------------"<<'\n';
+    std::cout<<"-----------------"<<'\n';
 //    std::cout<<"-----------------"<<'\n';
-    for(int i=0;i<=10;i++){
+    for(int i=0;i<1000;i++){
         string todo="release_train -c ";
         todo+=to_string(i);
         Backend::process(cmdQue,todo);
         test.OP(cmdQue,std::cout);
         cmdQue->clear();
-    }*/
+    }
 /*    std::cout<<"-----------------"<<'\n';
-    for(int i=0;i<100;i++){
+    for(int i=0;i<10;i++){
         string todo="delete_train -c ";
         todo+=to_string(i);
         Backend::process(cmdQue,todo);
@@ -206,21 +206,53 @@ void Query_Train(){
         cmdQue->clear();
     }*/
     std::cout<<"-----------------"<<'\n';
-    for(int i=0;i<10;i++) {
+    for(int i=0;i<1000;i++) {
         // std::cout<<i<<"\n";
         string todo = "query_train -c ";
         todo+=std::to_string(i);
         todo+=" -d ";
-        todo+="06-29";
+        todo+="06-30";
         Backend::process(cmdQue, todo);
         test.OP(cmdQue, std::cout);
         cmdQue->clear();
     }
 }
+void Query_Ticket(){
+    Backend::Main test;
+    Backend::Cmd_Que * cmdQue=new Backend::Cmd_Que;
+    for(int i=0;i<100;i++) {
+        // std::cout<<i<<"\n";
+        string todo = new_train(i);
+        Backend::process(cmdQue, todo);
+        test.OP(cmdQue, std::cout);
+        cmdQue->clear();
+        cur++;
+        // cur++;
+    }
+    for(int i=0;i<100;i++){
+        std::cout<<'i'<<'\n';
+        string todo="release_train -c ";
+        todo+=to_string(i);
+        Backend::process(cmdQue,todo);
+        test.OP(cmdQue,std::cout);
+        cmdQue->clear();
+    }
+    for(int i=0;i<=0;i++) {
+        // std::cout<<i<<"\n";
+        string todo = "query_ticket -s 1 -t 4";
+        todo+=" -d ";
+        todo+="06-30";
+        Backend::process(cmdQue, todo);
+        test.OP(cmdQue, std::cout);
+        cmdQue->clear();
+    }
+    delete cmdQue;
+}
 int main(){
     //Add_Train();
     //Release_Train();
     //Delete_Train();
-    Query_Train();
+    //Query_Train();
+    Query_Ticket();
     return 0;
 }

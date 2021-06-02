@@ -24,10 +24,11 @@ namespace Ticket {
 	 * maintains three things : a filestream, a read&write pointer, and a flag showing whether the file is opened for the first time
 	 */
 	class FileIONoCache {
-	protected:
+	//protected:
+	public:
 		std::fstream fs;
 		bool firstOpen = false;
-		
+		std::string name;
 		
 	public:
 		/**
@@ -43,7 +44,7 @@ namespace Ticket {
 		 * constructor
 		 * @param name file name
 		 */
-		explicit FileIONoCache(const std::string &name) {
+		explicit FileIONoCache(const std::string &name) : name(name) {
 			open(name);
 //			std::vector<int> a;
 		}
@@ -53,6 +54,7 @@ namespace Ticket {
 		void open(const std::string &name) {
 			fs.close();
 			fs.clear();
+			this -> name = name;
 			constexpr auto fl = std::ios::in | std::ios::out | std::ios::binary;
 			fs.open(name, fl);
 			if (!fs) {
@@ -102,7 +104,11 @@ namespace Ticket {
 			else if(pos == Pos::END) {
 				fs.seekp(0, std::ios::end);
 			}
+//			int tmp = sizeof(cur);
+//			std::cerr << "write " << name  << ' ' << cur << ' ' << sizeof(cur) << '\n';
+//			std::cerr << "before = " << fs.tellp();
 			fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
+//			std::cerr << " after = " << fs.tellp() << '\n';
 		}
 		
 		void write(int pos, void *val, int size) {
@@ -151,6 +157,15 @@ namespace Ticket {
 			fs.close();
 		}
 		
+		void clear() {
+//			std::cerr << "clear\n";
+			fs.close();
+			constexpr auto fl1 = std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc;
+			fs.open(name, fl1);
+			firstOpen = true;
+//			bool tmp = fs.fail();
+		}
+		
 		~FileIONoCache() {
 			fs.close();
 		}
@@ -188,7 +203,7 @@ namespace Ticket {
 		List<CacheNode> cache;
 		map<int, List<CacheNode>::Node*> cacheIndex;
 		int cacheCnt = 0;
-		static const int cacheSize = 1000;
+		static const int cacheSize = 2;
 
 		template<typename T>
 		void _insertCache(int pos, T *value) {
@@ -272,6 +287,16 @@ namespace Ticket {
 				*static_cast<T*>(cacheNode.value) = cur;
 				cacheNode.isModifyed = true;
 			}
+		}
+		void clear() {
+			auto current = cache.head -> next;
+			while (current != cache.end) {
+				auto tmp = current;
+				current = current -> next;
+				_popNode(tmp);
+			}
+			FileIONoCache::clear();
+			cacheCnt = 0;
 		}
 	};
 }

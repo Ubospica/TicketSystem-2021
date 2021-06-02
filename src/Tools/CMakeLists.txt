@@ -1,5 +1,5 @@
 
-#add_library(Tools String.hpp)
+add_library(Tools Tools.cpp)
 
-add_executable(ToolsTest test.cpp)
-#target_link_libraries(ToolsTest PUBLIC Tools)
+add_executable(ToolsTest test.cpp Tools.cpp)
+target_link_libraries(ToolsTest PUBLIC Tools)

@@ -37,7 +37,7 @@ namespace Ticket{
 	 * @tparam NO_VALUE_FLAG 如果是1表示Index only mode
 	 * @tparam M 块的大小，默认100
 	 */
-	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 100>
+	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 3>
 	class BPlusTree {
 	private:
 		struct Node;
@@ -47,7 +47,7 @@ namespace Ticket{
 		 * @param name 数据库名字，一个字符串，决定保存的文件名
 		 */
 		explicit BPlusTree(const std::string& name);
-		~BPlusTree() = default;
+		~BPlusTree();
 		/**
 		 * 查找某个值
 		 * @tparam Comp 请保持默认即可
@@ -125,7 +125,7 @@ namespace Ticket{
 		void clear();
 		
 		//debug
-		void print (const Node &p);
+		static void print (const Node &p);
 		void print (int pos);
 		/**
 		 * 打印整棵树

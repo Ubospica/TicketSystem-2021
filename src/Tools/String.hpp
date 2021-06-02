@@ -16,7 +16,7 @@ namespace Ticket {
 	 * @tparam LENGTH maximum length of string
 	 */
 	
-	template <size_t LENGTH>
+	template <size_t LENGTH = 50>
 	struct String {
 		char data[LENGTH]{0};
 		

@@ -9,20 +9,23 @@
 #include <iostream>
 #include <string>
 
+//using namespace Ticket;
+using String = Ticket::String<>;
+using Ticket::BPlusTree;
 
 struct Comp{
-	bool operator() (Ticket::String a, Ticket::String b) {
+	bool operator() (const String &a, const String &b) {
 		return a[0] < b[0];
 	}
 };
 struct Comp1{
-	bool operator() (Ticket::String a, Ticket::String b) {
+	bool operator() (const String &a, const String &b) {
 		return false;
 	}
 };
+
 int main() {
 //	freopen("Test2.in", "r", stdin);
-	using namespace Ticket;
 	using namespace std;
 	BPlusTree<String, int, 0, 3> bps("ww");
 	int o, v;
@@ -67,6 +70,12 @@ int main() {
 			}
 			cout << '\n';
 			cout.flush();
+		}
+		else if (o == 5) {
+			bps.clear();
+		}
+		else if (o == 6) {
+			return 0;
 		}
 	}
 }

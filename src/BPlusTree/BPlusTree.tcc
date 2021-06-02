@@ -14,7 +14,14 @@ namespace Ticket {
 		int prev = -1, next = -1;
 		Key vKey[M] {};
 		int son[M + 1] {};
+	//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+		friend std::ostream& operator<<(std::ostream &os, const Node &nd) {
+			print(nd);
+			return os;
+		}
 	};
+	
+
 	
 	
 //	//-2 cur
@@ -98,6 +105,12 @@ namespace Ticket {
 //		}
 	}
 	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::~BPlusTree() {
+		treeDt.write(Pos::POS_ROOT, root);
+		treeDt.write(Pos::POS_SIZE, size);
+		treeDt.write(Pos::POS_HEIGHT, height);
+	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::init() {
@@ -108,6 +121,8 @@ namespace Ticket {
 		treeDt.write(Pos::POS_HEIGHT, height);
 		Node newRt {0, 1, 1};
 		treeDt.write(FileIO::END, newRt);
+		
+//		bool tmp = treeDt.fs.fail();
 	}
 	
 	//returns node in the index
@@ -236,9 +251,9 @@ namespace Ticket {
 						root = treeDt.tellPos();
 						treeDt.write(FileIO::END, newRoot);
 						treeDt.write(pos, cur);
-						treeDt.write(Pos::POS_ROOT, root); //
+//						treeDt.write(Pos::POS_ROOT, root); //
 						++height;
-						treeDt.write(Pos::POS_HEIGHT, height);
+//						treeDt.write(Pos::POS_HEIGHT, height);
 						vSon = -1;
 					}
 					return 1;
@@ -295,9 +310,9 @@ namespace Ticket {
 						treeDt.write(FileIO::END, newNd);
 						root = treeDt.tellPos();
 						treeDt.write(FileIO::END, newRoot);
-						treeDt.write(Pos::POS_ROOT, root); //
+//						treeDt.write(Pos::POS_ROOT, root); //
 						++height;
-						treeDt.write(Pos::POS_HEIGHT, height);
+//						treeDt.write(Pos::POS_HEIGHT, height);
 						vSon = -1;
 					}
 					return 1;
@@ -312,7 +327,7 @@ namespace Ticket {
 		int pos1 = pos;
 		if (insert(root, vKey, pos1) == 1) {
 			++size;
-			treeDt.write(Pos::POS_SIZE, size);
+//			treeDt.write(Pos::POS_SIZE, size);
 			return pos;
 		}
 		else {
@@ -329,7 +344,7 @@ namespace Ticket {
 		if (insert(root, vKey, vSon) == 1) {
 			valueDt.write(FileIO::END, vr);
 			++size;
-			valueDt.write(Pos::POS_SIZE, size);
+//			treeDt.write(Pos::POS_SIZE, size);
 			return pValue;
 		}
 		else {
@@ -371,7 +386,7 @@ namespace Ticket {
 //		if (erase(root, vl) == 1) {
 		if (tmp == 1) {
 			--size;
-			treeDt.write(Pos::POS_SIZE, size);
+//			treeDt.write(Pos::POS_SIZE, size);
 //			treeDt.seekp(sizeof(int), std::ios::beg);
 //			write(-2, size);
 			return 1;
@@ -418,7 +433,11 @@ namespace Ticket {
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::clear() {
-	
+		treeDt.clear();
+		init();
+		if (!NO_VALUE_FLAG) {
+			valueDt.clear();
+		}
 	}
 
 	

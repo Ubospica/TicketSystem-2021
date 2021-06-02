@@ -160,7 +160,6 @@ namespace Ticket {
 	/**
 	 * FileIO with LRU cache
 	 */
-	using Backend::map;
 	class FileIO : public FileIONoCache {
 //	public:
 //		using FileIONoCache::FileIONoCache;

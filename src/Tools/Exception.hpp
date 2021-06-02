@@ -10,33 +10,36 @@
 #include <string>
 
 namespace Ticket {
-    class ExceptionBase : std::exception {
-    private:
-        std::string whatStr;
-    public:
-        explicit ExceptionBase(const std::string &str = std::string()) {
-            if (!str.empty()) {
-                whatStr = "Info: " + str;
-            }
-        }
-        const char *what() const noexcept override {
-            return whatStr.c_str();
-        }
-    };
-
-    class NoOptionError : public ExceptionBase {
-        using ExceptionBase::ExceptionBase;
-    };
-    class SyntaxError : public ExceptionBase {
-        using ExceptionBase::ExceptionBase;
-    };
-    class RunningError : public ExceptionBase {
-        using ExceptionBase::ExceptionBase;
-    };
-    class PermissionError : public ExceptionBase {
-        using ExceptionBase::ExceptionBase;
-    };
+	class ExceptionBase : std::exception {
+	private:
+		std::string whatStr;
+	public:
+		explicit ExceptionBase(const std::string &str = std::string()) {
+			if (!str.empty()) {
+				whatStr = "Info: " + str;
+			}
+		}
+		const char *what() const noexcept override {
+			return whatStr.c_str();
+		}
+	};
+	
+	class NoOptionError : public ExceptionBase {
+		using ExceptionBase::ExceptionBase;
+	};
+	class SyntaxError : public ExceptionBase {
+		using ExceptionBase::ExceptionBase;
+	};
+	class RunningError : public ExceptionBase {
+		using ExceptionBase::ExceptionBase;
+	};
+	class PermissionError : public ExceptionBase {
+		using ExceptionBase::ExceptionBase;
+	};
 	class RuntimeError : public ExceptionBase {
+		using ExceptionBase::ExceptionBase;
+	};
+	class WrongOperation : public ExceptionBase {
 		using ExceptionBase::ExceptionBase;
 	};
 	

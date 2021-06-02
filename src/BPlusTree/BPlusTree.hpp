@@ -122,6 +122,8 @@ namespace Ticket{
 			return size == 0;
 		}
 		
+		void clear();
+		
 		//debug
 		void print (const Node &p);
 		void print (int pos);

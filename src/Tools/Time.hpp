@@ -37,10 +37,10 @@ namespace Ticket {
 		}
 	};
 	
+	constexpr int monthDays[] { 100'000, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	struct Date : public Time {
 		int mm = 0, dd = 0;
 		
-		constexpr static int monthDays[] { 100'000, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		
 		Date () = default;
 		

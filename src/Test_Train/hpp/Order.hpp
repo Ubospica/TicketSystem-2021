@@ -316,29 +316,32 @@ namespace Backend {
             int sztmp = pos.size();
             if (sztmp < n) return false;
             order ordertmp;
-                ordertmp = _BPT_order.getVal(pos[sztmp - n]);
-                Train_ID = ordertmp.get_str(order_parameter::Train_ID);
-                switch (ordertmp.State()) {
-                    case (state_list::Refund):
-                        return false;
-                    case (state_list::Success) : {
-                        Success=ordertmp;
-                        ordertmp.change_state(state_list::Refund);
-                        _BPT_order.modifyVal(pos[sztmp-n],ordertmp);
-                        type='S';
-                        return true;
-                    }
-                    case (state_list::Pending): {
-                        OrderKey PeKey;
-                        PeKey.str=Train_ID;
-                        PeKey.SN=ordertmp.get_num(order_parameter::SN);
-                        Pending=PeKey;
-                        ordertmp.change_state(state_list::Refund);
-                        _BPT_order.modifyVal(pos[sztmp-1-n],ordertmp);
-                        type='N';
-                        return true;
-                    }
+            ordertmp = _BPT_order.getVal(pos[sztmp - n]);
+            Train_ID = ordertmp.get_str(order_parameter::Train_ID);
+            switch (ordertmp.State()) {
+                case (state_list::Refund):
+                    return false;
+                case (state_list::Success) : {
+                    Success=ordertmp;
+                    ordertmp.change_state(state_list::Refund);
+                    _BPT_order.modifyVal(pos[sztmp-n],ordertmp);
+                    type='S';
+                    return true;
                 }
+                case (state_list::Pending): {
+                    OrderKey PeKey;
+                    PeKey.str=Train_ID;
+                    PeKey.SN=ordertmp.get_num(order_parameter::SN);
+                    Pending=PeKey;
+                    ordertmp.change_state(state_list::Refund);
+                    _BPT_order.modifyVal(pos[sztmp-1-n],ordertmp);
+                    type='N';
+                    return true;
+                }
+                default: {
+                	throw Ticket::WrongOperation();
+                }
+            }
         }
 
         int size() {

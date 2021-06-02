@@ -8,6 +8,8 @@
 #include "Exception.hpp"
 
 #include <cstddef>
+#include <iterator>
+#include <vector>
 
 namespace Ticket {
 	
@@ -44,20 +46,21 @@ namespace Ticket {
 			 *
 			 */
 			value_type *pos = nullptr;
-			source_type *source = nullptr;
+			const source_type * source = nullptr;
 		public:
 			/**
 			 * return a new iterator which pointer n-next elements
 			 * as well as operator-
 			 */
 			iterator_base() = default;
-			iterator_base(value_type *pos, source_type *source) : pos(pos), source(source) { }
+			iterator_base(value_type *pos, const source_type * source) : pos(pos), source(source) { }
 			
 			iterator_base operator+(const int &n) const {
-				return iterator_base{pos + n, source};
+				std::vector<int>::const_iterator a;
+				return iterator_base(pos + n, source);
 			}
 			iterator_base operator-(const int &n) const {
-				return iterator_base{pos - n, source};
+				return iterator_base(pos - n, source);
 			}
 			// return the distance between two iterators,
 			// if these two iterators point to different vectors, throw invaild_iterator.
@@ -178,7 +181,7 @@ namespace Ticket {
 		 *
 		 * has same function as iterator, just for a const object.
 		 */
-		using const_iterator = iterator_base<const T, const vector<T>>;
+		using const_iterator = iterator_base<const T, vector<T>>;
 //		class const_iterator {
 //
 //		};

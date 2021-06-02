@@ -415,6 +415,11 @@ namespace Ticket {
 		}
 		return res;
 	}
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::clear() {
+	
+	}
 
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>

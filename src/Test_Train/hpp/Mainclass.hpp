@@ -35,7 +35,7 @@ namespace Backend {
         void adduser(Backend::Cmd_Que *cmdQue,std::ostream & os);
         void queryprofile(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
-        void OP(Backend::Cmd_Que *cmdQue,std::ostream & os);
+       
 
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
@@ -53,6 +53,7 @@ namespace Backend {
         std::string BPT_station_name();
         void initialize(){};
 
+         void OP(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
         void Run(std::istream & is,std::ostream & os){
             Cmd_Que * cmd=new Cmd_Que;

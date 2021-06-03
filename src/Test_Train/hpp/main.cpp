@@ -81,7 +81,7 @@ void Query_Ticket(){
         Backend::process(cmdQue, todo);
         test.OP(cmdQue, std::cout);
         cmdQue->clear();
-        cur++;
+//        cur++;
         // cur++;
     }
     for(int i=0;i<100;i++){
@@ -107,6 +107,7 @@ void Query_Ticket(){
 int main(){
 	freopen("a.in", "r", stdin);
 	freopen("a.out", "w", stdout);
+//	freopen("a.err", "w", stderr);
     Backend::Main OP;
 //    其中第一个参数为输入流，第二个参数为输出流
     OP.Run(std::cin,std::cout);

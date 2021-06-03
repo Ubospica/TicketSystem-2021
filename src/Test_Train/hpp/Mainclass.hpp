@@ -35,7 +35,7 @@ namespace Backend {
         void modifyprofile(Backend::Cmd_Que *cmdQue,std::ostream & os);
         void adduser(Backend::Cmd_Que *cmdQue,std::ostream & os);
         void queryprofile(Backend::Cmd_Que *cmdQue,std::ostream & os);
-
+	    void exit(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
@@ -57,15 +57,19 @@ namespace Backend {
         void Run(std::istream & is,std::ostream & os){
             Cmd_Que * cmd=new Cmd_Que;
             std::string todo;
+            int cnt=0;
             try {
                 while (true) {
-                    is >> todo;
+//                    is >> todo;
+					getline(is, todo);
                     process(cmd, todo);
                     OP(cmd, os);
                     cmd->clear();
-
+                    std::cerr<<"oper "<<++cnt<<'\n';
                 }
-            }catch(End){}
+            }catch(End){
+            	std::cout << "bye\n";
+            }
             delete cmd;
         }
     };
@@ -102,12 +106,12 @@ namespace Backend {
 
 
     //void add_train(Backend::Cmd_Que *cmdQue);
-    Ticket::Date Main::stringtodate(const std::string &str) {
-    }
-
-    //Ticket::Date Main::stringtodate(const Ticket::String str){};
-    Ticket::Time Main::stringtotime(const std::string &str) {}
-    //Ticket::Time Main::stringtotime(const Ticket::String str){};
+//    Ticket::Date Main::stringtodate(const std::string &str) {
+//    }
+//
+//    //Ticket::Date Main::stringtodate(const Ticket::String str){};
+//    Ticket::Time Main::stringtotime(const std::string &str) {}
+//    //Ticket::Time Main::stringtotime(const Ticket::String str){};
 
     void Main::OP(Backend::Cmd_Que *cmdQue, std::ostream &os) {
         const std::string todo = cmdQue->top();
@@ -206,6 +210,9 @@ namespace Backend {
             cmdQue->pop();
         }
         int pri = stringtoint(cmdQue->top());
+//        if (tmp[1] == "Manticore") {
+//	        std::cerr << "tmp\n";
+//        }
         if (log_op.add_user(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], pri)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
@@ -213,7 +220,7 @@ namespace Backend {
 
     //火车部分
     void Main::query_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<20> Train_ID = cmd->top();
+        Ticket::String<25> Train_ID = cmd->top();
         cmd->pop();
         std::string tmp = cmd->top();
         cmd->pop();
@@ -298,21 +305,21 @@ namespace Backend {
     }
 
     void Main::release_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<20> Train_ID = cmd->top();
+        Ticket::String<25> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.release_train(Train_ID)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::delete_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<20> Train_ID = cmd->top();
+        Ticket::String<25> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.delete_train(Train_ID)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::add_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<20> Train_ID = cmd->top();
+        Ticket::String<25> Train_ID = cmd->top();
         cmd->pop();
         int station_num = stringtoint(cmd->top());
         cmd->pop();
@@ -488,7 +495,7 @@ namespace Backend {
     }
 
     void Main::query_order(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<20> name = cmd->top();
+        Ticket::String<25> name = cmd->top();
         if (log_op.is_log(name)) {
             order_op.query_order(cmd->top(), os);
             cmd->pop();
@@ -496,14 +503,14 @@ namespace Backend {
     }
 
     void Main::refund_ticket(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<20> name = cmd->top();
+        Ticket::String<25> name = cmd->top();
         cmd->pop();
         if (log_op.is_log(name)) {
             int nums = stringtoint(cmd->top());
             cmd->pop();
             std::vector<order> TrainOrdervec;
             std::vector<OrderKey> Renewvec;
-            Ticket::String<20> Train_ID;
+            Ticket::String<25> Train_ID;
             order Success;
             int sz;
             char type;
@@ -539,6 +546,11 @@ namespace Backend {
          *
          */
     }
+	
+	void Main::exit(Cmd_Que *cmd, std::ostream &os) {
+		os << "bye\n";
+		throw End();
+	}
 }
 
 #endif

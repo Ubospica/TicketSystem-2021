@@ -17,6 +17,7 @@ namespace Backend {
         std::string _BPT_queue_name="queue";
         std::string _BPT_Rl_name="Rl";
         std::string _BPT_seat_name="Seat";
+        std::string _Count_name="Name_Count.dat";
         Order_op order_op;
         Train_manager train_op;
         Log_op log_op;
@@ -35,7 +36,6 @@ namespace Backend {
         void adduser(Backend::Cmd_Que *cmdQue,std::ostream & os);
         void queryprofile(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
-       
 
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
@@ -45,15 +45,14 @@ namespace Backend {
     //    int stringtoint(const Ticket::String & str);
     public:
         explicit Main():log_op(_BPT_user_name),
-        train_op(_BPT_Train_name,_BPT_station_name,_BPT_Rl_name,_BPT_seat_name),
+        train_op(_BPT_Train_name,_BPT_station_name,_BPT_Rl_name,_BPT_seat_name,_Count_name),
         order_op(_BPT_order_name,_BPT_queue_name){};
         std::string BPT_order_name();
         std::string BPT_Train_name();
         std::string BPT_user_name();
         std::string BPT_station_name();
         void initialize(){};
-
-         void OP(Backend::Cmd_Que *cmdQue,std::ostream & os);
+        void OP(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
         void Run(std::istream & is,std::ostream & os){
             Cmd_Que * cmd=new Cmd_Que;
@@ -464,6 +463,7 @@ namespace Backend {
                 break;
             }
             int nums = stringtoint(cmd->top());
+            cmd->pop();
             Ticket::String<40> Sta = cmd->top();
             cmd->pop();
             Ticket::String<40> End = cmd->top();

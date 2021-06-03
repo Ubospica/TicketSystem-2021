@@ -220,10 +220,7 @@ namespace Backend {
        // std::cout<<'?'<<'\n';
         if(op_pri<tmp.get_privilege()) return false;
         if(op_pri==tmp.get_privilege()&&op_name!=username) return false;
-        else {
-        	tmp.print(os);
-        	return true;
-        }
+        else tmp.print(os);
     }
 
     bool Log_op::modify(const Ticket::String<20> & op_name,const bool * kind,const Ticket::String<20> & change,std::string * strs,int pri,std::ostream & os){

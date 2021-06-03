@@ -59,7 +59,8 @@ namespace Backend {
             std::string todo;
             try {
                 while (true) {
-                    is >> todo;
+                    //is >> todo;
+                    getline(is,todo);
                     process(cmd, todo);
                     OP(cmd, os);
                     cmd->clear();

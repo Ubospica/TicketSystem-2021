@@ -513,171 +513,122 @@ namespace Backend {
             Station_Key stationKey;
             stationKey.Station_name = Sta;
             stationKey.pos = 0;
-            int sz;
-            std::vector<int> Stavec = _BPT_Station.route(stationKey);
+            std::vector<int> StaPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             stationKey.Station_name = Det;
-            std::vector<int> Endvec = _BPT_Station.route(stationKey);
-            std::vector<Station> StaStatvec;
-            std::vector<Station> EndStatvec;
-            map<Ticket::String<20>, int> Stamatch;
-            map<Ticket::String<20>, int> Endmatch;
-            sz = Endvec.size();
-            for (int i = 0; i < sz; i++) {
-                EndStatvec.push_back(_BPT_Station.getVal(Endvec[i]));
-                map<Ticket::String<20>, int>::value_type valueType(EndStatvec[i].Train_SN, i);
+            std::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
+            //std::vector<Station> Stavec;
+            std::vector<Station> Endvec;
+            //一切的核心这个map Key值是尾站的所有train名， vector是尾站相同的中转站的在从中转站到尾站中车的位置
+            //但由于中转站在从起点出发的火车中位置基本上与从中转站出发到尾站中的位置不一样
+            //所以用pair来存，其中first是在从起点出发的火车中的位置，second是站在转乘的火车中的位置
+            map<Ticket::String<20>, std::vector<std::pair<int, int>>> Endmatch;
+            for (int i = 0; i < EndPosvec.size(); i++) {
+                Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
+                std::vector<std::pair<int, int>> tmpvec;
+                map<Ticket::String<20>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Train_SN,
+                                                                                                tmpvec);
                 Endmatch.insert(valueType);
-            }
-            sz = Stavec.size();
-            for (int i = 0; i < sz; i++) {
-                StaStatvec.push_back(_BPT_Station.getVal(Stavec[i]));
-                map<Ticket::String<20>, int>::value_type valueType(StaStatvec[i].Train_SN, i);
-                Stamatch.insert(valueType);
             }
             std::priority_queue<Trans_Comp> PQ;
             //Ticket::String<20> Ret[2];
             //起始站
-            for (int i = 0; i < sz; i++) {
-                int train_pos = _BPT_Train.find(StaStatvec[i].Train_SN);
+            int nums;
+            Trans_Comp Ret;
+            Ret.num = 88888888;
+            Ret.Train_ID_End = "zzzzzzzzzzzzzzz";
+            Ret.Train_ID_Sta = "zzzzzzzzzzzzzzz";
+            for (int i = 0; i < StaPosvec.size(); i++) {
+                Station StaStation = _BPT_Station.getVal(StaPosvec[i]);
+                Ticket::String<20> Train_ID = StaStation.Train_SN;
+                int train_pos = _BPT_Train.find(Train_ID);
                 Train data = _BPT_Train.getVal(train_pos);
                 int statnum = data.station_num;
                 //遍历起始站的每一辆车车的每一个节点
-                for (int j = StaStatvec[i].Train_pos; j < statnum; j++) {
-                    //将j遍历到的节点设为中央节点
-                    stationKey.Station_name = data.train_info[j].station;
-                    std::vector<int> Centvec = _BPT_Station.route(stationKey);
-                    std::vector<Station> CentStatvec;
-                    std::vector<Trans_Type> StaTransVec;
-                    std::vector<Trans_Type> EndTransVec;
-                    //std::vector<Train> CandiTrainvec;
-                    //遍历中央节点的每一辆车
-                    for (int k = 0; k < Centvec.size(); k++) CentStatvec.push_back(_BPT_Station.getVal(Centvec[k]));
-                    if (type == 'P') {
-                        Train Candidate;
-                        for (int k = 0; k < Centvec.size(); k++) {
-                            //把中间站的所有train取出来
-                            int trainpos = _BPT_Train.find(CentStatvec[k].Train_SN);
-                            Candidate = _BPT_Train.getVal(trainpos);
-                            int Stapos = StaStatvec[i].Train_pos;
-                            //中间节点一，表示从Sta来到的车
-                            int Centpos1 = CentStatvec[k].Train_pos;
-                            Trans_Comp cmptmp;
-                            Ticket::Date time;
-                            //查看询问的date是否合法并且Centpos1大于Stapos说明列车行驶方向正确
-                            if (Candidate.train_info[Stapos].Sta_Date.cmpDate(date) <= 0 &&
-                                date.cmpDate(Candidate.train_info[Stapos].End_Date) <= 0 &&
-                                Stapos < Centpos1) {//表示正向
-                                int diff = Candidate.train_info[Centpos1].prefix_price -
-                                           Candidate.train_info[Stapos].prefix_price;
-                                //time表示到达中转站时间
-                                time = date + Candidate.train_info[Stapos].arri_time +
-                                       Candidate.train_info[Stapos].stopover + diff;
-                                cmptmp.Train_ID_Sta = CentStatvec[k].Train_SN;
-                                Train Candidate2;
-                                //确定好起点到中转站后
-                                //枚举中转站到终点
-                                for (int l = 0; l < Centvec.size(); l++) {
-                                    if (Endmatch.count(CentStatvec[l].Train_SN) &&
-                                        CentStatvec[l].Train_SN != CentStatvec[k].Train_SN) {
-                                        int trainpos2 = _BPT_Train.find(CentStatvec[l].Train_SN);
-                                        Candidate2 = _BPT_Train.getVal(trainpos2);
-                                        cmptmp.Train_ID_End = CentStatvec[l].Train_SN;
-                                        int Endpos = EndStatvec[Endmatch[CentStatvec[l].Train_SN]].Train_pos;
-                                        int Centpos2 = CentStatvec[i].Train_pos;
-                                        //保证时间与方向正确
-                                        //小于号右边为最晚该车离站时间，即保证来到这里后只要等待一定会遇到车
-                                        //这里有问题，希望它没有小于等于的情况
-                                        if (time < Candidate2.train_info[Centpos2].End_Date +
-                                                   Candidate2.train_info[Centpos2].arri_time +
-                                                   Candidate2.train_info[Centpos2].stopover && Centpos2 < Endpos) {
-                                            diff += Candidate2.train_info[Endpos].prefix_price -
-                                                    Candidate.train_info[Centpos2].prefix_price;
-                                            //计算
-                                            cmptmp.num = diff;
-                                            //丢入优先队列,我觉得这里可以优化，即出了这层循环再丢进单调队列
-                                            PQ.push(cmptmp);
-                                        }
-                                    }
-                                }
-                            }
+                for (int j = StaStation.Train_pos; j < statnum; j++) {
+                    //遍历该节点的每一辆车，并将其插入map中
+                    Station_Key CentKey;
+                    CentKey.pos = 0;
+                    CentKey.Station_name = data.train_info[j].station;
+                    std::vector<int> CentPosvec = _BPT_Station.route<Station_Comp>(CentKey);
+                    std::vector<Station> Centvec;
+                    int Centpos1 = -1;
+                    for (int k = 0; k < CentPosvec.size(); k++) {
+                        Centvec.push_back(_BPT_Station.getVal(CentPosvec[k]));
+                        if (Centvec[k].Train_SN == StaStation.Train_SN) Centpos1 = k;
+
+                    }
+                    for (int k = 0; k < CentPosvec.size(); k++) {
+                        if (Endmatch.count(Centvec[k].Train_SN)) {
+                            std::pair<int, int> value(Centpos1, Centvec[k].Train_pos);
+                            Endmatch[Centvec[k].Train_SN].push_back(value);
                         }
-                    } else if (type == 'T') {
-                        Train Candidate;
-                        for (int k = 0; k < Centvec.size(); k++) {
-                            //Trans_Type type;
-                            if (Stamatch.count(CentStatvec[k].Train_SN)) {
-                                //把train取出来
-                                int trainpos = _BPT_Train.find(CentStatvec[k].Train_SN);
-                                Candidate = _BPT_Train.getVal(trainpos);
-                                int Stapos = StaStatvec[i].Train_pos;
-                                int Centpos1 = CentStatvec[k].Train_pos;
-                                Trans_Comp cmptmp;
-                                Ticket::Date time;
-                                if (Candidate.train_info[Stapos].Sta_Date.cmpDate(date) <= 0 &&
-                                    date.cmpDate(Candidate.train_info[Centpos1].End_Date) <= 0 &&
-                                    Stapos < Centpos1) {//表示正向
-                                    int diff = Candidate.train_info[Centpos1].prefix_time -
-                                               Candidate.train_info[Stapos].prefix_time -
-                                               Candidate.train_info[Centpos1].stopover;
-                                    //time表示到达中转站时间
-                                    time = date + Candidate.train_info[Stapos].arri_time +
-                                           Candidate.train_info[Stapos].stopover + diff;
-                                    cmptmp.Train_ID_Sta = CentStatvec[k].Train_SN;
-                                    Train Candidate2;
-                                    //确定好起点到中转站后
-                                    //枚举中转站到终点
-                                    for (int l = 0; l < Centvec.size(); l++) {
-                                        if (Endmatch.count(CentStatvec[l].Train_SN) &&
-                                            CentStatvec[l].Train_SN != CentStatvec[k].Train_SN) {
-                                            int trainpos2 = _BPT_Train.find(CentStatvec[l].Train_SN);
-                                            Candidate2 = _BPT_Train.getVal(trainpos2);
-                                            cmptmp.Train_ID_End = CentStatvec[l].Train_SN;
-                                            int Endpos = EndStatvec[Endmatch[CentStatvec[l].Train_SN]].Train_pos;
-                                            int Centpos2 = CentStatvec[i].Train_pos;
-                                            //保证时间与方向正确
-                                            //小于号右边为最晚该车离站时间，即保证来到这里后只要等待一定会遇到车
-                                            //这里有问题，希望它没有小于等于的情况
-                                            if (time < Candidate2.train_info[Centpos2].End_Date +
-                                                       Candidate2.train_info[Centpos2].arri_time +
-                                                       Candidate2.train_info[Centpos2].stopover && Centpos2 < Endpos) {
-                                                Ticket::Time Timetmp = Candidate2.train_info[Centpos2].arri_time;
-                                                Ticket::Date Datetmp(Timetmp);
-                                                Ticket::Date Start(Timetmp);
-                                                Datetmp.dd = time.dd;
-                                                Datetmp.mm = time.mm;
-                                                //Start表示该车最早离站时间
-                                                Start.dd = Candidate2.train_info[Centpos2].Sta_Date.dd;
-                                                Start.mm = Candidate2.train_info[Centpos2].Sta_Date.mm;
-                                                //Datetmp表示该车到站同天的离站时间
-                                                Datetmp += Candidate2.train_info[Centpos2].stopover;
-                                                Start += Candidate2.train_info[Centpos2].stopover;
-                                                //同天离站时间小于起始离站，说明该天在发车起始以外，需要等到第一趟车
-                                                if (Datetmp < Start) {
-                                                    diff += Start.diffMinute(time);
-                                                } else {
-                                                    if (time < Datetmp) diff += Datetmp.diffMinute(time);
-                                                        //同天离站时间小于到站时间，那么要多等一天
-                                                    else {
-                                                        ++Datetmp;
-                                                        diff += Datetmp.diffMinute(time);
-                                                    }
-                                                }
-                                                diff += Candidate2.train_info[Endpos].prefix_time -
-                                                        Candidate.train_info[Centpos2].prefix_time -
-                                                        Candidate.train_info[Endpos].stopover;
-                                                cmptmp.num = diff;
-                                                PQ.push(cmptmp);
+                    }
+                }
+                for (int j = 0; j < Endvec.size(); j++) {
+                    if (StaStation.Train_SN != Endvec[j].Train_SN) {//换乘的不是同一辆车
+                        int train_pos2 = _BPT_Train.find(Endvec[j].Train_SN);
+                        Train Candidate = _BPT_Train.getVal(train_pos2);
+                        std::vector<std::pair<int, int>> CentTrainpos = Endmatch[Endvec[j].Train_SN];
+                        for (int k = 0; k < CentTrainpos.size(); k++) {
+                            int StaPos = StaStation.Train_pos;
+                            int CentPos1 = CentTrainpos[k].first;
+                            int CentPos2 = CentTrainpos[k].second;
+                            int EndPos = Endvec[j].Train_pos;
+                            if (StaPos < CentPos1 && CentPos2 < EndPos &&
+                                data.train_info[StaPos].Sta_Date.cmpDate(date) <= 0 &&
+                                date.cmpDate(data.train_info[StaPos].End_Date)) {//查询的始发时间合法//保证正向
+                                int diff = data.train_info[CentPos1].prefix_price -
+                                           data.train_info[StaPos].prefix_price;
+                                //time表示到达中转站时间
+                                Ticket::Date time = date + data.train_info[StaPos].arri_time +
+                                                    data.train_info[StaPos].stopover + diff;
+                                //只要到达中转时间小于最晚离开时间即可
+                                if (time < Candidate.train_info[CentPos2].End_Date +
+                                           Candidate.train_info[CentPos2].arri_time +
+                                           Candidate.train_info[CentPos2].stopover) {
+                                    if (type == 'P')
+                                        nums = Candidate.train_info[EndPos].prefix_price -
+                                               Candidate.train_info[CentPos2].prefix_price;
+                                    else {
+                                        Ticket::Time Timetmp = Candidate.train_info[CentPos2].arri_time;
+                                        Ticket::Date Datetmp(Timetmp);
+                                        Ticket::Date Start(Timetmp);
+                                        Datetmp.dd = time.dd;
+                                        Datetmp.mm = time.mm;
+                                        //Start表示该车最早离站时间
+                                        Start.dd = Candidate.train_info[CentPos2].Sta_Date.dd;
+                                        Start.mm = Candidate.train_info[CentPos2].Sta_Date.mm;
+                                        //Datetmp表示该车到站同天的离站时间
+                                        Datetmp += Candidate.train_info[CentPos2].stopover;
+                                        Start += Candidate.train_info[CentPos2].stopover;
+                                        //同天离站时间小于起始离站，说明该天在发车起始以外，需要等到第一趟车
+                                        if (Datetmp < Start) {
+                                            diff += Start.diffMinute(time);
+                                        } else {
+                                            if (time < Datetmp) diff += Datetmp.diffMinute(time);
+                                                //同天离站时间小于到站时间，那么要多等一天
+                                            else {
+                                                ++Datetmp;
+                                                diff += Datetmp.diffMinute(time);
                                             }
                                         }
+                                        diff += Candidate.train_info[EndPos].prefix_time -
+                                                Candidate.train_info[CentPos2].prefix_time -
+                                                Candidate.train_info[EndPos].stopover;
+                                        nums = diff;
                                     }
+                                    Trans_Comp Challenger;
+                                    Challenger.num = nums;
+                                    Challenger.Train_ID_End = Endvec[j].Train_SN;
+                                    Challenger.Train_ID_Sta = StaStation.Train_SN;
+                                    Ret = std::min(Challenger, Ret);
                                 }
                             }
                         }
-                        //Trans_Comp cmptmp;
-                        //PQ.push(cmptmp);
                     }
                 }
             }
-            os << PQ.top().Train_ID_Sta << '\n' << PQ.top().Train_ID_End << '\n';
+            os << Ret.Train_ID_Sta << '\n' << Ret.Train_ID_End << '\n';
             return true;
         }
 

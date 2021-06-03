@@ -128,13 +128,14 @@ namespace Backend {
         inline int
         _get_seat_range(const Train &data, const Ticket::String<40> &Sta, const Ticket::Date &Start_Date, int sta,
                         int end) {
+            Ticket::Date Datekey;
+            Datekey.mm=Start_Date.mm;
+            Datekey.dd=Start_Date.dd;
             Seat_Key seatKey;
             seatKey.station = Sta;
             seatKey.train = data.Train_SN;
-            seatKey.time = Start_Date.to_string();
-
+            seatKey.time = Datekey.to_string();
             Ticket::Date Datetmp = Start_Date;
-            Ticket::Date Datekey;
             int seatpos;
             int seat = data.seat;
             int seattmp;
@@ -494,12 +495,9 @@ namespace Backend {
                  std::cout<<"-----"<<'\n';*/
                 DateKet2.mm = Dtmp.mm;
                 DateKet2.dd = Dtmp.dd;
-                os << Det << ' ' << Dtmp << ' ';
-                if (type == 'P')
-                    os << Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
+                os << Det << ' ' << Dtmp << ' '<< Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
                                  - Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_price << ' ' << seat
                               << '\n';
-                else os << diff << ' ' << seat << '\n';
             }
             return true;
         }

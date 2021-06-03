@@ -187,7 +187,7 @@ namespace Backend {
             Count.open(count);
             if (Count.isFirstOpen()) cnt = 0, Count.write(Count.BEG, cnt);
             else Count.read(Count.BEG, cnt);
-            std::cout << cnt << '\n';
+            //std::cout << cnt << '\n';
         };
 
         bool add_train(const Ticket::String<20> &SN, int &stanum, int &seatnum, Ticket::String<40> *stations,
@@ -480,7 +480,7 @@ namespace Backend {
                 Dtmp += Trainvec[Trainpos].train_info[pospair[Trainpos].first].stopover;
                 int seat = _get_seat_range(Trainvec[Trainpos], Sta, Dtmp, pospair[Trainpos].first,
                                            pospair[Trainpos].second);
-                std::cout << arr[i].ID << ' ' << Sta << ' ' << Dtmp << ' ' << '-' << '>' << ' ';
+                os << arr[i].ID << ' ' << Sta << ' ' << Dtmp << ' ' << '-' << '>' << ' ';
                 // Dtmp=Trainvec[Trainpos].train_info[pospair[i].first].arri_time;
                 int diff = Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_time -
@@ -494,12 +494,12 @@ namespace Backend {
                  std::cout<<"-----"<<'\n';*/
                 DateKet2.mm = Dtmp.mm;
                 DateKet2.dd = Dtmp.dd;
-                std::cout << Det << ' ' << Dtmp << ' ';
+                os << Det << ' ' << Dtmp << ' ';
                 if (type == 'P')
-                    std::cout << Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
+                    os << Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
                                  - Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_price << ' ' << seat
                               << '\n';
-                else std::cout << diff << ' ' << seat << '\n';
+                else os << diff << ' ' << seat << '\n';
             }
             return true;
         }
@@ -717,36 +717,29 @@ namespace Backend {
             for (int i = sta; i < sz; i++) {
                 seatpos = _BPT_Seat.find(seatKey);
                 seattmp = _BPT_Seat.getVal(seatpos);
+                if (data.train_info[i].station == End) {
+                    end = i;
+                    break;
+                }
                 if (nums > seattmp) {
                     seat = -1;
                     return;
                 }
                 seat = std::min(seat, seattmp);
-                if (data.train_info[i].station == End) {
-                    end = i;
-                    break;
-                }
-                Datetmp += (data.train_info[i + 1].prefix_time - data.train_info[i].prefix_time -
-                            data.train_info[i + 1].stopover);
+                Datetmp += (data.train_info[i + 1].prefix_time - data.train_info[i].prefix_time);
                 Datekey.mm = Datetmp.mm;
                 Datekey.dd = Datetmp.dd;
                 seatKey.time = Datekey.to_string();
             }
-            End = data.train_info[end].station;
+            End_Date = Datetmp;
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
         }
 
-        void RenewSeat(const Ticket::String<20> Train_ID, const Ticket::Date &Sta_Time, const Ticket::String<40> &Sta,
-                       const Ticket::String<40> End, int devi) {
+        void RenewSeat(const Ticket::String<20> Train_ID, const Ticket::Date &Sta_Time,
+                       int sta,int end, int devi) {
             int pos = _BPT_Train.find(Train_ID);
             Train data = _BPT_Train.getVal(pos);
             int sz = data.station_num;
-            int sta, end;
-            for (int i = 0; i < sz; i++)
-                if (data.train_info[i].station == Sta) {
-                    sta = i;
-                    break;
-                }
 
             // seatKey.time=Sta_Time.to_string();
             Ticket::Date Datetmp = Sta_Time;
@@ -754,20 +747,19 @@ namespace Backend {
             DateKey.mm = Datetmp.mm;
             DateKey.dd = Datetmp.dd;
             Seat_Key seatKey;
-            seatKey.station = Sta;
+            //seatKey.station = Sta;
             seatKey.train = Train_ID;
             seatKey.time = DateKey.to_string();
             int seatpos;
             int oriseat;
-            for (int i = sta; i < sz; i++) {
+            for (int i = sta; i <end; i++) {
                 seatKey.station = data.train_info[i].station;
                 seatpos = _BPT_Seat.find(seatKey);
                 oriseat = _BPT_Seat.getVal(seatpos);
                 oriseat += devi;
                 _BPT_Seat.modifyVal(seatpos, oriseat);
-                if (data.train_info[i].station == Sta) break;
-                Datetmp += (data.train_info[i + 1].prefix_time - data.train_info[i].prefix_time -
-                            data.train_info[i + 1].stopover);
+                //if (data.train_info[i].station == Sta) break;
+                Datetmp += (data.train_info[i + 1].prefix_time - data.train_info[i].prefix_time);
                 DateKey.mm = Datetmp.mm;
                 DateKey.dd = Datetmp.dd;
                 seatKey.time = DateKey.to_string();

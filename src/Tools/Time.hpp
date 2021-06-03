@@ -141,6 +141,10 @@ namespace Ticket {
 		
 		explicit Date(int timeCnt) : timeCnt(timeCnt) { }
 		
+		Date (int h, int m) {
+			timeCnt = h * 60 + m;
+		}
+		
 		Date (int mm, int dd, int h, int m) {
 			timeCnt = dd * 1440 + h * 60 + m;
 			for (int i = 6; i < mm; ++i) timeCnt += monthDays[i] * 1440;
@@ -182,7 +186,6 @@ namespace Ticket {
 			return *this;
 		}
 		
-		// mm == 6 or 7
 		[[nodiscard]] int calcMinute() const {
 			return timeCnt;
 		}

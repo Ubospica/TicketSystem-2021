@@ -240,7 +240,7 @@ namespace Backend {
                     break;
             };
             os << ']' << ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< End_date <<' '<< Det << ' '
-                      << ticket_num << '\n';
+                      <<price<<' '<< ticket_num << '\n';
         }
 
         state_list &State() {

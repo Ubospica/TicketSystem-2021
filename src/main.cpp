@@ -4,6 +4,6 @@
 #include "MainClass.hpp"
 
 int main (int argc, char *argv[]) {
-	MainClass::init(argc, argv);
+	Ticket::MainClass::init(argc, argv);
 	return 0;
 }

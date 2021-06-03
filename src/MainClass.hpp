@@ -5,13 +5,14 @@
 #ifndef TICKETSYSTEM_2021_MAINCLASS_HPP
 #define TICKETSYSTEM_2021_MAINCLASS_HPP
 
-
-class MainClass {
-public:
-	static void init(int argc, char *argv[]) {
-	
-	}
-};
+namespace Ticket {
+	class MainClass {
+	public:
+		static void init(int argc, char *argv[]) {
+		
+		}
+	};
+}
 
 
 #endif //TICKETSYSTEM_2021_MAINCLASS_HPP

@@ -148,3 +148,72 @@
 			}
 		}
 	}
+
+
+//		std::string s1 = name + "Index.dat";
+//		auto fl = std::ios::in | std::ios::out | std::ios::binary;
+//		treeDt.open(s1, fl);
+//		if (!treeDt) { //file not exists
+//			//trashy cpp grammar! `std::ofstream(s1)` won't compile
+//			std::ofstream(static_cast<std::string>(s1));
+//			treeDt.open(s1, fl);
+//			if (!treeDt) {
+//				throw RuntimeError("File system error");
+//			}
+//			init();
+//		}
+//		else {
+//			read(0, root);
+//			read(Pos::POS_SIZE, size);
+//			read(Pos::POS_HEIGHT, height);
+//		}
+//		if (!NO_VALUE_FLAG) {
+//			std::string s2 = name + "Data.dat";
+//			valueDt.open(s2, fl);
+//			if (!valueDt) { //file not exists
+//				//trashy cpp grammar! `std::ofstream(s1)` won't compile
+//				std::ofstream(static_cast<std::string>(s2));
+//				valueDt.open(s2, fl);
+//				if (!valueDt) {
+//					throw RuntimeError("File system error");
+//				}
+//			}
+//		}
+
+
+
+
+//	//-2 cur
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur, FileIO &fs) {
+//		if(pos >= 0){
+//			fs.seekg(pos);
+//		}
+//		fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
+//	}
+//
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur) {
+//		read(pos, cur, treeDt);
+//	}
+//
+//	//pos: -1 end; -2 cur
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur, std::fstream &fs) {
+//		if(pos >= 0){
+//			fs.seekp(pos);
+//		}
+//		else if(pos == Pos::END) {
+//			fs.seekp(0, std::ios::end);
+//		}
+//		fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
+//	}
+//
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	template <typename T>
+//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur) {
+//		write(pos, cur, treeDt);
+//	}

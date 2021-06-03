@@ -13,9 +13,14 @@
 using String = Ticket::String<>;
 using Ticket::BPlusTree;
 
+int cmpLen = 1;
 struct Comp{
 	bool operator() (const String &a, const String &b) {
-		return a[0] < b[0];
+		for (int i = 0; i < cmpLen; ++i) {
+			if (a[i] < b[i]) return true;
+			else if (a[i] > b[i] || (a[i] == 0 && b[i] == 0)) return false;
+		}
+		return false;
 	}
 };
 struct Comp1{
@@ -51,7 +56,8 @@ int main() {
 //			bps.print();
 		}
 		else if (o == 4) {
-			cin>>s;
+			cin>>s>>v;
+			cmpLen = v;
 			auto rt = bps.route(s);
 			for (const auto &i : rt) {
 				cout << bps.getVal(i) << ' ';

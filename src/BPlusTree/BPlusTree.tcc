@@ -14,7 +14,6 @@ namespace Ticket {
 		int prev = -1, next = -1;
 		Key vKey[M] {};
 		int son[M + 1] {};
-	//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 		friend std::ostream& operator<<(std::ostream &os, const Node &nd) {
 			print(nd);
 			return os;
@@ -22,42 +21,6 @@ namespace Ticket {
 	};
 	
 
-	
-	
-//	//-2 cur
-//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-//	template <typename T>
-//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur, FileIO &fs) {
-//		if(pos >= 0){
-//			fs.seekg(pos);
-//		}
-//		fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
-//	}
-//
-//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-//	template <typename T>
-//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::read(int pos, T &cur) {
-//		read(pos, cur, treeDt);
-//	}
-//
-//	//pos: -1 end; -2 cur
-//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-//	template <typename T>
-//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur, std::fstream &fs) {
-//		if(pos >= 0){
-//			fs.seekp(pos);
-//		}
-//		else if(pos == Pos::END) {
-//			fs.seekp(0, std::ios::end);
-//		}
-//		fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
-//	}
-//
-//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-//	template <typename T>
-//	inline void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::write(int pos, const T &cur) {
-//		write(pos, cur, treeDt);
-//	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::BPlusTree(const std::string& name) {
@@ -74,35 +37,6 @@ namespace Ticket {
 		if (!NO_VALUE_FLAG) {
 			valueDt.open(name + "Data.dat");
 		}
-//		std::string s1 = name + "Index.dat";
-//		auto fl = std::ios::in | std::ios::out | std::ios::binary;
-//		treeDt.open(s1, fl);
-//		if (!treeDt) { //file not exists
-//			//trashy cpp grammar! `std::ofstream(s1)` won't compile
-//			std::ofstream(static_cast<std::string>(s1));
-//			treeDt.open(s1, fl);
-//			if (!treeDt) {
-//				throw RuntimeError("File system error");
-//			}
-//			init();
-//		}
-//		else {
-//			read(0, root);
-//			read(Pos::POS_SIZE, size);
-//			read(Pos::POS_HEIGHT, height);
-//		}
-//		if (!NO_VALUE_FLAG) {
-//			std::string s2 = name + "Data.dat";
-//			valueDt.open(s2, fl);
-//			if (!valueDt) { //file not exists
-//				//trashy cpp grammar! `std::ofstream(s1)` won't compile
-//				std::ofstream(static_cast<std::string>(s2));
-//				valueDt.open(s2, fl);
-//				if (!valueDt) {
-//					throw RuntimeError("File system error");
-//				}
-//			}
-//		}
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
@@ -121,13 +55,12 @@ namespace Ticket {
 		treeDt.write(Pos::POS_HEIGHT, height);
 		Node newRt {0, 1, 1};
 		treeDt.write(FileIO::END, newRt);
-		
-//		bool tmp = treeDt.fs.fail();
 	}
 	
 	//returns node in the index
 	//(-1, 0) if not found
 	//(pos, p) if found; the val should be node[pos].vSon[p]
+	//if many: returns the last one
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
 	pair<int,int> BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findIndex(int pos, const Key &vKey) {
@@ -226,7 +159,6 @@ namespace Ticket {
 					std::memcpy(newNd.son, cur.son + M / 2, newNd.cnt * sizeof(int));
 					cur.cnt = M / 2;
 					
-					//treeDt.seekp(0, std::ios::end);
 					treeDt.movePos(FileIO::END);
 					int newP = treeDt.tellPos();
 					treeDt.write(FileIO::CUR, newNd);
@@ -400,35 +332,59 @@ namespace Ticket {
 	template <typename Comp>
 	auto BPlusTree<Key, Value, NO_VALUE_FLAG, M>::route(const Key &val) ->
 		std::vector<int> {
+		Comp cmp;
 		std::vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
 		if (pos0.first == -1) {
 			return res;
 		}
+		
 		Node cur;
 		treeDt.read(pos0.first, cur);
-		auto checkAndAdd = [&res, &val] (const Node &cur) {
-			for (int i = 0; i < cur.cnt; ++i) {
-				bool a = Comp()(cur.vKey[i], val), b = Comp()(val, cur.vKey[i]);
-				if (cur.son[i] != -1 && (!Comp()(cur.vKey[i], val)) && (!Comp()(val, cur.vKey[i]))) {
-					res.push_back(cur.son[i]);
+		
+		while (true) { //loop iterator: pos0
+			if (cur.son[pos0.second] != -1) {
+				if (cmp(cur.vKey[pos0.second], val)) {
+					break;
+				}
+				else {
+					res.push_back(cur.son[pos0.second]);
 				}
 			}
-		};
-		checkAndAdd(cur);
-		auto tmp = pos0.first;//std::get<0>(pos0);
-		while (cur.next != -1 && !Comp()(cur.vKey[cur.cnt], val) && !Comp()(val, cur.vKey[cur.cnt])) {
-			tmp = cur.next;
-			treeDt.read(tmp, cur);
-			checkAndAdd(cur);
+			--pos0.second;
+			if (pos0.second == -1) {
+				if (cur.prev == -1) {
+					break;
+				}
+				pos0.first = cur.prev;
+				treeDt.read(pos0.first, cur);
+				pos0.second = cur.cnt - 1;
+			}
 		}
-		tmp = pos0.first;// = std::get<0>(pos0);
-		while (cur.prev != -1 && !Comp()(cur.vKey[0], val) && !Comp()(val, cur.vKey[0])) {
-			tmp = cur.prev;
-			treeDt.read(tmp, cur);
-			checkAndAdd(cur);
-		}
+		std::reverse(res.begin(), res.end());
 		return res;
+		
+//		auto checkAndAdd = [&res, &val] (const Node &cur) {
+//			for (int i = 0; i < cur.cnt; ++i) {
+//				if (cur.son[i] != -1 && (!Comp()(cur.vKey[i], val)) && (!Comp()(val, cur.vKey[i]))) {
+//					res.push_back(cur.son[i]);
+//				}
+//			}
+//		};
+////		checkAndAdd(cur);
+//		auto tmp = pos0.first;//std::get<0>(pos0);
+//		while (cur.next != -1 && !Comp()(cur.vKey[cur.cnt], val) && !Comp()(val, cur.vKey[cur.cnt])) {
+//			tmp = cur.next;
+//			treeDt.read(tmp, cur);
+//			checkAndAdd(cur);
+//		}
+//		tmp = pos0.first;// = std::get<0>(pos0);
+//		while (cur.prev != -1 && !Comp()(cur.vKey[0], val) && !Comp()(val, cur.vKey[0])) {
+//			tmp = cur.prev;
+//			treeDt.read(tmp, cur);
+//			checkAndAdd(cur);
+//		}
+//		return res;
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>

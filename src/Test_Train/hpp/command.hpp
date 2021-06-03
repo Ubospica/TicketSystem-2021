@@ -2,6 +2,7 @@
 #define BACKEND_COMMAND_HPP
 #include<iostream>
 #include"String.hpp"
+#include"Exception.hpp"
 namespace Backend{
     class Cmd_Que{
     private:
@@ -200,9 +201,8 @@ namespace Backend {
             if(pointer==sz) Cmd_Strm->insert('n',in);
             else read_substr(Cmd_Strm, 1, Cmd, pointer);
         } else if (tmp == "clean") {}
-        else if (tmp == "exit") {
-            throw End();
-        }
+        else if (tmp == "exit") {}
+        else throw Ticket::SyntaxError();
     }
 }
 #endif

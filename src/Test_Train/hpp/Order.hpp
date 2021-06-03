@@ -240,7 +240,7 @@ namespace Backend {
                     break;
             };
             os << ']' << ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< End_date <<' '<< Det << ' '
-                      << ticket_num << '\n';
+                      <<price<<' '<< ticket_num << '\n';
         }
 
         state_list &State() {
@@ -333,7 +333,7 @@ namespace Backend {
             for (int i = 0; i < sz; i++) {
                 ret.push_back(_BPT_order.getVal(pos[i]));
             }
-            std::sort(ret.begin(),ret.end(),std::greater<order>());
+            //std::sort(ret.begin(),ret.end(),std::greater<order>());
             return ret;
         }
 
@@ -458,7 +458,7 @@ namespace Backend {
             //try{ all_order=Order.query(name);}catch(NotFound){return 0;}
             int sz = all_order.size();
             os<<sz<<'\n';
-            for (int i = 0; i < sz; i++) all_order[i].print(os);
+            for (int i = sz-1; i >=0 ; i++) all_order[i].print(os);
             return;
         }
 

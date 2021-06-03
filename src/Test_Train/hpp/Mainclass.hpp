@@ -128,9 +128,14 @@ namespace Backend {
         else if (todo == "query_order") { query_order(cmdQue, os); }
         else if (todo == "refund_ticket") { refund_ticket(cmdQue, os); }
         else if (todo == "buy_ticket") { buy_ticket(cmdQue, os); }
-        else if(todo=="clean") {}
-        else if(todo=="end"){end(cmdQue, os);}
-        else throw Ticket::WrongOperation();
+        else if(todo=="clean") {clean(cmdQue,os);}
+        else if(todo=="exit"){end(cmdQue,os);}
+        else {
+            std::cout << "??????????????????????????" << '\n';
+            std::cout << todo << '\n';
+            std::cerr << "OP" << '\n';
+            throw Ticket::WrongOperation();
+        }
     }
 
     void Main::login(Backend::Cmd_Que *cmdQue, std::ostream &os) {
@@ -333,6 +338,7 @@ namespace Backend {
         int pointer = 0;
         //int sz=tmp.size();
         std::string sub;
+        //站名
         for (int i = 0; i < station_num; i++) {
             while (tmp[pointer] != '\0' && tmp[pointer] != '|') {
                 sub += tmp[pointer];

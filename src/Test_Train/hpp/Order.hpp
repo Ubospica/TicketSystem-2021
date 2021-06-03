@@ -230,16 +230,16 @@ namespace Backend {
             os << '[';
             switch (_state) {
                 case (state_list::Refund):
-                    os << "Refund";
+                    os << "refunded";
                     break;
                 case (state_list::Success):
-                    os << "Success";
+                    os << "success";
                     break;
                 case (state_list::Pending):
-                    os << "Pending";
+                    os << "pending";
                     break;
-            };
-            os << ']' << ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< End_date <<' '<< Det << ' '
+            }
+            os << ']' <<' '<<train_ID<< ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< Det << ' '<<End_date<< ' '
                       <<price<<' '<< ticket_num << '\n';
         }
 
@@ -284,10 +284,10 @@ namespace Backend {
 
         /*std::vector<int> & refund(int n){
         }*/
-        void GetPending(const Ticket::String<25> & TrainID, std::vector<order> & TrainOrdervec) {
+        void GetPending(const Ticket::String<25> & name, std::vector<order> & TrainOrdervec) {
             OrderKey tmp;
             tmp.SN = 0;
-            tmp.str =TrainID;
+            tmp.str =name;
             std::vector<int>Posvec = Waiting_Queue.route<Comp>(tmp);
             int Possz=Posvec.size();
             for(int j=0;j<Possz;j++) TrainOrdervec.push_back(Waiting_Queue.getVal(Posvec[j]));
@@ -360,11 +360,11 @@ namespace Backend {
                     }
                     case (state_list::Pending): {
                         OrderKey PeKey;
-                        PeKey.str=Train_ID;
+                        PeKey.str=name;
                         PeKey.SN=ordertmp.get_num(order_parameter::SN);
                         Pending=PeKey;
                         ordertmp.change_state(state_list::Refund);
-                        _BPT_order.modifyVal(pos[sztmp-1-n],ordertmp);
+                        _BPT_order.modifyVal(pos[sztmp-n],ordertmp);
                         type='N';
                         return true;
                     }
@@ -409,7 +409,7 @@ namespace Backend {
            // Ticket::String<25> Trainvec;
             if(Order.refund(name,n,Success,Pending,Train_ID,type)) {
                 if(type=='P') Que.refund(Pending);
-                else Que.GetPending(Train_ID,TrainOrdervec);
+                else Que.GetPending(name,TrainOrdervec);
                 return true;
             }
             else return false;
@@ -454,11 +454,15 @@ namespace Backend {
         }
 
         void query_order(const Ticket::String<25> &name,std::ostream& os) {
+            std::cout<<"19"<<'\n';
             std::vector<order> all_order = Order.query(name);
+            std::cout<<"20"<<'\n';
             //try{ all_order=Order.query(name);}catch(NotFound){return 0;}
             int sz = all_order.size();
             os<<sz<<'\n';
-            for (int i = sz-1; i >=0 ; i++) all_order[i].print(os);
+            for (int i = sz-1; i >=0 ; i--) {
+                all_order[i].print(os);
+            }
             return;
         }
 

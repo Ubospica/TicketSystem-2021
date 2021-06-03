@@ -40,7 +40,7 @@ namespace Backend {
 
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
-        Ticket::Time stringtotime(const std::string & str);
+       // Ticket::Time stringtotime(const std::string & str);
     //    Ticket::Time stringtotime(const Ticket::String & str);
         int stringtoint(const std::string & str);
     //    int stringtoint(const Ticket::String & str);
@@ -58,12 +58,15 @@ namespace Backend {
         void Run(std::istream & is,std::ostream & os){
             Cmd_Que * cmd=new Cmd_Que;
             std::string todo;
+            int i=0;
             try {
                 while (true) {
                     //is >> todo;
                     getline(is,todo);
                     process(cmd, todo);
+                    std::cout<<i<<'\n';
                     OP(cmd, os);
+                    i++;
                     cmd->clear();
 
                 }
@@ -108,7 +111,7 @@ namespace Backend {
     }
 
     //Ticket::Date Main::stringtodate(const Ticket::String str){};
-    Ticket::Time Main::stringtotime(const std::string &str) {}
+    //Ticket::Time Main::stringtotime(const std::string &str) {}
     //Ticket::Time Main::stringtotime(const Ticket::String str){};
 
     void Main::OP(Backend::Cmd_Que *cmdQue, std::ostream &os) {
@@ -239,8 +242,8 @@ namespace Backend {
                 dd *= 10;
                 dd += tmp[x] - '0';
             }
-            Date.dd = dd;
-            Date.mm = mm;
+            Ticket::Date Dtmp(mm,dd,0,0);
+            Date=Dtmp;
             break;
         }
         if (train_op.query_train(Train_ID, Date, os)) {}
@@ -266,13 +269,14 @@ namespace Backend {
                 dd *= 10;
                 dd += tmp[x] - '0';
             }
-            Date.dd = dd;
-            Date.mm = mm;
+            Ticket::Date Dtmp(mm,dd,0,0);
+            Date=Dtmp;
             break;
         }
         char type;
         if (cmd->top()[0] == 't') type = 'T';
         else type = 'P';
+
         if (train_op.query_ticket(Sta, End, Date, type, os)) {}
         else os << '-' << '1' << '\n';
     }
@@ -296,8 +300,8 @@ namespace Backend {
                 dd *= 10;
                 dd += tmp[x] - '0';
             }
-            Date.dd = dd;
-            Date.mm = mm;
+            Ticket::Date Dtmp(mm,dd,0,0);
+            Date=Dtmp;
             break;
         }
         char type;
@@ -364,7 +368,7 @@ namespace Backend {
         tmp = cmd->top();
         cmd->pop();
         pointer = 0;
-        Ticket::Time start_time;
+        Ticket::Date start_time;
         while (true) {
             int mi = 0, hr = 0;
             for (int i = 0; i < 2; ++i, ++pointer) {
@@ -376,8 +380,10 @@ namespace Backend {
                 mi *= 10;
                 mi += tmp[pointer] - '0';
             }
-            start_time.mi = mi;
-            start_time.hr = hr;
+            Ticket::Date Dtmp(0,0,hr,mi);
+            start_time=Dtmp;
+     /*       start_time.mi = mi;
+            start_time.hr = hr;*/
             break;
         }
         tmp = cmd->top();
@@ -423,8 +429,10 @@ namespace Backend {
                 dd *= 10;
                 dd += tmp[pointer] - '0';
             }
-            Date[0].mm = mm;
-            Date[0].dd = dd;
+            Ticket::Date Dtmp(mm,dd,0,0);
+            Date[0]=Dtmp;
+      /*      Date[0].mm = mm;
+            Date[0].dd = dd;*/
             mm = dd = 0;
             ++pointer;
             for (int i = 0; i < 2; ++i, ++pointer) {
@@ -436,8 +444,10 @@ namespace Backend {
                 dd *= 10;
                 dd += tmp[pointer] - '0';
             }
-            Date[1].mm = mm;
-            Date[1].dd = dd;
+            Ticket::Date Dtmp2(mm,dd,0,0);
+            Date[1]=Dtmp;
+       /*     Date[1].mm = mm;
+            Date[1].dd = dd;*/
             break;
         }
         char type = cmd->top()[0];
@@ -470,8 +480,10 @@ namespace Backend {
                     dd *= 10;
                     dd += tmp[x] - '0';
                 }
-                Start_Date.dd = dd;
-                Start_Date.mm = mm;
+                Ticket::Date Dtmp(mm,dd,0,0);
+                Start_Date=Dtmp;
+            /*    Start_Date.dd = dd;
+                Start_Date.mm = mm;*/
                 break;
             }
             int nums = stringtoint(cmd->top());
@@ -491,11 +503,14 @@ namespace Backend {
                 os << "queue" << '\n';
             } else {
                 order_op.buy_ticket(name, train_ID, Start_Date, End_Date, Sta, End, sta, end, nums, price, state);
+              //  std::cout<<train_ID<<' '<<Start_Date<<' '<<sta<<' '<<end<<'\n';
                 train_op.RenewSeat(train_ID, Start_Date, sta, end, -nums);
                 long long ans = nums * price;
                 os << ans << '\n';
+
             }
         } else os << '-' << '1';
+
     }
 
     void Main::query_order(Cmd_Que *cmd, std::ostream &os) {
@@ -518,9 +533,12 @@ namespace Backend {
             order Success;
             int sz;
             char type;
+          //  std::cout<<'5'<<'\n';
             if (order_op.refund(Train_ID, name, nums, Success, TrainOrdervec, type)) {
+            //    std::cout<<'6'<<'\n';
                 if (type == 'P') os << '0' << '\n';
                 else {
+                 //   std::cout<<'7'<<'\n';
                     train_op.RenewSeat(Success.get_str(order_parameter::Train_ID),
                                        Success.get_Date(order_parameter::Start_Date),
                                        Success.get_num(order_parameter::Start_Position),
@@ -528,13 +546,16 @@ namespace Backend {
                                        Success.get_num(order_parameter::Num));
                     sz = TrainOrdervec.size();
                     int seat, sta, end, price;
+                  //  std::cout<<'8'<<'\n';
                     for (int i = 0; i < sz; i++) {
+                    //    std::cout<<'!'<<'\n';
                         Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                         Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);
-                        Ticket::String<40> Sta = TrainOrdervec[i].get_station(order_parameter::Start_Position);
-                        Ticket::String<40> End = TrainOrdervec[i].get_station(order_parameter::End_Position);
+                        Ticket::String<40> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
+                        Ticket::String<40> End = TrainOrdervec[i].get_station(order_parameter::End);
                         train_op.GetSeat(Train_ID, Start_Time, End_Time, Sta, End, sta, end, seat, price,
                                          TrainOrdervec[i].get_num(order_parameter::Num));
+                      //  std::cout<<'!'<<Train_ID<<' '<<seat<<' '<< TrainOrdervec[i].get_num(order_parameter::Num)<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
                         if (seat == -1) break;
                         OrderKey orderKeytmp;
                         orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);

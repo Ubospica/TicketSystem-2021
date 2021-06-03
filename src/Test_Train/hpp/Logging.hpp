@@ -104,6 +104,7 @@ namespace Backend {
             case (user_parameter::Username):return username;
             case (user_parameter::Name):return name;
             default:
+                std::cerr<<"get_25"<<'\n';
                 throw Ticket::WrongOperation("get_25");
         }
     }
@@ -113,6 +114,7 @@ namespace Backend {
             case (user_parameter::Username):return username;
             case (user_parameter::Name):return name;
             default:
+                std::cerr<<"get_25"<<'\n';
                 throw Ticket::WrongOperation("get_25");
         }
     }
@@ -123,6 +125,7 @@ namespace Backend {
             case (user_parameter::Username):return passwd;
             case (user_parameter::Name):return mailAddr;
             default:
+                std::cerr<<"get_35"<<'\n';
                 throw Ticket::WrongOperation("get_25");
         }
     }
@@ -137,8 +140,10 @@ namespace Backend {
             case (user_parameter::Passwd):passwd=change;break;
             case (user_parameter::Name):name=change;break;
             case (user_parameter::MailAddr):mailAddr=change;break;
-            default:
+            default: {
+                std::cerr<<"get_user_parameter"<<'\n';
                 Ticket::WrongOperation("get_user_parameter");
+            }
         }
         //  else if(kind==user_parameter::Privilege)  privilege=change;
     }

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include "Utility.hpp"
 
 namespace Ticket {
 //	struct Time {
@@ -136,7 +137,6 @@ namespace Ticket {
 	struct Date {
 		int timeCnt = 0;
 		
-		
 		Date () = default;
 		
 		explicit Date(int timeCnt) : timeCnt(timeCnt) { }
@@ -191,13 +191,29 @@ namespace Ticket {
 			return timeCnt - b.timeCnt;
 		}
 		
+		pair<int, int> getMMDD() const {
+			int month = 6, tmp = timeCnt / 1440;
+			while (tmp > monthDays[month]) {
+				tmp -= monthDays[month];
+				++month;
+			}
+			return make_pair(month, tmp);
+		}
+		
+		pair<int, int> getHHMM() const {
+			return make_pair((timeCnt % 1440) / 60, timeCnt % 60);
+		}
+		
+		
 		/**
 		 * returns 1 if date of *this is less then another
 		 * @param another
 		 * @return
 		 */
 		[[nodiscard]] int cmpDate(const Date &another) const {
-			return timeCnt / 1440 < another.timeCnt / 1440;
+			if (timeCnt / 1440 < another.timeCnt / 1440) return -1;
+			else if (timeCnt / 1440 == another.timeCnt / 1440) return 0;
+			else return 1;
 		}
 		
 		[[nodiscard]] std::string to_string() const {

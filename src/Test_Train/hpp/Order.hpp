@@ -81,6 +81,12 @@ namespace Backend {
                 case (order_parameter::Price):
                     price = num;
                     break;
+                case(order_parameter::Start_Position):
+                    sta=num;
+                    break;
+                case(order_parameter::End_Position):
+                    det=num;
+                    break;
                 default:
                     throw Ticket::WrongOperation("order_set_num");
             };
@@ -199,9 +205,25 @@ namespace Backend {
             _state = state;
         }
 
-        bool operator<(order &r) const {
+        bool operator<(const order &r) const {
             return serial_number < r.serial_number;
         }
+
+        bool operator>(const order & r)const{
+            return serial_number>r.serial_number;
+        }
+
+ /*       order & operator=(const order && o){
+
+        }
+
+        order & operator=(const order & o){
+
+        }
+
+        order (const order & o){
+
+        }*/
 
         void print(std::ostream & os) {
             //Date.
@@ -217,7 +239,7 @@ namespace Backend {
                     os << "Pending";
                     break;
             };
-            os << ']' << ' ' << Sta << ' ' << Sta_date << Sta_date << '-' << '>' << End_date << Det << ' '
+            os << ']' << ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< End_date <<' '<< Det << ' '
                       << ticket_num << '\n';
         }
 
@@ -303,7 +325,10 @@ namespace Backend {
             std::vector<int> pos = _BPT_order.route<Comp>(tmp);
             std::vector<order> ret;
             int sz = pos.size();
-            for (int i = 0; i < sz; i++) ret[i - 1] = _BPT_order.getVal(pos[i]);
+            for (int i = 0; i < sz; i++) {
+                ret.push_back(_BPT_order.getVal(pos[i]));
+            }
+            std::sort(ret.begin(),ret.end(),std::greater<order>());
             return ret;
         }
 
@@ -316,32 +341,29 @@ namespace Backend {
             int sztmp = pos.size();
             if (sztmp < n) return false;
             order ordertmp;
-            ordertmp = _BPT_order.getVal(pos[sztmp - n]);
-            Train_ID = ordertmp.get_str(order_parameter::Train_ID);
-            switch (ordertmp.State()) {
-                case (state_list::Refund):
-                    return false;
-                case (state_list::Success) : {
-                    Success=ordertmp;
-                    ordertmp.change_state(state_list::Refund);
-                    _BPT_order.modifyVal(pos[sztmp-n],ordertmp);
-                    type='S';
-                    return true;
+                ordertmp = _BPT_order.getVal(pos[sztmp - n]);
+                Train_ID = ordertmp.get_str(order_parameter::Train_ID);
+                switch (ordertmp.State()) {
+                    case (state_list::Refund):
+                        return false;
+                    case (state_list::Success) : {
+                        Success=ordertmp;
+                        ordertmp.change_state(state_list::Refund);
+                        _BPT_order.modifyVal(pos[sztmp-n],ordertmp);
+                        type='S';
+                        return true;
+                    }
+                    case (state_list::Pending): {
+                        OrderKey PeKey;
+                        PeKey.str=Train_ID;
+                        PeKey.SN=ordertmp.get_num(order_parameter::SN);
+                        Pending=PeKey;
+                        ordertmp.change_state(state_list::Refund);
+                        _BPT_order.modifyVal(pos[sztmp-1-n],ordertmp);
+                        type='N';
+                        return true;
+                    }
                 }
-                case (state_list::Pending): {
-                    OrderKey PeKey;
-                    PeKey.str=Train_ID;
-                    PeKey.SN=ordertmp.get_num(order_parameter::SN);
-                    Pending=PeKey;
-                    ordertmp.change_state(state_list::Refund);
-                    _BPT_order.modifyVal(pos[sztmp-1-n],ordertmp);
-                    type='N';
-                    return true;
-                }
-                default: {
-                	throw Ticket::WrongOperation();
-                }
-            }
         }
 
         int size() {
@@ -407,15 +429,18 @@ namespace Backend {
             data.set_num(order_parameter::Num, n);
             data.set_num(order_parameter::SN, Order.size() + 1);
             data.set_num(order_parameter::Price, price);
+            data.set_num(order_parameter::Start_Position,sta);
+            data.set_num(order_parameter::End_Position,end);
             data.set_Date(order_parameter::Start_Date, Sta_date);
             data.set_Date(order_parameter::End_Date, End_date);
-            int pos = Order.insert(data);
-            if (pos == -1) throw Ticket::WrongOperation("buy_ticket");
-            if (state) data.change_state(state_list::Success);
-            else {
+            if (state) {
                 data.change_state(state_list::Pending);
                 Que.insert(name, Order.size() + 1, data);
             }
+            else  data.change_state(state_list::Success);
+            int pos = Order.insert(data);
+            if (pos == -1) throw Ticket::WrongOperation("buy_ticket");
+
         }
 
         void query_order(const Ticket::String<20> &name,std::ostream& os) {

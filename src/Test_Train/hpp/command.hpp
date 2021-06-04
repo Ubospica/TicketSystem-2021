@@ -2,6 +2,7 @@
 #define BACKEND_COMMAND_HPP
 #include<iostream>
 #include"String.hpp"
+#include"Exception.hpp"
 namespace Backend{
     class Cmd_Que{
     private:
@@ -180,17 +181,17 @@ namespace Backend {
         } else if (tmp == "query_ticket") {
             read_substr(Cmd_Strm, 3, Cmd, pointer);
             std::string in="time";
-            if(pointer==sz) Cmd_Strm->insert('p',in);
+            if(pointer>=sz) Cmd_Strm->insert('p',in);
             else read_substr(Cmd_Strm, 1, Cmd, pointer);
         } else if (tmp == "query_transfer") {
             read_substr(Cmd_Strm, 3, Cmd, pointer);
             std::string in="time";
-            if(pointer==sz) Cmd_Strm->insert('p',in);
+            if(pointer>=sz) Cmd_Strm->insert('p',in);
             else read_substr(Cmd_Strm, 1, Cmd, pointer);
         } else if (tmp == "buy_ticket") {
             read_substr(Cmd_Strm, 6, Cmd, pointer);
             std::string in="false";
-            if(pointer==sz) Cmd_Strm->insert('q',in);
+            if(pointer>=sz) Cmd_Strm->insert('q',in);
             else read_substr(Cmd_Strm, 1, Cmd, pointer);
         } else if (tmp == "query_order") {
             read_substr(Cmd_Strm, 1, Cmd, pointer);
@@ -200,9 +201,8 @@ namespace Backend {
             if(pointer==sz) Cmd_Strm->insert('n',in);
             else read_substr(Cmd_Strm, 1, Cmd, pointer);
         } else if (tmp == "clean") {}
-        else if (tmp == "exit") {
-            throw End();
-        }
+        else if (tmp == "exit") {}
+        else throw Ticket::SyntaxError();
     }
 }
 #endif

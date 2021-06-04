@@ -29,11 +29,11 @@ namespace Backend {
 
         explicit user(const Ticket::String<25> & Name):username(Name){};
 
-        Ticket::String<25> get_20(user_parameter kind);
+        Ticket::String<25> get_25(user_parameter kind);
 
-        const Ticket::String<25> get_20(user_parameter kind)const;
+        const Ticket::String<25> get_25(user_parameter kind)const;
 
-        Ticket::String<35> get_30(user_parameter kind);
+        Ticket::String<35> get_35(user_parameter kind);
 
         const int & get_privilege()const;
 
@@ -46,12 +46,6 @@ namespace Backend {
         void print(std::ostream & os);
 
         ~user()=default;
-        
-        friend std::ostream& operator<<(std::ostream &os, const user &us) {
-        	os << "username="<<us.username << " pwd="<<us.passwd<<" name="
-        	    << us.name<<" mail="<< us.mailAddr << " pri="<< us.privilege;
-        	return os;
-        }
     };
 
     class BPT_insert_user{
@@ -69,6 +63,8 @@ namespace Backend {
         void modify_user(const user& Nuser);
 
         int size();
+
+        void clean();
 
         ~BPT_insert_user()=default;
     };
@@ -95,37 +91,42 @@ namespace Backend {
 
         bool add_user(const Ticket::String<25> & op_name,const Ticket::String<25> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri);
 
-            ~Log_op()=default;
+        void clean();
+
+        ~Log_op()=default;
     };
 
 }
 namespace Backend {
 
-    Ticket::String<25> user::get_20(user_parameter kind){
+    Ticket::String<25> user::get_25(user_parameter kind){
         switch(kind) {
             case (user_parameter::Username):return username;
             case (user_parameter::Name):return name;
             default:
-                throw Ticket::WrongOperation("get_20");
+                std::cerr<<"get_25"<<'\n';
+                throw Ticket::WrongOperation("get_25");
         }
     }
 
-    const Ticket::String<25> user::get_20(user_parameter kind)const{
+    const Ticket::String<25> user::get_25(user_parameter kind)const{
         switch(kind) {
             case (user_parameter::Username):return username;
             case (user_parameter::Name):return name;
             default:
-                throw Ticket::WrongOperation("get_20");
+                std::cerr<<"get_25"<<'\n';
+                throw Ticket::WrongOperation("get_25");
         }
     }
 
 
-    Ticket::String<35> user::get_30(user_parameter kind){
+    Ticket::String<35> user::get_35(user_parameter kind){
         switch(kind) {
             case (user_parameter::Username):return passwd;
             case (user_parameter::Name):return mailAddr;
             default:
-                throw Ticket::WrongOperation("get_20");
+                std::cerr<<"get_35"<<'\n';
+                throw Ticket::WrongOperation("get_25");
         }
     }
 
@@ -139,8 +140,10 @@ namespace Backend {
             case (user_parameter::Passwd):passwd=change;break;
             case (user_parameter::Name):name=change;break;
             case (user_parameter::MailAddr):mailAddr=change;break;
-            default:
+            default: {
+                std::cerr<<"get_user_parameter"<<'\n';
                 Ticket::WrongOperation("get_user_parameter");
+            }
         }
         //  else if(kind==user_parameter::Privilege)  privilege=change;
     }
@@ -164,16 +167,14 @@ namespace Backend {
 
     bool BPT_insert_user::add_user(user & data){
         //std::cout<<data.get_username()<<' '<<'\n';
-        if(_BPT_user.insert(data.get_20(user_parameter::Username),data)==-1) return false;
+        if(_BPT_user.insert(data.get_25(user_parameter::Username),data)==-1) return false;
         else {
-//        	_BPT_user.print();
            // std::cout<<_BPT_user.insert(data.get_username(),data);
             return true;
         }
     }
 
     user BPT_insert_user::find_user(const Ticket::String<25> & username){
-//    	_BPT_user.print();
         int pos=_BPT_user.find(username);
         if(pos==-1) throw NotFound();
         return _BPT_user.getVal(pos);
@@ -185,12 +186,16 @@ namespace Backend {
     }
 
     void BPT_insert_user::modify_user(const user& Nuser){
-        int pos=_BPT_user.find(Nuser.get_20(user_parameter::Username));
+        int pos=_BPT_user.find(Nuser.get_25(user_parameter::Username));
         _BPT_user.modifyVal(pos,Nuser);
     }
 
     int BPT_insert_user::size(){
         return _BPT_user.getSize();
+    }
+
+    void BPT_insert_user::clean() {
+        _BPT_user.clear();
     }
 
     bool Log_op::is_log(const Ticket::String<25> & username){return _logging_list.count(username);}
@@ -229,8 +234,8 @@ namespace Backend {
         if(op_pri<tmp.get_privilege()) return false;
         if(op_pri==tmp.get_privilege()&&op_name!=username) return false;
         else {
-        	tmp.print(os);
-        	return true;
+            tmp.print(os);
+            return true;
         }
     }
 
@@ -270,7 +275,6 @@ namespace Backend {
     }//0 是密码 1是名字 2是邮箱 3是权限
 
     bool Log_op::add_user(const Ticket::String<25> & op_name,const Ticket::String<25> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri){
-
         if(_logging_list.count(op_name)) {
             //判断权限
             int c_pri;
@@ -307,6 +311,10 @@ namespace Backend {
             }
             else return false;
         }
+    }
+
+    void Log_op::clean(){
+        op_user.clean();
     }
 
 }

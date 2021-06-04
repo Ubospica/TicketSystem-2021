@@ -324,8 +324,8 @@ namespace Backend {
             int pos = _BPT_Train.find(SN);
             int pos2 = _BPT_Train.find(SN);
             int pos3 = _BPT_Train.find(SN);
-            std::cout<<"--------------"<<'\n';
-            std::cout<<SN<<' '<<pos<<' '<<pos2<<' '<<pos3<<'\n';
+            std::cerr<<"--------------"<<'\n';
+            std::cerr<<SN<<' '<<pos<<' '<<pos2<<' '<<pos3<<'\n';
             //int Rlpos=_BPT_Rl.find(SN);
             //int spos=_BPT_Seat.find(SN);
             if (pos == -1) return false;
@@ -335,7 +335,7 @@ namespace Backend {
                 //std::cerr<<"query_train",throw wrong_operation();
                 Train data = _BPT_Train.getVal(pos);
 
-                std::cout<<data.start_day<<' '<<tDate<<' '<<data.end_day<<'\n';
+                std::cerr<<data.start_day<<' '<<tDate<<' '<<data.end_day<<'\n';
                 if (data.start_day.cmpDate(tDate) > 0 || tDate.cmpDate(data.end_day) >0 ) return false;
                 int sz = data.station_num;
                 char flag = _BPT_Rl.getVal(Rlpos);
@@ -666,21 +666,24 @@ namespace Backend {
                      int nums) {
             int pos = _BPT_Train.find(Train_ID);
             if (pos == -1) {
-                seat = -1;
+                seat = -2;
                 return;
             }
 
             Train data = _BPT_Train.getVal(pos);
             int sz = data.station_num;
-            for (int i = 0; i < sz; i++)
+            for (int i = 0; i < sz; i++) {
                 if (data.train_info[i].station == Sta) {
                     sta = i;
                     break;
                 }
-            std::cout<<'4'<<'\n';
+            }
+            std::cerr<<'4'<<'\n';
+            //std::cout<<Start_Date.timeCnt<<"\n";
+            //std::cout<<Start_Date.to_string()<<' '<<data.train_info[sta].Sta_Date.to_string()<<' '<<data.train_info[sta].End_Date.to_string();
             if (data.train_info[sta].Sta_Date.cmpDate(Start_Date) > 0 ||
                 Start_Date.cmpDate(data.train_info[sta].End_Date) > 0) {
-                seat = -1;
+                seat = -2;
                 return;
             }
             Seat_Key seatKey;
@@ -699,7 +702,7 @@ namespace Backend {
             int seatpos;
             seat = data.seat;
             int seattmp;
-            std::cout<<'1'<<'\n';
+            std::cerr<<'1'<<'\n';
             for (int i = sta; i < sz; i++) {
                 seatpos = _BPT_Seat.find(seatKey);
                 seattmp = _BPT_Seat.getVal(seatpos);
@@ -711,7 +714,7 @@ namespace Backend {
                     seat = -1;
                     return;
                 }
-                std::cout<<'2'<<'\n';
+                std::cerr<<'2'<<'\n';
                 seat = std::min(seat, seattmp);
                 Datetmp += (data.train_info[i + 1].prefix_time - data.train_info[i].prefix_time);
                 Ticket::pair<int,int> mmdd=Datetmp.getMMDD();
@@ -720,8 +723,8 @@ namespace Backend {
                 Datekey.dd = Datetmp.dd;*/
                 seatKey.time = Datekey.to_string();
             }
-            std::cout<<'3'<<'\n';
-            std::cout<<data.station_num<<' '<<end<<"\n";
+            std::cerr<<'3'<<'\n';
+            std::cerr<<data.station_num<<' '<<end<<"\n";
             End_Date = Datetmp+(-data.train_info[end].stopover);
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
 

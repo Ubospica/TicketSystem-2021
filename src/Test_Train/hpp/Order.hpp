@@ -304,7 +304,11 @@ namespace Backend {
             tmp.str =Train_ID;
             std::vector<int>Posvec = _BPT_TrainIndex.route<Comp>(tmp);
             int Possz=Posvec.size();
-            for(int j=0;j<Possz;j++) TrainOrdervec.push_back(Waiting_Queue.getVal(Posvec[j]));
+            for(int j=0;j<Possz;j++) {
+                TrainOrdervec.push_back(Waiting_Queue.getVal(_BPT_TrainIndex.getVal(Posvec[j])));
+                std::cerr<<"------8**"<<'\n';
+                std::cerr<<TrainOrdervec[j].get_Date(order_parameter::Start_Date).to_string()<<'\n';
+            }
         }
 
         void clean(){
@@ -366,7 +370,7 @@ namespace Backend {
             if (sztmp < n) return false;
             order ordertmp;
                 ordertmp = _BPT_Name_order.getVal(pos[sztmp - n]);
-                SN=ordertmp.get_num(order_parameter::Num);
+                SN=ordertmp.get_num(order_parameter::SN);
                 Train_ID = ordertmp.get_str(order_parameter::Train_ID);
                 switch (ordertmp.State()) {
                     case (state_list::Refund):
@@ -374,8 +378,8 @@ namespace Backend {
                     case (state_list::Success) : {
                         Success=ordertmp;
                         ordertmp.change_state(state_list::Refund);
-                        std::cout<<"!!!!!!!!!!!!"<<'\n';
-                        std::cout<<ordertmp.get_str(order_parameter::Train_ID)<<' '<<ordertmp.get_Date(order_parameter::Start_Date)<<' '<<ordertmp.get_Date(order_parameter::End_Date)<<'\n';
+                        std::cerr<<"!!!!!!!!!!!!"<<'\n';
+                        std::cerr<<ordertmp.get_str(order_parameter::Train_ID)<<' '<<ordertmp.get_Date(order_parameter::Start_Date)<<' '<<ordertmp.get_Date(order_parameter::End_Date)<<'\n';
                         _BPT_Name_order.modifyVal(pos[sztmp-n],ordertmp);
                         type='S';
                         return true;
@@ -450,7 +454,7 @@ namespace Backend {
 
         void buy_ticket(const std::string &name, const std::string &train_ID, const Ticket::Date Sta_date,
                         const Ticket::Date End_date, const Ticket::String<40> &Sta, Ticket::String<40> &Det, int &sta, int &end,
-                        int &n, int &price, bool state) {//0为queue，1为购票成功
+                        int &n, int &price, bool state) {//1为queue，0为购票成功
             order data;
            /* data.set_str<25>(order_parameter::Username, name);
             data.set_str<40>(order_parameter::Start, Sta);

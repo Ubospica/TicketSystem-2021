@@ -39,6 +39,7 @@ namespace Backend {
         void clean(Backend::Cmd_Que *cmdQue,std::ostream & os);
         void end(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
+
         Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
        // Ticket::Time stringtotime(const std::string & str);
@@ -60,7 +61,7 @@ namespace Backend {
                     //is >> todo;
                     getline(is,todo);
                     process(cmd, todo);
-                    std::cout<<i<<' ';
+                    std::cerr<<i<<' ';
                     OP(cmd, os);
                     i++;
                     cmd->clear();
@@ -68,6 +69,9 @@ namespace Backend {
                 }
             }catch(End){}
             delete cmd;
+        }
+        ~Main(){
+            std::cout<<"delete"<<'\n';
         }
     };
 }
@@ -221,10 +225,7 @@ namespace Backend {
                 dd *= 10;
                 dd += tmp[x] - '0';
             }
-            std::cerr<<"~~~~~~~~~~~~~~~~~~~~~";
-            std::cerr<<mm<<' '<<dd<<'\n';
             Ticket::Date Dtmp(mm,dd,0,0);
-            std::cerr<<Dtmp<<'\n';
             Date=Dtmp;
             break;
         }
@@ -268,7 +269,6 @@ namespace Backend {
 
     void Main::query_transfer(Cmd_Que *cmd, std::ostream &os) {
         Ticket::String<40> Sta = cmd->top();
-        cmd->pop();
         cmd->pop();
         Ticket::String<40> End = cmd->top();
         cmd->pop();
@@ -483,6 +483,7 @@ namespace Backend {
             if (cmd->top() == "false") state = false;
             else state = true;
             int sta, end, seat, price;
+            //Start_Date带分秒
             train_op.GetSeat(train_ID, Start_Date, End_Date, Sta, End, sta, end, seat, price, nums);
             if (seat==-2||(seat == -1 && !state)) os << '-' << '1' << '\n';
             else if (seat == -1 && state) {
@@ -496,7 +497,7 @@ namespace Backend {
                 os << ans << '\n';
 
             }
-        } else os << '-' << '1';
+        } else os << '-' << '1'<<'\n';
 
     }
 
@@ -541,10 +542,12 @@ namespace Backend {
                         Ticket::String<40> End = TrainOrdervec[i].get_station(order_parameter::End);
                         sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                         end=TrainOrdervec[i].get_num(order_parameter::End_Position);
+                        int nums=TrainOrdervec[i].get_num(order_parameter::Num);
                         train_op.GetSeat(Train_ID, Start_Time, End_Time, Sta, End, sta, end, seat, price,
-                                         TrainOrdervec[i].get_num(order_parameter::Num));
-                        std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< TrainOrdervec[i].get_num(order_parameter::Num)<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
-                        if (seat == -1) break;
+                                         nums);
+                        std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
+                        if (seat == -1) continue;
+                        train_op.RenewSeat(Train_ID,Start_Time,sta,end,-nums);
                         OrderKey orderKeytmp;
                         orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);
                         orderKeytmp.SN = TrainOrdervec[i].get_num(order_parameter::SN);
@@ -554,7 +557,7 @@ namespace Backend {
                     os << '0' << '\n';
                 }
             } else os << '-' << '1' << '\n';
-        } else os << '-' << '1';
+        } else os << '-' << '1'<<'\n';
         /*
          *
          */

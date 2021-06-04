@@ -268,7 +268,10 @@ namespace Backend {
             OrderKey data_key;
             data_key.str = name;
             data_key.SN = SN;
+
             int pos=Waiting_Queue.insert(data_key, order);
+            std::cerr<<"here"<<'\n';
+            std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
             data_key.str=Train_ID;
             _BPT_TrainIndex.insert(data_key,pos);
             //Waiting_Queue.write(Ticket::FileIO::END,data);
@@ -302,8 +305,11 @@ namespace Backend {
             OrderKey tmp;
             tmp.SN = 0;
             tmp.str =Train_ID;
+            std::cerr<<"------88**"<<'\n';
             std::vector<int>Posvec = _BPT_TrainIndex.route<Comp>(tmp);
+            std::cerr<<tmp.str<<' ';
             int Possz=Posvec.size();
+            std::cerr<<Possz<<'\n';
             for(int j=0;j<Possz;j++) {
                 TrainOrdervec.push_back(Waiting_Queue.getVal(_BPT_TrainIndex.getVal(Posvec[j])));
                 std::cerr<<"------8**"<<'\n';
@@ -394,6 +400,9 @@ namespace Backend {
                         _BPT_Name_order.modifyVal(pos[sztmp-n],ordertmp);
                         type='P';
                         return true;
+                    }
+                    default:{
+                        throw Ticket::WrongOperation();
                     }
                 }
         }

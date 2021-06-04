@@ -225,16 +225,16 @@ namespace Backend {
             Date=Dtmp;
             break;
         }
-        Ticket::String<25> Train_ID = cmd->top();
+        Ticket::String<22> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.query_train(Train_ID, Date, os)) {}
         else os << '-' << '1' << '\n';
     }
 
     void Main::query_ticket(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<45> Sta = cmd->top();
+        Ticket::String<36> Sta = cmd->top();
         cmd->pop();
-        Ticket::String<45> End = cmd->top();
+        Ticket::String<36> End = cmd->top();
         cmd->pop();
         Ticket::Date Date;
         std::string tmp = cmd->top();
@@ -264,9 +264,9 @@ namespace Backend {
     }
 
     void Main::query_transfer(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<45> Sta = cmd->top();
+        Ticket::String<36> Sta = cmd->top();
         cmd->pop();
-        Ticket::String<45> End = cmd->top();
+        Ticket::String<36> End = cmd->top();
         cmd->pop();
         Ticket::Date Date;
         std::string tmp = cmd->top();
@@ -294,27 +294,27 @@ namespace Backend {
     }
 
     void Main::release_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<25> Train_ID = cmd->top();
+        Ticket::String<22> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.release_train(Train_ID)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::delete_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<25> Train_ID = cmd->top();
+        Ticket::String<22> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.delete_train(Train_ID)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::add_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<25> Train_ID = cmd->top();
+        Ticket::String<22> Train_ID = cmd->top();
         cmd->pop();
         int station_num = stringtoint(cmd->top());
         cmd->pop();
         int seat_num = stringtoint(cmd->top());
         cmd->pop();
-        Ticket::String<45> Stations[station_num];
+        Ticket::String<36> Stations[station_num];
         int price[station_num];
         int traveltimes[station_num];
         int stoppover[station_num];
@@ -471,9 +471,9 @@ namespace Backend {
             }
             int nums = stringtoint(cmd->top());
             cmd->pop();
-            Ticket::String<45> Sta = cmd->top();
+            Ticket::String<36> Sta = cmd->top();
             cmd->pop();
-            Ticket::String<45> End = cmd->top();
+            Ticket::String<36> End = cmd->top();
             cmd->pop();
             bool state;
             if (cmd->top() == "false") state = false;
@@ -498,7 +498,7 @@ namespace Backend {
     }
 
     void Main::query_order(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<25> name = cmd->top();
+        Ticket::String<22> name = cmd->top();
         if (log_op.is_log(name)) {
             order_op.query_order(cmd->top(), os);
             cmd->pop();
@@ -506,14 +506,14 @@ namespace Backend {
     }
 
     void Main::refund_ticket(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<25> name = cmd->top();
+        Ticket::String<22> name = cmd->top();
         cmd->pop();
         if (log_op.is_log(name)) {
             int nums = stringtoint(cmd->top());
             cmd->pop();
             std::vector<order> TrainOrdervec;
             std::vector<OrderKey> Renewvec;
-            Ticket::String<25> Train_ID;
+            Ticket::String<22> Train_ID;
             order Success;
             int sz;
             char type;
@@ -533,9 +533,9 @@ namespace Backend {
                        // std::cerr<<"!~-"<<'\n';
                         Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                         Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);
-                        Ticket::String<45> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
+                        Ticket::String<36> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
                       //  std::cerr<<Start_Time.to_string()<<'\n';
-                        Ticket::String<45> End = TrainOrdervec[i].get_station(order_parameter::End);
+                        Ticket::String<36> End = TrainOrdervec[i].get_station(order_parameter::End);
                         sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                         end=TrainOrdervec[i].get_num(order_parameter::End_Position);
                         int nums=TrainOrdervec[i].get_num(order_parameter::Num);
@@ -552,8 +552,10 @@ namespace Backend {
                     order_op.renew(Renewvec,Train_ID);
                     os << '0' << '\n';
                 }
-            } else os << '-' << '1' << '\n';
-        } else os << '-' << '1'<<'\n';
+            }
+            else os << '-' << '1' << '\n';
+        }
+        else os << '-' << '1'<<'\n';
         /*
          *
          */

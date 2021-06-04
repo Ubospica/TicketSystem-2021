@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(TicketSystem_2021)
+project(code)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -9,6 +9,7 @@ include_directories(src/)
 include_directories(src/Tools)
 include_directories(src/BPlusTree)
 
+add_executable(code src/Test_Train/hpp/main.cpp)
 
 add_subdirectory(src/Tools)
 add_subdirectory(src/BPlusTree)

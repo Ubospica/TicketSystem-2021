@@ -248,8 +248,12 @@ namespace Backend {
                 data.train_info[i].stopover = stoppovertime[i];
                 Statmp += stoppovertime[i];
                 Endtmp += stoppovertime[i];
-                data.train_info[i].Sta_Date = Statmp;
-                data.train_info[i].End_Date = Endtmp;
+                Ticket::pair<int,int> mmdd=Statmp.getMMDD();
+                Ticket::Date Dtmp(mmdd.first,mmdd.second,0,0);
+                Ticket::pair<int,int> mmdd2=Endtmp.getMMDD();
+                Ticket::Date Dtmp2(mmdd2.first,mmdd2.second,0,0);
+                data.train_info[i].Sta_Date = Dtmp;
+                data.train_info[i].End_Date = Dtmp2;
                 data.train_info[i].prefix_time =
                         data.train_info[i - 1].prefix_time + traveltime[i] + stoppovertime[i];//
             }
@@ -318,6 +322,10 @@ namespace Backend {
 
         bool query_train(const Ticket::String<25> &SN, const Ticket::Date &tDate, std::ostream &os) {
             int pos = _BPT_Train.find(SN);
+            int pos2 = _BPT_Train.find(SN);
+            int pos3 = _BPT_Train.find(SN);
+            std::cout<<"--------------"<<'\n';
+            std::cout<<SN<<' '<<pos<<' '<<pos2<<' '<<pos3<<'\n';
             //int Rlpos=_BPT_Rl.find(SN);
             //int spos=_BPT_Seat.find(SN);
             if (pos == -1) return false;
@@ -326,7 +334,9 @@ namespace Backend {
                 if (Rlpos == -1) Error("query_train");
                 //std::cerr<<"query_train",throw wrong_operation();
                 Train data = _BPT_Train.getVal(pos);
-                if (data.start_day.cmpDate(tDate) == 1 || tDate.cmpDate(data.end_day) == 1) return false;
+
+                std::cout<<data.start_day<<' '<<tDate<<' '<<data.end_day<<'\n';
+                if (data.start_day.cmpDate(tDate) > 0 || tDate.cmpDate(data.end_day) >0 ) return false;
                 int sz = data.station_num;
                 char flag = _BPT_Rl.getVal(Rlpos);
                 if (flag == 'N') {
@@ -711,8 +721,8 @@ namespace Backend {
                 seatKey.time = Datekey.to_string();
             }
             std::cout<<'3'<<'\n';
+            std::cout<<data.station_num<<' '<<end<<"\n";
             End_Date = Datetmp+(-data.train_info[end].stopover);
-
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
 
         }

@@ -788,6 +788,7 @@ namespace Backend {
             //   std::cerr<<'3'<<'\n';
             //   std::cerr<<data.station_num<<' '<<end<<"\n";
             if(!is_exist) {seat=-2;return;}
+            if(sta>=end) {seat=-2;return;}
             if(seat<nums) seat=-1;
             End_Date = Datetmp+(-data.train_info[end].stopover);
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;

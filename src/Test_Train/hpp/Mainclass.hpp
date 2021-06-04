@@ -89,8 +89,8 @@ namespace Backend {
 
 
     //void add_train(Backend::Cmd_Que *cmdQue);
-    Ticket::Date Main::stringtodate(const std::string &str) {
-    }
+//    Ticket::Date Main::stringtodate(const std::string &str) {
+//    }
 
     //Ticket::Date Main::stringtodate(const Ticket::String str){};
     //Ticket::Time Main::stringtotime(const std::string &str) {}

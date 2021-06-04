@@ -20,7 +20,7 @@ namespace Ticket {
 		}
 	};
 	
-
+	
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::BPlusTree(const std::string& name) {
@@ -97,7 +97,7 @@ namespace Ticket {
 			return cur.son[res.second];
 		}
 	}
-
+	
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
@@ -183,9 +183,7 @@ namespace Ticket {
 						root = treeDt.tellPos();
 						treeDt.write(FileIO::END, newRoot);
 						treeDt.write(pos, cur);
-//						treeDt.write(Pos::POS_ROOT, root); //
 						++height;
-//						treeDt.write(Pos::POS_HEIGHT, height);
 						vSon = -1;
 					}
 					return 1;
@@ -223,8 +221,6 @@ namespace Ticket {
 					cur.cnt = M / 2;
 					if (!cur.isRoot) {
 						treeDt.write(pos, cur);
-//						treeDt.seekp(0, std::ios::end);
-//						int newP = treeDt.tellp();
 						treeDt.movePos(FileIO::END);
 						int newP = treeDt.tellPos();
 						treeDt.write(FileIO::END, newNd);
@@ -234,17 +230,13 @@ namespace Ticket {
 						cur.isRoot = 0;
 						treeDt.write(pos, cur);
 						Node newRoot{1, 1, 0, -1, -1, {cur.vKey[cur.cnt]}, {pos}}; //
-//						treeDt.seekp(0, std::ios::end);
-//						int newP = treeDt.tellp();
 						treeDt.movePos(FileIO::END);
 						int newP = treeDt.tellPos();
 						newRoot.son[1] = newP;
 						treeDt.write(FileIO::END, newNd);
 						root = treeDt.tellPos();
 						treeDt.write(FileIO::END, newRoot);
-//						treeDt.write(Pos::POS_ROOT, root); //
 						++height;
-//						treeDt.write(Pos::POS_HEIGHT, height);
 						vSon = -1;
 					}
 					return 1;
@@ -284,7 +276,7 @@ namespace Ticket {
 		}
 	}
 	
-
+	
 	
 	// an idiotic & easily-implemented version
 	// cuz i cannot erase the data (RValve) in "Data.dat"
@@ -314,13 +306,8 @@ namespace Ticket {
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(const Key &vl) {
-		int tmp = erase(root, vl);
-//		if (erase(root, vl) == 1) {
-		if (tmp == 1) {
+		if (erase(root, vl) == 1) {
 			--size;
-//			treeDt.write(Pos::POS_SIZE, size);
-//			treeDt.seekp(sizeof(int), std::ios::beg);
-//			write(-2, size);
 			return 1;
 		}
 		else {
@@ -329,9 +316,20 @@ namespace Ticket {
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::realErase(int pos, const Key &vKey) {
+		return 0;
+	}
+	
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::realErase(const Key &vl) {
+		return 0;
+	}
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
 	auto BPlusTree<Key, Value, NO_VALUE_FLAG, M>::route(const Key &val) ->
-		std::vector<int> {
+	std::vector<int> {
 		Comp cmp;
 		std::vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
@@ -363,28 +361,6 @@ namespace Ticket {
 		}
 		std::reverse(res.begin(), res.end());
 		return res;
-		
-//		auto checkAndAdd = [&res, &val] (const Node &cur) {
-//			for (int i = 0; i < cur.cnt; ++i) {
-//				if (cur.son[i] != -1 && (!Comp()(cur.vKey[i], val)) && (!Comp()(val, cur.vKey[i]))) {
-//					res.push_back(cur.son[i]);
-//				}
-//			}
-//		};
-////		checkAndAdd(cur);
-//		auto tmp = pos0.first;//std::get<0>(pos0);
-//		while (cur.next != -1 && !Comp()(cur.vKey[cur.cnt], val) && !Comp()(val, cur.vKey[cur.cnt])) {
-//			tmp = cur.next;
-//			treeDt.read(tmp, cur);
-//			checkAndAdd(cur);
-//		}
-//		tmp = pos0.first;// = std::get<0>(pos0);
-//		while (cur.prev != -1 && !Comp()(cur.vKey[0], val) && !Comp()(val, cur.vKey[0])) {
-//			tmp = cur.prev;
-//			treeDt.read(tmp, cur);
-//			checkAndAdd(cur);
-//		}
-//		return res;
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
@@ -395,13 +371,13 @@ namespace Ticket {
 			valueDt.clear();
 		}
 	}
-
+	
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::print (const BPlusTree::Node &p) {
 		using namespace std;
 		cerr << "cnt=" << p.cnt << " isroot=" << p.isRoot << " isLeaf=" << p.isLeaf
-				<< " prev=" << p.prev << " next=" << p.next<<"\n";
+		     << " prev=" << p.prev << " next=" << p.next<<"\n";
 		cerr << "vKey, son: ";
 		for (int i = 0; i < p.cnt; ++i) {
 			cerr << "(" << p.vKey[i] << ", " << p.son[i] << ") ";

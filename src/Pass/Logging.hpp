@@ -244,11 +244,11 @@ namespace Backend {
             //判断权限
             int c_pri;
             try {c_pri = _logging_list[op_name];}catch(NotFound){
-                std::cerr<<"NotFound";
+//                std::cerr<<"NotFound";
                 return false;}
          //   std::cout<<pri<<' '<<c_pri<<'\n';
             if(c_pri<=pri){
-                std::cerr<<"pri"<<'\n';
+//                std::cerr<<"pri"<<'\n';
                 return false;}
             user u(user_name);
             u.set_pri(pri);

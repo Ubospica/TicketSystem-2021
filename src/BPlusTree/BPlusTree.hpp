@@ -92,7 +92,7 @@ namespace Ticket{
 		 * @return 删除成功返回1，否则（如vl不存在）返回-1； （-1是为了和其他函数保持一致）
 		 */
 		int erase(const Key &vl);
-//		std::vector<std::tuple<Key, int>> route();
+		int realErase(const Key &vl);
 		/**
 		 * 模糊查找：可以先不使用，之后可能改接口（类似stl）
 		 *
@@ -131,11 +131,11 @@ namespace Ticket{
 		 * 打印整棵树
 		 */
 		void print ();
-		
+	
 	private:
 		FileIO treeDt, valueDt;
 		int root, height, size;
-		
+
 //		template <typename T> inline void read(int pos, T &cur, FileIO &fs);
 //		template <typename T> inline void read(int pos, T &cur);
 //
@@ -147,13 +147,14 @@ namespace Ticket{
 		template <typename Comp = std::less<Key> > pair<int, int> findIndex(int pos, const Key &vKey);
 		int insert(int pos, Key &vKey, int &vSon);
 		int erase(int pos, const Key &vKey);
+		int realErase(int pos, const Key &vKey);
 		
 		struct Pos {
 //			static const int END = -1, CUR = -2;
 			static const int POS_ROOT = 0, POS_SIZE = sizeof(root), POS_HEIGHT = sizeof(int) * 2;
 		};
 	};
-
+	
 } // namespace Bookstore
 
 //template implementation

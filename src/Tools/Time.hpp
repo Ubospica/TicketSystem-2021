@@ -133,7 +133,8 @@ namespace Ticket {
 //		}
 //	};
 	
-	constexpr int monthDays[] { 100'000, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	constexpr int monthDays[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	constexpr int totalDays[] { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
 	struct Date {
 		int timeCnt = 0;
 		
@@ -146,8 +147,7 @@ namespace Ticket {
 		}
 		
 		Date (int mm, int dd, int h, int m) {
-			timeCnt = dd * 1440 + h * 60 + m;
-			for (int i = 6; i < mm; ++i) timeCnt += monthDays[i] * 1440;
+			timeCnt = (totalDays[mm - 1] + dd) * 1440 + h * 60 + m;
 		}
 		
 		bool operator<(const Date &another) const {
@@ -195,7 +195,7 @@ namespace Ticket {
 		}
 		
 		pair<int, int> getMMDD() const {
-			int month = 6, tmp = timeCnt / 1440;
+			int month = 1, tmp = timeCnt / 1440;
 			while (tmp > monthDays[month]) {
 				tmp -= monthDays[month];
 				++month;
@@ -205,6 +205,10 @@ namespace Ticket {
 		
 		pair<int, int> getHHMM() const {
 			return make_pair((timeCnt % 1440) / 60, timeCnt % 60);
+		}
+		
+		Date getDate() const {
+			return Date(timeCnt / 1440 * 1440);
 		}
 		
 		
@@ -220,13 +224,9 @@ namespace Ticket {
 		}
 		
 		[[nodiscard]] std::string to_string() const {
-			int month = 6, tmp = timeCnt;
-			while (tmp > monthDays[month] * 1440) {
-				tmp -= monthDays[month] * 1440;
-				++month;
-			}
+			auto mmdd = getMMDD(), hhmm = getHHMM();
 			char res[20];
-			sprintf(res, "%02d-%02d %02d:%02d", month, tmp / 1440, (tmp % 1440) / 60, tmp % 60);
+			sprintf(res, "%02d-%02d %02d:%02d", mmdd.first, mmdd.second, hhmm.first, hhmm.second);
 			return std::string(res);
 		}
 		

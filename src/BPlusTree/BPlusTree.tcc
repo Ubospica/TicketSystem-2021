@@ -161,7 +161,7 @@ namespace Ticket {
 					
 					treeDt.movePos(FileIO::END);
 					int newP = treeDt.tellPos();
-					treeDt.write(FileIO::CUR, newNd);
+					treeDt.write(FileIO::END, newNd);
 					
 					if (cur.next != -1) {
 						Node nextNd;

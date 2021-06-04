@@ -13,7 +13,7 @@ namespace Backend {
         Passwd,
         Name,
         MailAddr,
-        Privilege,
+        //Privilege,
         Username
     };
     class user{
@@ -58,7 +58,7 @@ namespace Backend {
 
         user find_user(const Ticket::String<25> & username);
 
-        void erase_user(const Ticket::String<25> & username);
+        //void erase_user(const Ticket::String<25> & username);
 
         void modify_user(const user& Nuser);
 
@@ -142,7 +142,7 @@ namespace Backend {
             case (user_parameter::MailAddr):mailAddr=change;break;
             default: {
                 std::cerr<<"get_user_parameter"<<'\n';
-                Ticket::WrongOperation("get_user_parameter");
+                Ticket::WrongOperation();
             }
         }
         //  else if(kind==user_parameter::Privilege)  privilege=change;
@@ -180,11 +180,11 @@ namespace Backend {
         return _BPT_user.getVal(pos);
     }
 
-    void BPT_insert_user::erase_user(const Ticket::String<25> & username){
+  /*  void BPT_insert_user::erase_user(const Ticket::String<25> & username){
         //int pos=_BPT_user.find(username);
         _BPT_user.erase(username);
     }
-
+*/
     void BPT_insert_user::modify_user(const user& Nuser){
         int pos=_BPT_user.find(Nuser.get_25(user_parameter::Username));
         _BPT_user.modifyVal(pos,Nuser);

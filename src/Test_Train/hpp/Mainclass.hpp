@@ -89,8 +89,6 @@ namespace Backend {
 
 
     //void add_train(Backend::Cmd_Que *cmdQue);
-//    Ticket::Date Main::stringtodate(const std::string &str) {
-//    }
 
     //Ticket::Date Main::stringtodate(const Ticket::String str){};
     //Ticket::Time Main::stringtotime(const std::string &str) {}
@@ -234,9 +232,9 @@ namespace Backend {
     }
 
     void Main::query_ticket(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<40> Sta = cmd->top();
+        Ticket::String<45> Sta = cmd->top();
         cmd->pop();
-        Ticket::String<40> End = cmd->top();
+        Ticket::String<45> End = cmd->top();
         cmd->pop();
         Ticket::Date Date;
         std::string tmp = cmd->top();
@@ -266,9 +264,9 @@ namespace Backend {
     }
 
     void Main::query_transfer(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<40> Sta = cmd->top();
+        Ticket::String<45> Sta = cmd->top();
         cmd->pop();
-        Ticket::String<40> End = cmd->top();
+        Ticket::String<45> End = cmd->top();
         cmd->pop();
         Ticket::Date Date;
         std::string tmp = cmd->top();
@@ -316,7 +314,7 @@ namespace Backend {
         cmd->pop();
         int seat_num = stringtoint(cmd->top());
         cmd->pop();
-        Ticket::String<40> Stations[station_num];
+        Ticket::String<45> Stations[station_num];
         int price[station_num];
         int traveltimes[station_num];
         int stoppover[station_num];
@@ -473,9 +471,9 @@ namespace Backend {
             }
             int nums = stringtoint(cmd->top());
             cmd->pop();
-            Ticket::String<40> Sta = cmd->top();
+            Ticket::String<45> Sta = cmd->top();
             cmd->pop();
-            Ticket::String<40> End = cmd->top();
+            Ticket::String<45> End = cmd->top();
             cmd->pop();
             bool state;
             if (cmd->top() == "false") state = false;
@@ -535,9 +533,9 @@ namespace Backend {
                        // std::cerr<<"!~-"<<'\n';
                         Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                         Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);
-                        Ticket::String<40> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
+                        Ticket::String<45> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
                       //  std::cerr<<Start_Time.to_string()<<'\n';
-                        Ticket::String<40> End = TrainOrdervec[i].get_station(order_parameter::End);
+                        Ticket::String<45> End = TrainOrdervec[i].get_station(order_parameter::End);
                         sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                         end=TrainOrdervec[i].get_num(order_parameter::End_Position);
                         int nums=TrainOrdervec[i].get_num(order_parameter::Num);

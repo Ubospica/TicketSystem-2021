@@ -16,11 +16,11 @@ namespace Backend {
     // std::ofstream & operator<<(order & o,ofstream & os);
     struct OrderKey{
         Ticket::String<25> str;
-        int SN;
+        int SN=0;
         bool operator<(const OrderKey & r)const{
             return str<r.str||(str==r.str&&SN<r.SN);
         }
-        bool operator==(const OrderKey & r){
+        bool operator==(const OrderKey & r)const{
             return str==r.str&&SN==r.SN;
         }
         bool operator!=(const OrderKey & r)const{
@@ -45,7 +45,7 @@ namespace Backend {
         Success,
         Pending,
         Refund,
-        Error
+        //Error
     };
 
     class order {
@@ -57,13 +57,13 @@ namespace Backend {
         Ticket::Date End_date;
         Ticket::Date Sta_date;//购买时间
         Ticket::String<25> train_ID;
-        Ticket::String<40> Sta;
-        int sta;
-        Ticket::String<40> Det;
-        int det;
-        int ticket_num;
-        int price;
-        int serial_number;//只在查询pair 中Key 中 num为0时 指代当前数目
+        Ticket::String<45> Sta;
+        int sta=0;
+        Ticket::String<45> Det;
+        int det=0;
+        int ticket_num=0;
+        int price=0;
+        int serial_number=0;
     public:
         order() {
             _state = state_list::Null;
@@ -89,7 +89,7 @@ namespace Backend {
                     break;
                 default:
                     throw Ticket::WrongOperation("order_set_num");
-            };
+            }
         }
 /*        template<int Length>
         void set_str(order_parameter kind, const std::string str) {
@@ -110,7 +110,7 @@ namespace Backend {
                     throw Ticket::WrongOperation("order_set_string");
             };
         }*/
-        void set_str(order_parameter kind, const Ticket::String<25> str) {
+        void set_str(order_parameter kind, const Ticket::String<25> & str) {
             switch (kind) {
                 case (order_parameter::Train_ID):
                     train_ID = str;
@@ -120,10 +120,10 @@ namespace Backend {
                     break;
                 default:
                     throw Ticket::WrongOperation("order_set_string");
-            };
+            }
         }
 
-        void set_station(order_parameter kind, const Ticket::String<40> str){
+        void set_station(order_parameter kind, const Ticket::String<45> & str){
             switch (kind) {
                 case (order_parameter::Start):
                     Sta = str;
@@ -147,8 +147,8 @@ namespace Backend {
                     break;
                 default:
                     throw Ticket::WrongOperation("order_set_date");
-                    break;
-            };
+                    //break;
+            }
         }
 
         const Ticket::Date &get_Date(order_parameter kind) {
@@ -159,10 +159,10 @@ namespace Backend {
                     return End_date;
                 default:
                     throw Ticket::WrongOperation("order_get_date");
-            };
+            }
         }
 
-        int get_num(order_parameter kind) {
+        int get_num(order_parameter kind)const {
             switch (kind) {
                 case (order_parameter::Num):
                     return ticket_num;
@@ -176,7 +176,7 @@ namespace Backend {
                     return det;
                 default:
                     throw Ticket::WrongOperation("order_set_num");
-            };
+            }
         }
 
         Ticket::String<25> get_str(order_parameter kind) {
@@ -187,10 +187,10 @@ namespace Backend {
                     return user_name;
                 default:
                     throw Ticket::WrongOperation("order_set_string");
-            };
+            }
         }
 
-        Ticket::String<40> get_station(order_parameter kind) {
+        Ticket::String<45> get_station(order_parameter kind) {
             switch (kind) {
                 case (order_parameter::Start):
                     return Sta;
@@ -198,7 +198,7 @@ namespace Backend {
                     return Det;
                 default:
                     throw Ticket::WrongOperation("order_set_string");
-            };
+            }
         }
 
         void change_state(state_list state) {
@@ -238,6 +238,8 @@ namespace Backend {
                 case (state_list::Pending):
                     os << "pending";
                     break;
+                default:
+                    throw Ticket::WrongOperation();
             }
             os << ']' <<' '<<train_ID<< ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< Det << ' '<<End_date<< ' '
                       <<price<<' '<< ticket_num << '\n';
@@ -452,7 +454,7 @@ namespace Backend {
             else return false;
         }
 
-        void renew(std::vector<OrderKey> & Renewvec,const Ticket::String<25> Train_ID) {
+        void renew(std::vector<OrderKey> & Renewvec,const Ticket::String<25> & Train_ID) {
             //将空余票更新后，回到这里,传入更新的火车及其票数
             //再传出订单中的order
             //(?)
@@ -462,7 +464,7 @@ namespace Backend {
         }
 
         void buy_ticket(const std::string &name, const std::string &train_ID, const Ticket::Date Sta_date,
-                        const Ticket::Date End_date, const Ticket::String<40> &Sta, Ticket::String<40> &Det, int &sta, int &end,
+                        const Ticket::Date End_date, const Ticket::String<45> &Sta, Ticket::String<45> &Det, int &sta, int &end,
                         int &n, int &price, bool state) {//1为queue，0为购票成功
             order data;
            /* data.set_str<25>(order_parameter::Username, name);

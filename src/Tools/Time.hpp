@@ -207,10 +207,16 @@ namespace Ticket {
 			return make_pair((timeCnt % 1440) / 60, timeCnt % 60);
 		}
 		
-		Date getDate() const {
+		Date transToDate() const {
 			return Date(timeCnt / 1440 * 1440);
 		}
 		
+		std::string getDateStr() const {
+			static char res[25];
+			auto mmdd = getMMDD();
+			sprintf(res, "%02d%02d", mmdd.first, mmdd.second);
+			return std::string(res);
+		}
 		
 		/**
 		 * returns 1 if date of *this is less then another
@@ -224,8 +230,8 @@ namespace Ticket {
 		}
 		
 		[[nodiscard]] std::string to_string() const {
+			static char res[25];
 			auto mmdd = getMMDD(), hhmm = getHHMM();
-			char res[25];
 			sprintf(res, "%02d-%02d %02d:%02d", mmdd.first, mmdd.second, hhmm.first, hhmm.second);
 			return std::string(res);
 		}

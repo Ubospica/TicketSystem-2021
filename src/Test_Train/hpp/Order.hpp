@@ -270,8 +270,8 @@ namespace Backend {
             data_key.SN = SN;
 
             int pos=Waiting_Queue.insert(data_key, order);
-            std::cerr<<"here"<<'\n';
-            std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
+            //std::cerr<<"here"<<'\n';
+            //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
             data_key.str=Train_ID;
             _BPT_TrainIndex.insert(data_key,pos);
             //Waiting_Queue.write(Ticket::FileIO::END,data);
@@ -305,15 +305,15 @@ namespace Backend {
             OrderKey tmp;
             tmp.SN = 0;
             tmp.str =Train_ID;
-            std::cerr<<"------88**"<<'\n';
+           // std::cerr<<"------88**"<<'\n';
             std::vector<int>Posvec = _BPT_TrainIndex.route<Comp>(tmp);
-            std::cerr<<tmp.str<<' ';
+          //  std::cerr<<tmp.str<<' ';
             int Possz=Posvec.size();
-            std::cerr<<Possz<<'\n';
+          //  std::cerr<<Possz<<'\n';
             for(int j=0;j<Possz;j++) {
                 TrainOrdervec.push_back(Waiting_Queue.getVal(_BPT_TrainIndex.getVal(Posvec[j])));
-                std::cerr<<"------8**"<<'\n';
-                std::cerr<<TrainOrdervec[j].get_Date(order_parameter::Start_Date).to_string()<<'\n';
+            //    std::cerr<<"------8**"<<'\n';
+            //    std::cerr<<TrainOrdervec[j].get_Date(order_parameter::Start_Date).to_string()<<'\n';
             }
         }
 
@@ -384,8 +384,8 @@ namespace Backend {
                     case (state_list::Success) : {
                         Success=ordertmp;
                         ordertmp.change_state(state_list::Refund);
-                        std::cerr<<"!!!!!!!!!!!!"<<'\n';
-                        std::cerr<<ordertmp.get_str(order_parameter::Train_ID)<<' '<<ordertmp.get_Date(order_parameter::Start_Date)<<' '<<ordertmp.get_Date(order_parameter::End_Date)<<'\n';
+                        //std::cerr<<"!!!!!!!!!!!!"<<'\n';
+                        //std::cerr<<ordertmp.get_str(order_parameter::Train_ID)<<' '<<ordertmp.get_Date(order_parameter::Start_Date)<<' '<<ordertmp.get_Date(order_parameter::End_Date)<<'\n';
                         _BPT_Name_order.modifyVal(pos[sztmp-n],ordertmp);
                         type='S';
                         return true;

@@ -61,7 +61,7 @@ namespace Backend {
                     //is >> todo;
                     getline(is,todo);
                     process(cmd, todo);
-                    std::cerr<<i<<' ';
+                  //  std::cerr<<i<<' ';
                     OP(cmd, os);
                     i++;
                     cmd->clear();
@@ -70,9 +70,7 @@ namespace Backend {
             }catch(End){}
             delete cmd;
         }
-        ~Main(){
-            std::cout<<"delete"<<'\n';
-        }
+        ~Main()=default;
     };
 }
 namespace Backend {
@@ -118,9 +116,9 @@ namespace Backend {
         else if(todo=="clean") {clean(cmdQue,os);}
         else if(todo=="exit"){end(cmdQue,os);}
         else {
-            std::cout << "??????????????????????????" << '\n';
-            std::cout << todo << '\n';
-            std::cerr << "OP" << '\n';
+           // std::cout << "??????????????????????????" << '\n';
+           // std::cout << todo << '\n';
+           // std::cerr << "OP" << '\n';
             throw Ticket::WrongOperation();
         }
     }
@@ -264,7 +262,7 @@ namespace Backend {
         else type = 'P';
 
         if (train_op.query_ticket(Sta, End, Date, type, os)) {}
-        else os << '-' << '1' << '\n';
+        else os <<'0' << '\n';
     }
 
     void Main::query_transfer(Cmd_Que *cmd, std::ostream &os) {
@@ -534,18 +532,18 @@ namespace Backend {
                     sz = TrainOrdervec.size();
                     int seat, sta, end, price;
                     for (int i = 0; i < sz; i++) {
-                        std::cerr<<"!~-"<<'\n';
+                       // std::cerr<<"!~-"<<'\n';
                         Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                         Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);
                         Ticket::String<40> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
-                        std::cerr<<Start_Time.to_string()<<'\n';
+                      //  std::cerr<<Start_Time.to_string()<<'\n';
                         Ticket::String<40> End = TrainOrdervec[i].get_station(order_parameter::End);
                         sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                         end=TrainOrdervec[i].get_num(order_parameter::End_Position);
                         int nums=TrainOrdervec[i].get_num(order_parameter::Num);
                         train_op.GetSeat(Train_ID, Start_Time, End_Time, Sta, End, sta, end, seat, price,
                                          nums);
-                        std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
+                      //  std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
                         if (seat == -1) continue;
                         train_op.RenewSeat(Train_ID,Start_Time,sta,end,-nums);
                         OrderKey orderKeytmp;

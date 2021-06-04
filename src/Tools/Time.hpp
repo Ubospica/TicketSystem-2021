@@ -225,7 +225,7 @@ namespace Ticket {
 		
 		[[nodiscard]] std::string to_string() const {
 			auto mmdd = getMMDD(), hhmm = getHHMM();
-			char res[20];
+			char res[25];
 			sprintf(res, "%02d-%02d %02d:%02d", mmdd.first, mmdd.second, hhmm.first, hhmm.second);
 			return std::string(res);
 		}

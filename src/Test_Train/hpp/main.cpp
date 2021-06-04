@@ -81,7 +81,6 @@ void Query_Ticket(){
         Backend::process(cmdQue, todo);
         test.OP(cmdQue, std::cout);
         cmdQue->clear();
-        cur++;
         // cur++;
     }
     for(int i=0;i<100;i++){

@@ -203,7 +203,7 @@ namespace Ticket {
 		List<CacheNode> cache;
 		map<int, List<CacheNode>::Node*> cacheIndex;
 		int cacheCnt = 0;
-		static const int cacheSize = 10000;
+		static const int cacheSize = 2000;
 
 		template<typename T>
 		void _insertCache(int pos, T *value) {

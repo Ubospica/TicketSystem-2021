@@ -104,8 +104,8 @@ void Query_Ticket(){
     delete cmdQue;
 }
 int main(){
-//	freopen("a.in", "r", stdin);
-//	freopen("a.out", "w", stdout);
+	freopen("a.in", "r", stdin);
+	freopen("a.out", "w", stdout);
     Backend::Main OP;
 //    其中第一个参数为输入流，第二个参数为输出流
     OP.Run(std::cin,std::cout);

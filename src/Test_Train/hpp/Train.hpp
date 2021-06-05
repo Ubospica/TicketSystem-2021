@@ -580,27 +580,26 @@ namespace Backend {
             //一切的核心这个map Key值是尾站的所有train名， vector是尾站相同的中转站的在从中转站到尾站中车的位置
             //但由于中转站在从起点出发的火车中位置基本上与从中转站出发到尾站中的位置不一样
             //所以用pair来存，其中first是在从起点出发的火车中的位置，second是站在转乘的火车中的位置
-
             std::priority_queue<Trans_Comp> PQ;
             //Ticket::String<25> Ret[2];
             //起始站
             int nums;
             Trans_Comp Ret;
             Ret.num = 88888888;
-            std::string init="zzzzzzzzzzzzzzz";
-            Ret.Train_ID_End = init;
-            Ret.Train_ID_Sta = init;
             //  std::cerr<<"transfer_0"<<'\n';
             //  std::cerr<<date<<'\n';
+
+            map<Ticket::String<22>, std::vector<std::pair<int, int>>> Endmatch;
+            for (int i = 0; i < EndPosvec.size(); i++) {
+                Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
+                std::vector<std::pair<int, int>> tmpvec;
+                map<Ticket::String<22>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Train_SN,
+                                                                                                tmpvec);
+                Endmatch.insert(valueType);
+            }
             for (int i = 0; i < StaPosvec.size(); i++) {
-                map<Ticket::String<22>, std::vector<std::pair<int, int>>> Endmatch;
-                for (int j = 0; j < EndPosvec.size(); j++) {
-                    Endvec.push_back(_BPT_Station.getVal(EndPosvec[j]));
-                    std::vector<std::pair<int, int>> tmpvec;
-                    map<Ticket::String<22>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[j].Train_SN,
-                                                                                                    tmpvec);
-                    Endmatch.insert(valueType);
-                }
+
+                for(int j=0;j<EndPosvec.size();j++) Endmatch[Endvec[j].Train_SN].clear();
                 //   std::cerr<<"transfer_0.5"<<'\n';
                 Station StaStation = _BPT_Station.getVal(StaPosvec[i]);
                 Ticket::String<22> Train_ID = StaStation.Train_SN;
@@ -618,7 +617,11 @@ namespace Backend {
                     int Centpos1 = -1;
                     for (int k = 0; k < CentPosvec.size(); k++) {
                         Centvec.push_back(_BPT_Station.getVal(CentPosvec[k]));
-                        if (Centvec[k].Train_SN == StaStation.Train_SN) Centpos1 = Centvec[k].Train_pos;
+                      //  std::cout<<"-------"<<'\n';
+                        if (Centvec[k].Train_SN == StaStation.Train_SN){
+                            Centpos1 = Centvec[k].Train_pos;
+                       //     std::cout<<Centpos1<<"\n";
+                        }
                     }
                     for (int k = 0; k < CentPosvec.size(); k++) {
                         if (Endmatch.count(Centvec[k].Train_SN)) {
@@ -650,8 +653,8 @@ namespace Backend {
                                 Ticket::Date time = date + data.train_info[StaPos].depart_time+ diff;
                                 //只要到达中转时间小于最晚离开时间即可
                                 //             std::cerr<<"transfer_2"<<'\n';
-                                if (time < Candidate.train_info[CentPos2].End_Date +
-                                           Candidate.train_info[CentPos2].depart_time) {
+                                if (!(Candidate.train_info[CentPos2].End_Date +
+                                         Candidate.train_info[CentPos2].depart_time<time)) {
                                     Trans_Comp Challenger;
                                     Challenger.Cent=Candidate.train_info[CentPos2].station;
                                     Challenger.diff1=diff;
@@ -695,8 +698,8 @@ namespace Backend {
                                         nums = diff;
                                     }
                                     Challenger.num = nums;
-                                    Challenger.Train_ID_End = Endvec[j].Train_SN;
-                                    Challenger.Train_ID_Sta = StaStation.Train_SN;
+                                    Challenger.Train_ID_End = Candidate.Train_SN;
+                                    Challenger.Train_ID_Sta = data.Train_SN;
                                     Ret = std::min(Challenger, Ret);
                                 }
                             }
@@ -704,7 +707,7 @@ namespace Backend {
                     }
                 }
             }
-            if(Ret.Train_ID_End==init) os<<'0'<<'\n';
+            if(Ret.num==88888888) os<<'0'<<'\n';
             else{
                 Ticket::Date tmp=Ret.depart1+Ret.diff1;
                 int seat=_get_seat_range(Ret.Train_ID_Sta,Sta,Ret.depart1,Ret.sta1,Ret.end1);

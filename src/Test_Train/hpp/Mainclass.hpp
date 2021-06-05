@@ -225,7 +225,7 @@ namespace Backend {
             Date=Dtmp;
             break;
         }
-        Ticket::String<22> Train_ID = cmd->top();
+        Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.query_train(Train_ID, Date, os)) {}
         else os << '-' << '1' << '\n';
@@ -294,21 +294,21 @@ namespace Backend {
     }
 
     void Main::release_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<22> Train_ID = cmd->top();
+        Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.release_train(Train_ID)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::delete_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<22> Train_ID = cmd->top();
+        Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
         if (train_op.delete_train(Train_ID)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::add_train(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<22> Train_ID = cmd->top();
+        Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
         int station_num = stringtoint(cmd->top());
         cmd->pop();
@@ -504,7 +504,7 @@ namespace Backend {
     }
 
     void Main::query_order(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<22> name = cmd->top();
+        Ticket::String<24> name = cmd->top();
         if (log_op.is_log(name)) {
             order_op.query_order(cmd->top(), os);
             cmd->pop();
@@ -512,14 +512,14 @@ namespace Backend {
     }
 
     void Main::refund_ticket(Cmd_Que *cmd, std::ostream &os) {
-        Ticket::String<22> name = cmd->top();
+        Ticket::String<24> name = cmd->top();
         cmd->pop();
         if (log_op.is_log(name)) {
             int nums = stringtoint(cmd->top());
             cmd->pop();
             std::vector<order> TrainOrdervec;
             std::vector<OrderKey> Renewvec;
-            Ticket::String<22> Train_ID;
+            Ticket::String<24> Train_ID;
             order Success;
             int sz;
             char type;

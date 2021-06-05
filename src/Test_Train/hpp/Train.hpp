@@ -17,7 +17,7 @@ namespace Backend {
     private:
         struct Train {
             //private:
-            Ticket::String<25> Train_SN;
+            Ticket::String<22> Train_SN;
             Ticket::Date start_day;
             Ticket::Date end_day;
             Ticket::Date start_time;
@@ -28,7 +28,7 @@ namespace Backend {
             int seat=0;
             //int station;
             struct info {
-                Ticket::String<45> station;
+                Ticket::String<36> station;
                 //int prefix_time;
                 Ticket::Date Sta_Date;//仅代表日期的起终
                 Ticket::Date End_Date;//
@@ -46,13 +46,13 @@ namespace Backend {
         };
 
         struct Station {
-            Ticket::String<25> Train_SN;
+            Ticket::String<22> Train_SN;
             int Train_pos = 0;
 
             //Ticket::Time arri_time;
             Station() = default;
 
-            Station(const Ticket::String<25> &SN, const int &pos) {
+            Station(const Ticket::String<22> &SN, const int &pos) {
                 Train_SN = SN;
                 Train_pos = pos;
                 //arri_time=o.train_info[pos].arri_time;
@@ -63,14 +63,14 @@ namespace Backend {
         };
 
         struct Seat_Key {
-            Ticket::String<7> time;
-            Ticket::String<25> train;
-            Ticket::String<45> station;
+            Ticket::String<6> time;
+            Ticket::String<22> train;
+            Ticket::String<36> station;
 
             Seat_Key() = default;
 
-            Seat_Key(const Ticket::String<25> &Train, const Ticket::String<45> &Station,
-                     const Ticket::String<7> &Time) {
+            Seat_Key(const Ticket::String<22> &Train, const Ticket::String<36> &Station,
+                     const Ticket::String<6> &Time) {
                 time = Time;
                 train = Train;
                 station = Station;
@@ -92,7 +92,7 @@ namespace Backend {
             int pos;
         };*/
         struct Station_Key {
-            Ticket::String<45> Station_name;
+            Ticket::String<36> Station_name;
             int pos = 0;
 
             bool operator==(const Station_Key &r) const {
@@ -111,14 +111,14 @@ namespace Backend {
         };
 
         Ticket::BPlusTree<Seat_Key, int> _BPT_Seat;
-        Ticket::BPlusTree<Ticket::String<25>, Train> _BPT_Train;
+        Ticket::BPlusTree<Ticket::String<22>, Train> _BPT_Train;
         Ticket::BPlusTree<Station_Key, Station> _BPT_Station;
-        Ticket::BPlusTree<Ticket::String<25>, char> _BPT_Rl;
+        Ticket::BPlusTree<Ticket::String<22>, char> _BPT_Rl;
         Ticket::FileIONoCache Count;
         int cnt = 0;
 
         inline int
-        _get_seat(const Ticket::String<25> &train, const Ticket::String<45> &station, const Ticket::String<7> &date) {
+        _get_seat(const Ticket::String<22> &train, const Ticket::String<36> &station, const Ticket::String<6> &date) {
             Seat_Key seatKey(train, station, date);
             int pos = _BPT_Seat.find(seatKey);
             if (pos == -1) return -1;
@@ -126,7 +126,7 @@ namespace Backend {
         }
 
         inline int
-        _get_seat_range(const Train &data, const Ticket::String<45> &Sta, const Ticket::Date &Start_Date, int sta,
+        _get_seat_range(const Train &data, const Ticket::String<36> &Sta, const Ticket::Date &Start_Date, int sta,
                         int end) {
 
             Ticket::pair<int,int> mmdd=Start_Date.getMMDD();
@@ -159,7 +159,7 @@ namespace Backend {
         }
 
 
-        inline int _get_seat_range(const Ticket::String<25> &Train_ID, const Ticket::String<45> &Sta, const Ticket::Date &Start_Date, int sta,
+        inline int _get_seat_range(const Ticket::String<22> &Train_ID, const Ticket::String<36> &Sta, const Ticket::Date &Start_Date, int sta,
                                    int end) {
             int pos=_BPT_Train.find(Train_ID);
             Train data=_BPT_Train.getVal(pos);
@@ -194,7 +194,7 @@ namespace Backend {
         struct Comp {
             int data = 0;
             int pos = 0;
-            Ticket::String<25> ID;
+            Ticket::String<22> ID;
 
             bool operator<(const Comp &o) const {
                 return data < o.data || (data == o.data && ID < o.ID);
@@ -202,9 +202,9 @@ namespace Backend {
         };
 
         struct Trans_Comp {
-            Ticket::String<25> Train_ID_Sta;
-            Ticket::String<25> Train_ID_End;
-            Ticket::String<45> Cent;
+            Ticket::String<22> Train_ID_Sta;
+            Ticket::String<22> Train_ID_End;
+            Ticket::String<36> Cent;
             int num=0;
             int diff1=0;
             int diff2=0;
@@ -234,7 +234,7 @@ namespace Backend {
             //std::cout << cnt << '\n';
         };
 
-        bool add_train(const Ticket::String<25> &SN, int &stanum, int &seatnum, Ticket::String<45> *stations,
+        bool add_train(const Ticket::String<22> &SN, int &stanum, int &seatnum, Ticket::String<36> *stations,
                        const int *price, const Ticket::Date &sta_time, const int *traveltime, const int *stoppovertime,
                        const Ticket::Date *saleDate, char type) {//saleDate[0]为起始,1为终结
             if(_BPT_Train.find(SN)!=-1) return false;
@@ -299,7 +299,7 @@ namespace Backend {
             //终点站,price与出发时间停留时间无用
         }
 
-        bool delete_train(const Ticket::String<25> &SN) {
+        bool delete_train(const Ticket::String<22> &SN) {
             //这里好像有点鲁棒？判断是否发售？
             int pos = _BPT_Rl.find(SN);
             if (pos == -1) return false;
@@ -318,7 +318,7 @@ namespace Backend {
             }
         }
 
-        bool release_train(const Ticket::String<25> &SN) {
+        bool release_train(const Ticket::String<22> &SN) {
             int pos = _BPT_Train.find(SN);
             //Otmp_pos为第二key为0的位置
             Station_Key data_key;
@@ -354,7 +354,7 @@ namespace Backend {
             //_BPT_Train.modifyVal(pos,data);
         }
 
-        bool query_train(const Ticket::String<25> &SN, const Ticket::Date &tDate, std::ostream &os) {
+        bool query_train(const Ticket::String<22> &SN, const Ticket::Date &tDate, std::ostream &os) {
             int pos = _BPT_Train.find(SN);
             int pos2 = _BPT_Train.find(SN);
             int pos3 = _BPT_Train.find(SN);
@@ -420,10 +420,10 @@ namespace Backend {
         }
 
         bool
-        query_ticket(const Ticket::String<45> &Sta, const Ticket::String<45> &Det, const Ticket::Date &date, char type,
+        query_ticket(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date, char type,
                      std::ostream &os) {//type 'T'-time 'P'-price
-            Backend::map<Ticket::String<25>, int> match;
-            std::vector<Ticket::String<25>> aimIDvec;
+            Backend::map<Ticket::String<22>, int> match;
+            std::vector<Ticket::String<22>> aimIDvec;
             Station_Key Keytmp;
             Keytmp.Station_name = Sta;
             Keytmp.pos = 0;
@@ -441,7 +441,7 @@ namespace Backend {
             //起始站匹配
             for (int i = 0; i < sz; i++) {
                 stationtmp = _BPT_Station.getVal(stavec[i]);
-                Ticket::pair<const Ticket::String<25>, int> tmp(stationtmp.Train_SN, stationtmp.Train_pos);
+                Ticket::pair<const Ticket::String<22>, int> tmp(stationtmp.Train_SN, stationtmp.Train_pos);
                 //    os<<stationtmp.Train_SN<<' '<<stationtmp.Train_pos<<' '<<'\n';
                 if (match.insert(tmp)) {}
                 else std::cerr << "query_ticket", throw std::exception();
@@ -563,7 +563,7 @@ namespace Backend {
             return true;
         }
 
-        bool query_transfer(const Ticket::String<45> &Sta, const Ticket::String<45> &Det, const Ticket::Date &date,
+        bool query_transfer(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date,
                             char type, std::ostream &os) {
             //为什么感觉时间处理这么麻烦?
             //先记住我在每一个info里存的prefix_time
@@ -593,17 +593,17 @@ namespace Backend {
             //  std::cerr<<"transfer_0"<<'\n';
             //  std::cerr<<date<<'\n';
             for (int i = 0; i < StaPosvec.size(); i++) {
-                map<Ticket::String<25>, std::vector<std::pair<int, int>>> Endmatch;
+                map<Ticket::String<22>, std::vector<std::pair<int, int>>> Endmatch;
                 for (int j = 0; j < EndPosvec.size(); j++) {
                     Endvec.push_back(_BPT_Station.getVal(EndPosvec[j]));
                     std::vector<std::pair<int, int>> tmpvec;
-                    map<Ticket::String<25>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[j].Train_SN,
+                    map<Ticket::String<22>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[j].Train_SN,
                                                                                                     tmpvec);
                     Endmatch.insert(valueType);
                 }
                 //   std::cerr<<"transfer_0.5"<<'\n';
                 Station StaStation = _BPT_Station.getVal(StaPosvec[i]);
-                Ticket::String<25> Train_ID = StaStation.Train_SN;
+                Ticket::String<22> Train_ID = StaStation.Train_SN;
                 int train_pos = _BPT_Train.find(Train_ID);
                 Train data = _BPT_Train.getVal(train_pos);
                 int statnum = data.station_num;
@@ -717,8 +717,8 @@ namespace Backend {
             return true;
         }
 
-        void GetSeat(const Ticket::String<25> &Train_ID, Ticket::Date &Start_Date, Ticket::Date &End_Date,
-                     Ticket::String<45> &Sta, Ticket::String<45> &End, int &sta, int &end, int &seat, int &price,
+        void GetSeat(const Ticket::String<22> &Train_ID, Ticket::Date &Start_Date, Ticket::Date &End_Date,
+                     Ticket::String<36> &Sta, Ticket::String<36> &End, int &sta, int &end, int &seat, int &price,
                      int nums) {
             int pos = _BPT_Train.find(Train_ID);
             if (pos == -1) {
@@ -794,7 +794,7 @@ namespace Backend {
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
         }
 
-        void RenewSeat(const Ticket::String<25> & Train_ID, const Ticket::Date &Sta_Time,
+        void RenewSeat(const Ticket::String<22> & Train_ID, const Ticket::Date &Sta_Time,
                        int sta,int end, int devi) {
             int pos = _BPT_Train.find(Train_ID);
             Train data = _BPT_Train.getVal(pos);

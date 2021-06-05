@@ -480,20 +480,27 @@ namespace Backend {
             else state = true;
             int sta, end, seat, price;
             //Start_Date带分秒
-            train_op.GetSeat(train_ID, Start_Date, End_Date, Sta, End, sta, end, seat, price, nums);
-            if (seat==-2||(seat == -1 && !state)) os << '-' << '1' << '\n';
-            else if (seat == -1 && state) {
-                order_op.buy_ticket(name, train_ID, Start_Date, End_Date, Sta, End, sta, end, nums, price, true);
-                os << "queue" << '\n';
-            } else {
-                order_op.buy_ticket(name, train_ID, Start_Date, End_Date, Sta, End, sta, end, nums, price, false);
-              //  std::cout<<train_ID<<' '<<Start_Date<<' '<<sta<<' '<<end<<'\n';
-                train_op.RenewSeat(train_ID, Start_Date, sta, end, -nums);
-                long long ans = nums * price;
-                os << ans << '\n';
+            Train_manager::Train data;
+            if(train_op.GetTrain(data,train_ID)) {
+                //这里的Start_Date不带分秒
+                train_op.GetSeat(data, Start_Date, End_Date, Sta, End, sta, end, seat, price, nums);
+                //这里的Start_Date带分秒
+                if (seat == -2 || (seat == -1 && !state)) os << '-' << '1' << '\n';
+                else if (seat == -1 && state) {
+                    order_op.buy_ticket(name, train_ID, Start_Date, End_Date, Sta, End, sta, end, nums, price, true);
+                    os << "queue" << '\n';
+                } else {
+                    order_op.buy_ticket(name, train_ID, Start_Date, End_Date, Sta, End, sta, end, nums, price, false);
+                    //  std::cout<<train_ID<<' '<<Start_Date<<' '<<sta<<' '<<end<<'\n';
+                    train_op.RenewSeat(data, Start_Date, sta, end, -nums);
+                    long long ans = nums * price;
+                    os << ans << '\n';
 
+                }
             }
-        } else os << '-' << '1'<<'\n';
+            else os<<'-'<<'1'<<'\n';
+        }
+        else os << '-' << '1'<<'\n';
 
     }
 
@@ -522,7 +529,9 @@ namespace Backend {
             //    std::cout<<'6'<<'\n';
                 if (type == 'P') os << '0' << '\n';
                 else {
-                    train_op.RenewSeat(Success.get_str(order_parameter::Train_ID),
+                    Train_manager::Train data;
+                    train_op.GetTrain(data,Success.get_str(order_parameter::Train_ID));
+                    train_op.RenewSeat(data,
                                        Success.get_Date(order_parameter::Start_Date),
                                        Success.get_num(order_parameter::Start_Position),
                                        Success.get_num(order_parameter::End_Position),
@@ -533,17 +542,18 @@ namespace Backend {
                        // std::cerr<<"!~-"<<'\n';
                         Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                         Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);
+                        Ticket::Date Start_Key(Start_Time.transToDate());
                         Ticket::String<36> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
                       //  std::cerr<<Start_Time.to_string()<<'\n';
                         Ticket::String<36> End = TrainOrdervec[i].get_station(order_parameter::End);
                         sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                         end=TrainOrdervec[i].get_num(order_parameter::End_Position);
                         int nums=TrainOrdervec[i].get_num(order_parameter::Num);
-                        train_op.GetSeat(Train_ID, Start_Time, End_Time, Sta, End, sta, end, seat, price,
+                        train_op.GetSeat(data, Start_Key, End_Time, Sta, End, sta, end, seat, price,
                                          nums);
                       //  std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
                         if (seat == -1) continue;
-                        train_op.RenewSeat(Train_ID,Start_Time,sta,end,-nums);
+                        train_op.RenewSeat(data,Start_Time,sta,end,-nums);
                         OrderKey orderKeytmp;
                         orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);
                         orderKeytmp.SN = TrainOrdervec[i].get_num(order_parameter::SN);

@@ -14,14 +14,14 @@ namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
 
     class Train_manager {
-    private:
+    public:
         struct Train {
             //private:
             Ticket::String<22> Train_SN;
             Ticket::Date start_day;
             Ticket::Date end_day;
             Ticket::Date start_time;
-           // Ticket::String<40> start_station;
+            // Ticket::String<40> start_station;
             int station_num = 0;
             // char rl='N';
             char type='\0';
@@ -44,6 +44,9 @@ namespace Backend {
             //Train()=default;
             //~Train()=default;
         };
+
+    private:
+
 
         struct Station {
             Ticket::String<22> Train_SN;
@@ -124,8 +127,7 @@ namespace Backend {
             if (pos == -1) return -1;
             else return _BPT_Seat.getVal(pos);
         }
-
-        inline int
+        int
         _get_seat_range(const Train &data, const Ticket::String<36> &Sta, const Ticket::Date &Start_Date, int sta,
                         int end) {
 
@@ -159,7 +161,7 @@ namespace Backend {
         }
 
 
-        inline int _get_seat_range(const Ticket::String<22> &Train_ID, const Ticket::String<36> &Sta, const Ticket::Date &Start_Date, int sta,
+        int _get_seat_range(const Ticket::String<22> &Train_ID, const Ticket::String<36> &Sta, const Ticket::Date &Start_Date, int sta,
                                    int end) {
             int pos=_BPT_Train.find(Train_ID);
             Train data=_BPT_Train.getVal(pos);
@@ -223,6 +225,7 @@ namespace Backend {
 
     public:
         //Train_manager()=default;
+
         explicit Train_manager(const std::string &name, const std::string &station_name, const std::string &Rlname,
                                const std::string &seat_name, const std::string &count) : _BPT_Train(name),
                                                                                          _BPT_Station(station_name),
@@ -487,7 +490,7 @@ namespace Backend {
 
             //Ticket::Date Datetmp(data.start_time);
             //Ticket::pair<int,int> mmdd=date.getMMDD();
-            Ticket::Date DateKey(date.transToDate());
+            Ticket::Date DateKey(date);
             /*       DateKey.dd = date.dd;
                    DateKey.mm = date.mm;*/
             for (int i = 0; i < sz; i++) {
@@ -570,7 +573,7 @@ namespace Backend {
                  std::cout<<diff<<' '<<Dtmp<<' '<<Dtmp+diff<<' '<<'\n';
                  std::cout<<"-----"<<'\n';*/
               //  mmdd2=Dtmp.getMMDD();
-                Ticket::Date DateKet2(Dtmp.transToDate());
+               // Ticket::Date DateKet2(Dtmp.transToDate());
                 /* DateKet2.mm = Dtmp.mm;
                  DateKet2.dd = Dtmp.dd;*/
                 os << Det << ' ' << Dtmp << ' '<< Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
@@ -737,16 +740,16 @@ namespace Backend {
             return true;
         }
 
-        void GetSeat(const Ticket::String<22> &Train_ID, Ticket::Date &Start_Date, Ticket::Date &End_Date,
+        bool GetTrain(Train & data,const Ticket::String<22> & Train_ID){
+            int pos=_BPT_Train.find(Train_ID);
+            if(pos==-1) return false;
+            else {data=_BPT_Train.getVal(pos);return true;}
+        }
+
+        void GetSeat(Train & data, Ticket::Date &Start_Date, Ticket::Date &End_Date,
                      Ticket::String<36> &Sta, Ticket::String<36> &End, int &sta, int &end, int &seat, int &price,
                      int nums) {
-            int pos = _BPT_Train.find(Train_ID);
-            if (pos == -1) {
-                seat = -2;
-                return;
-            }
-
-            Train data = _BPT_Train.getVal(pos);
+           // int pos = _BPT_Train.find(Train_ID);
             if(nums>data.seat) {seat=-2;return;}
             int sz = data.station_num;
             bool is_exist=false;
@@ -772,13 +775,14 @@ namespace Backend {
             //Ticket::pair<int,int> mmdd=Start_Date.getMMDD();
             /*     Start_Date.mi = data.train_info[sta].arri_time.mi;
                  Start_Date.hr = data.train_info[sta].arri_time.hr;*/
-            Ticket::Date Stmp(Start_Date.transToDate()+data.train_info[sta].depart_time);
-            Start_Date=Stmp;
+            //此时Start_Date 不含分秒
+            //Ticket::Date Stmp();
+            Ticket::Date Dtmp(Start_Date);
+            Start_Date=Start_Date+data.train_info[sta].depart_time;
             //mmdd=Start_Date.getMMDD();
-            Ticket::Date Dtmp(Start_Date.transToDate());
             Seat_Key seatKey;
             seatKey.station = Sta;
-            seatKey.train = Train_ID;
+            seatKey.train = data.Train_SN;
             seatKey.time = Dtmp.getDateStr();
             Ticket::Date Datetmp = Start_Date;
             int seatpos;
@@ -814,13 +818,14 @@ namespace Backend {
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
         }
 
-        void RenewSeat(const Ticket::String<22> & Train_ID, const Ticket::Date &Sta_Time,
+        void RenewSeat(Train & data, const Ticket::Date &Sta_Time,
                        int sta,int end, int devi) {
-            int pos = _BPT_Train.find(Train_ID);
-            Train data = _BPT_Train.getVal(pos);
+            //int pos = _BPT_Train.find(Train_ID);
+            //Train data = _BPT_Train.getVal(pos);
             int sz = data.station_num;
 
             // seatKey.time=Sta_Time.to_string();
+            //这里Sta_Time包含分秒
             Ticket::Date Datetmp = Sta_Time;
         //    Ticket::pair<int,int> mmdd=Datetmp.getMMDD();
             Ticket::Date Datekey(Datetmp.transToDate());
@@ -828,7 +833,7 @@ namespace Backend {
             DateKey.dd = Datetmp.dd;*/
             Seat_Key seatKey;
             //seatKey.station = Sta;
-            seatKey.train = Train_ID;
+            seatKey.train = data.Train_SN;
             seatKey.time = Datekey.getDateStr();
             int seatpos;
             int oriseat;

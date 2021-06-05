@@ -270,7 +270,6 @@ namespace Backend {
             OrderKey data_key;
             data_key.str = name;
             data_key.SN = SN;
-
             int pos=Waiting_Queue.insert(data_key, order);
             //std::cerr<<"here"<<'\n';
             //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';

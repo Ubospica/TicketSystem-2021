@@ -630,7 +630,7 @@ namespace Backend {
                                 if (!(Candidate.train_info[CentPos2].End_Date +
                                          Candidate.train_info[CentPos2].depart_time<time)) {
                                     Trans_Comp Challenger;
-                                    Challenger.Cent=Candidate.train_info[CentPos2].station;
+                                    Challenger.Cent=data.train_info[CentPos1].station;
                                     Challenger.diff1=diff;
                                     Challenger.depart1=date + data.train_info[StaPos].depart_time;
                                     Challenger.sta1=StaPos;
@@ -640,14 +640,10 @@ namespace Backend {
                                     Challenger.Start_Date1=date + data.train_info[StaPos].depart_time-data.train_info[StaPos].prefix_time;
                                     Challenger.price1=data.train_info[CentPos1].prefix_price-data.train_info[StaPos].prefix_price;
                                     Challenger.price2=Candidate.train_info[EndPos].prefix_price-Candidate.train_info[CentPos2].prefix_price;
-                                    //           std::cerr<<"transfer_3"<<'\n';
                                     Ticket::Date Timetmp = Candidate.train_info[CentPos2].depart_time;
-                                  //  Ticket::pair<int,int> mmdd=time.getMMDD();
-                                  //  Ticket::pair<int,int> hrmi=Timetmp.getHHMM();
                                     //Datetmp表示该车到站同天的离站时间
                                     Ticket::Date Datetmp(time.transToDate()+Timetmp);
                                     //Start表示该车最早离站时间
-                                    //mmdd=Candidate.train_info[CentPos2].Sta_Date.getMMDD();
                                     Ticket::Date Start(Candidate.train_info[CentPos2].Sta_Date+Timetmp);
                                     if (Datetmp < Start) {
                                         //同天离站时间小于起始离站，说明该天在发车起始以外，需要等到第一趟车
@@ -655,7 +651,7 @@ namespace Backend {
                                         Challenger.depart2=Start;
                                         Challenger.Start_Date2=Start;
                                     } else {
-                                        if (time < Datetmp) diff += Datetmp.diffMinute(time);
+                                        if (!(Datetmp<time)) diff += Datetmp.diffMinute(time);
                                         else {
                                             //同天离站时间小于到站时间，那么要多等一天
                                             ++Datetmp;
@@ -684,7 +680,7 @@ namespace Backend {
                     }
                 }
             }
-            if(Ret.num==88888888) return false;
+            if(Ret.num==888888888) return false;
             else{
                 Ticket::Date tmp=Ret.depart1+Ret.diff1;
                 int seat=_get_seat_range(Ret.Train_ID_Sta,Ret.Start_Date1,Ret.sta1,Ret.end1,100001);
@@ -704,7 +700,7 @@ namespace Backend {
         }
 
         void GetSeat(Train & data, Ticket::Date &Start_Date, Ticket::Date &End_Date,
-                     Ticket::String<36> &Sta, Ticket::String<36> &End, int &sta, int &end, int &seat, int &price,
+                     const Ticket::String<36> &Sta, const Ticket::String<36> &End, int &sta, int &end, int &seat, int &price,
                      int nums) {
            // int pos = _BPT_Train.find(Train_ID);
             if(nums>data.seat) {seat=-2;return;}
@@ -726,17 +722,11 @@ namespace Backend {
                 seat = -2;
                 return;
             }
-
-            //Ticket::pair<int,int> hrmi=data.train_info[sta].depart_time.getHHMM();
-            //Ticket::pair<int,int> mmdd=Start_Date.getMMDD();
-            /*     Start_Date.mi = data.train_info[sta].arri_time.mi;
-                 Start_Date.hr = data.train_info[sta].arri_time.hr;*/
             //此时Start_Date 不含分秒
             //Ticket::Date Stmp();
-
-            Seat_Key seatKey;
-            seatKey.train = data.Train_SN;
-            seatKey.time = Start_Date.getDateStr();
+        //    Seat_Key seatKey;
+       //     seatKey.train = data.Train_SN;
+       //     seatKey.time = Start_Date.getDateStr();
             Start_Date=Start_Date+data.train_info[sta].depart_time;
          //   std::cout<<seatKey.time<<"\n";
             Ticket::Date Dtmp(Start_Date);
@@ -754,7 +744,7 @@ namespace Backend {
             Seat seat1;
             int pos=_BPT_Seat.find(seatKey1);
            // std::cout<<pos<<'\n';
-            seat1=_BPT_Seat.getVal(_BPT_Seat.find(seatKey1));
+            seat1=_BPT_Seat.getVal(pos);
          //   for(int i=0;i<sz;i++) std::cout<<seat1.seatarr[i]<<'\n';
             for (int i = sta; i < sz; i++) {
                 if (data.train_info[i].station == End) {
@@ -776,19 +766,11 @@ namespace Backend {
 
         void RenewSeat(Train & data, const Ticket::Date &Sta_Time,
                        int sta,int end, int devi) {
-            //int pos = _BPT_Train.find(Train_ID);
-            //Train data = _BPT_Train.getVal(pos);
             int sz = data.station_num;
-            // seatKey.time=Sta_Time.to_string();
             //这里Sta_Time包含分秒
             Ticket::Date Datetmp = Sta_Time-data.train_info[sta].prefix_time;
-           // std::cout<<Datetmp<<'\n';
-        //    Ticket::pair<int,int> mmdd=Datetmp.getMMDD();
             Ticket::Date Datekey=(Datetmp.transToDate());
-/*            DateKey.mm = Datetmp.mm;
-            DateKey.dd = Datetmp.dd;*/
             Seat_Key seatKey;
-            //seatKey.station = Sta;
             seatKey.train = data.Train_SN;
             seatKey.time = Datekey.getDateStr();
             int seatpos=_BPT_Seat.find(seatKey);
@@ -797,8 +779,6 @@ namespace Backend {
         //    std::cout<<seatKey.time<<'\n';
             for (int i = sta; i <end; i++) {
                 seat.seatarr[i]+=devi;
-                //if (data.train_info[i].station == Sta) break;
-           //     Ticket::pair<int,int> mmdd2=Datetmp.getMMDD();
             }
             _BPT_Seat.modifyVal(seatpos, seat);
         }

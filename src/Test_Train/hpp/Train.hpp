@@ -197,7 +197,6 @@ namespace Backend {
             int data = 0;
             int pos = 0;
             Ticket::String<22> ID;
-
             bool operator<(const Comp &o) const {
                 return data < o.data || (data == o.data && ID < o.ID);
             }
@@ -475,7 +474,6 @@ namespace Backend {
                 //小心逆向查车，小心车没释放
                 try {
                     //逆向查车不算
-                    //  std::cerr<<"------000"<<stationtmp.Train_SN<<' '<<stationtmp.Train_pos<<' '<<date<<' '<<'\n';
                     if (stationtmp.Train_pos > match[stationtmp.Train_SN])
                         aimIDvec.push_back(stationtmp.Train_SN);
                 } catch (NotFound) {}
@@ -487,9 +485,6 @@ namespace Backend {
             //int pos;
             sz = aimIDvec.size();
             //把Train取出来
-
-            //Ticket::Date Datetmp(data.start_time);
-            //Ticket::pair<int,int> mmdd=date.getMMDD();
             Ticket::Date DateKey(date);
             /*       DateKey.dd = date.dd;
                    DateKey.mm = date.mm;*/
@@ -498,7 +493,6 @@ namespace Backend {
                 //   std::cerr<<aimIDvec[i]<<' '<<DateKey<<'\n';
                 Seat_Key seatKey(aimIDvec[i], Sta, DateKey.getDateStr());
                 if (_BPT_Seat.find(seatKey) != -1) {
-                    //     std::cerr<<aimIDvec[i]<<'\n';
                     int trapos = _BPT_Train.find(aimIDvec[i]);
                     if (trapos == -1) std::cerr << "query_ticket_2", throw std::exception();
                     Trainvec.push_back(_BPT_Train.getVal(trapos));
@@ -507,7 +501,6 @@ namespace Backend {
             sz = Trainvec.size();
             Comp arr[sz];
             std::pair<int, int> pospair[sz];
-            //Seat_arr seatArrs[sz];
             int tmp_seat_pos;
             if (type == 'T') {
                 for (int i = 0; i < sz; i++) {
@@ -529,7 +522,6 @@ namespace Backend {
                                   Trainvec[i].train_info[pospair[i].second].stopover;
                     //    std::cout<<arr[i].data<<' '<<arr[i].ID<<'\n';
                 }
-
             } else if (type == 'P') {
                 for (int i = 0; i < sz; i++) {
                     arr[i].ID = Trainvec[i].Train_SN;
@@ -550,32 +542,18 @@ namespace Backend {
                 }
             } else std::cerr << "query_ticket", throw std::exception();
             std::sort(arr, arr + sz);
-            //  for(int i=0;i<sz;i++) std::cout<<arr[i].ID<<' '<<arr[i].data<<' '<<arr[i].pos<<'\n';
             Ticket::Date Dtmp;
             os << sz << '\n';
             for (int i = 0; i < sz; i++) {
-
                 int Trainpos = arr[i].pos;
                 Dtmp = date + Trainvec[Trainpos].train_info[pospair[Trainpos].first].depart_time;
-                //Dtmp += Trainvec[Trainpos].train_info[pospair[Trainpos].first].stopover;
                 int seat = _get_seat_range(Trainvec[Trainpos], Sta, Dtmp, pospair[Trainpos].first,
                                            pospair[Trainpos].second);
                 os << arr[i].ID << ' ' << Sta << ' ' << Dtmp << ' ' << '-' << '>' << ' ';
-                // Dtmp=Trainvec[Trainpos].train_info[pospair[i].first].arri_time;
                 int diff = Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].second].stopover;
                 Dtmp += diff;
-                /* std::cout<<"-----"<<'\n';
-                 int diff=Trainvec[Trainpos].train_info[pospair[i].second].prefix_time-
-                          Trainvec[Trainpos].train_info[pospair[i].first].prefix_time-
-                          Trainvec[Trainpos].train_info[pospair[i].second].stopover;
-                 std::cout<<diff<<' '<<Dtmp<<' '<<Dtmp+diff<<' '<<'\n';
-                 std::cout<<"-----"<<'\n';*/
-              //  mmdd2=Dtmp.getMMDD();
-               // Ticket::Date DateKet2(Dtmp.transToDate());
-                /* DateKet2.mm = Dtmp.mm;
-                 DateKet2.dd = Dtmp.dd;*/
                 os << Det << ' ' << Dtmp << ' '<< Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
                                                   - Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_price << ' ' << seat
                    << '\n';
@@ -593,32 +571,29 @@ namespace Backend {
             stationKey.Station_name = Sta;
             stationKey.pos = 0;
             std::vector<int> StaPosvec = _BPT_Station.route<Station_Comp>(stationKey);
+            if(StaPosvec.empty()) return false;
             stationKey.Station_name = Det;
             std::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
+            if(EndPosvec.empty()) return false;
             //std::vector<Station> Stavec;
             std::vector<Station> Endvec;
             //一切的核心这个map Key值是尾站的所有train名， vector是尾站相同的中转站的在从中转站到尾站中车的位置
             //但由于中转站在从起点出发的火车中位置基本上与从中转站出发到尾站中的位置不一样
             //所以用pair来存，其中first是在从起点出发的火车中的位置，second是站在转乘的火车中的位置
-            std::priority_queue<Trans_Comp> PQ;
+           // std::priority_queue<Trans_Comp> PQ;
             //Ticket::String<25> Ret[2];
             //起始站
             int nums;
             Trans_Comp Ret;
             Ret.num = 88888888;
-            //  std::cerr<<"transfer_0"<<'\n';
-            //  std::cerr<<date<<'\n';
-
             map<Ticket::String<22>, std::vector<std::pair<int, int>>> Endmatch;
             for (int i = 0; i < EndPosvec.size(); i++) {
                 Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
                 std::vector<std::pair<int, int>> tmpvec;
-                map<Ticket::String<22>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Train_SN,
-                                                                                                tmpvec);
+                map<Ticket::String<22>, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Train_SN,tmpvec);
                 Endmatch.insert(valueType);
             }
             for (int i = 0; i < StaPosvec.size(); i++) {
-
                 for(int j=0;j<EndPosvec.size();j++) Endmatch[Endvec[j].Train_SN].clear();
                 //   std::cerr<<"transfer_0.5"<<'\n';
                 Station StaStation = _BPT_Station.getVal(StaPosvec[i]);
@@ -727,7 +702,7 @@ namespace Backend {
                     }
                 }
             }
-            if(Ret.num==88888888) os<<'0'<<'\n';
+            if(Ret.num==88888888) return false;
             else{
                 Ticket::Date tmp=Ret.depart1+Ret.diff1;
                 int seat=_get_seat_range(Ret.Train_ID_Sta,Sta,Ret.depart1,Ret.sta1,Ret.end1);

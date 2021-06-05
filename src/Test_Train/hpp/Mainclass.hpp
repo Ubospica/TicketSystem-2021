@@ -290,7 +290,7 @@ namespace Backend {
         if (cmd->top()[0] == 't') type = 'T';
         else type = 'P';
         if (train_op.query_transfer(Sta, End, Date, type, os)) {}
-        else os << '-' << '1' << '\n';
+        else os<<'0'<<'\n';
     }
 
     void Main::release_train(Cmd_Que *cmd, std::ostream &os) {
@@ -495,7 +495,6 @@ namespace Backend {
                     train_op.RenewSeat(data, Start_Date, sta, end, -nums);
                     long long ans = nums * price;
                     os << ans << '\n';
-
                 }
             }
             else os<<'-'<<'1'<<'\n';

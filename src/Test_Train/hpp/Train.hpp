@@ -565,7 +565,7 @@ namespace Backend {
             //起始站
             int nums;
             Trans_Comp Ret;
-            Ret.num = 88888888;
+            Ret.num = 888888888;
             map<int, std::vector<std::pair<int, int>>> Endmatch;
             for (int i = 0; i < EndPosvec.size(); i++) {
                 Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
@@ -631,6 +631,8 @@ namespace Backend {
                                          Candidate.train_info[CentPos2].depart_time<time)) {
                                     Trans_Comp Challenger;
                                     Challenger.Cent=data.train_info[CentPos1].station;
+                                    std::cerr<<CentPos1<<' '<<Challenger.Train_ID_Sta<<"\n";
+                                    std::cerr<<CentPos2<<' '<<Challenger.Train_ID_End<<'\n';
                                     Challenger.diff1=diff;
                                     Challenger.depart1=date + data.train_info[StaPos].depart_time;
                                     Challenger.sta1=StaPos;

@@ -31,11 +31,11 @@ namespace Backend {
 
         Ticket::String<24> get_user_name();
 
-        Ticket::String<25> get_25(user_parameter kind);
+       //// Ticket::String<25> get_25(user_parameter kind);
 
         const Ticket::String<24> get_user_name()const;
 
-        Ticket::String<35> get_35(user_parameter kind);
+       // Ticket::String<35> get_35(user_parameter kind);
 
         const int & get_privilege()const;
 
@@ -101,7 +101,7 @@ namespace Backend {
 }
 namespace Backend {
 
-    Ticket::String<25> user::get_25(user_parameter kind){
+  /*  Ticket::String<25> user::get_25(user_parameter kind){
         switch(kind) {
            // case (user_parameter::Username):return username;
             case (user_parameter::Name):return name;
@@ -110,7 +110,7 @@ namespace Backend {
                 throw Ticket::WrongOperation("get_25");
         }
     }
-
+*/
 /*
     const Ticket::String<25> user::get_25(user_parameter kind)const{
         switch(kind) {
@@ -125,9 +125,9 @@ namespace Backend {
 
     const Ticket::String<24> user::get_user_name()const{
         return username;
-    };
+    }
 
-    Ticket::String<35> user::get_35(user_parameter kind){
+  /*  Ticket::String<35> user::get_35(user_parameter kind){
         switch(kind) {
             case (user_parameter::Username):return passwd;
             case (user_parameter::Name):return mailAddr;
@@ -136,7 +136,7 @@ namespace Backend {
                 throw Ticket::WrongOperation("get_25");
         }
     }
-
+*/
     Ticket::String<24> user::get_user_name() {
         return username;
     }
@@ -153,7 +153,7 @@ namespace Backend {
             case (user_parameter::MailAddr):mailAddr=change;break;
             default: {
                 std::cerr<<"get_user_parameter"<<'\n';
-                Ticket::WrongOperation();
+                throw Ticket::WrongOperation();
             }
         }
         //  else if(kind==user_parameter::Privilege)  privilege=change;
@@ -290,7 +290,6 @@ namespace Backend {
             //判断权限
             int c_pri;
             try {c_pri = _logging_list[op_name];}catch(NotFound){
-                std::cerr<<"NotFound";
                 return false;}
          //   std::cout<<pri<<' '<<c_pri<<'\n';
             if(c_pri<=pri){

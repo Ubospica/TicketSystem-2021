@@ -40,7 +40,6 @@ namespace Backend {
         void end(Backend::Cmd_Que *cmdQue,std::ostream & os);
 
 
-        Ticket::Date stringtodate(const std::string & str) ;
     //    Ticket::Date stringtodate(const Ticket::String & str);
        // Ticket::Time stringtotime(const std::string & str);
     //    Ticket::Time stringtotime(const Ticket::String & str);
@@ -117,7 +116,7 @@ namespace Backend {
            // std::cout << "??????????????????????????" << '\n';
            // std::cout << todo << '\n';
            // std::cerr << "OP" << '\n';
-            throw Ticket::WrongOperation();
+            //throw Ticket::WrongOperation();
         }
     }
 
@@ -210,7 +209,7 @@ namespace Backend {
         std::string tmp = cmd->top();
         cmd->pop();
         Ticket::Date Date;
-        while (1) {
+        while (true) {
             int mm = 0, dd = 0, x = 0;
             for (int i = 0; i < 2; ++i, ++x) {
                 mm *= 10;
@@ -239,7 +238,7 @@ namespace Backend {
         Ticket::Date Date;
         std::string tmp = cmd->top();
         cmd->pop();
-        while (1) {
+        while (true) {
             int mm = 0, dd = 0, x = 0;
             for (int i = 0; i < 2; ++i, ++x) {
                 mm *= 10;
@@ -271,7 +270,7 @@ namespace Backend {
         Ticket::Date Date;
         std::string tmp = cmd->top();
         cmd->pop();
-        while (1) {
+        while (true) {
             int mm = 0, dd = 0, x = 0;
             for (int i = 0; i < 2; ++i, ++x) {
                 mm *= 10;
@@ -531,6 +530,8 @@ namespace Backend {
                 else {
                     Train_manager::Train data;
                     train_op.GetTrain(data,Success.get_str(order_parameter::Train_ID));
+                    train_op.RenewN(data,TrainOrdervec,Renewvec,Success);
+                  /*
                     train_op.RenewSeat(data,
                                        Success.get_Date(order_parameter::Start_Date),
                                        Success.get_num(order_parameter::Start_Position),
@@ -548,13 +549,12 @@ namespace Backend {
                         Ticket::String<36> End = TrainOrdervec[i].get_station(order_parameter::End);
                         sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                         end=TrainOrdervec[i].get_num(order_parameter::End_Position);
-                        int nums=TrainOrdervec[i].get_num(order_parameter::Num);
+                        int seatnums=TrainOrdervec[i].get_num(order_parameter::Num);
                         train_op.GetSeat(data, Start_Key, End_Time, Sta, End, sta, end, seat, price,
-                                         nums);
-
+                                         seatnums);
                       //  std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
                         if (seat == -1||seat==-2) continue;
-                        train_op.RenewSeat(data,Start_Time,sta,end,-nums);
+                        train_op.RenewSeat(data,Start_Time,sta,end,-seatnums);
                        // std::cerr<<"------"<<'\n';
                       //  std::cerr<<TrainOrdervec[i].get_str(order_parameter::Train_ID)<<'\n';
                       //  std::cerr<<TrainOrdervec[i].get_str(order_parameter::Username)<<'\n';
@@ -564,7 +564,7 @@ namespace Backend {
                         orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);
                         orderKeytmp.SN = TrainOrdervec[i].get_num(order_parameter::SN);
                         Renewvec.push_back(orderKeytmp);
-                    }
+                    }*/
                     order_op.renew(Renewvec,Train_ID);
                     os << '0' << '\n';
                 }
@@ -582,7 +582,6 @@ namespace Backend {
         train_op.clean();
         order_op.clean();
         os<<'0'<<'\n';
-        return;
     }
 
     void Main::end(Backend::Cmd_Que *cmdQue, std::ostream &os) {

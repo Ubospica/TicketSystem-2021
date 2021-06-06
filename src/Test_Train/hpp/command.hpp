@@ -52,7 +52,7 @@ namespace Backend{
         ~Cmd_Que();
         void clear();
     };
-    void process(Backend::Cmd_Que *command_stream, std::string & Cmd);
+    void process(Backend::Cmd_Que *Cmd_Strm, std::string & Cmd);
 }
 
 namespace Backend {

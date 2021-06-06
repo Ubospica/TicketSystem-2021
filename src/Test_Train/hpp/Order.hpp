@@ -262,9 +262,9 @@ namespace Backend {
             }
         };
         Ticket::BPlusTree<OrderKey, order> Waiting_Queue;//记
-        Ticket::BPlusTree<OrderKey,int> _BPT_TrainIndex;
+        Ticket::BPlusTree<OrderKey,order> Train_Queue;
     public:
-        explicit waiting_queue(const std::string &name,const std::string & Trainfilename) : Waiting_Queue(name) ,_BPT_TrainIndex(Trainfilename){};
+        explicit waiting_queue(const std::string &name,const std::string & Trainfilename) : Waiting_Queue(name) ,Train_Queue(Trainfilename){};
 
         void insert(const Ticket::String<24> &name,const Ticket::String<24> & Train_ID, int SN, order &order) {
             OrderKey data_key;
@@ -275,7 +275,7 @@ namespace Backend {
             //std::cerr<<"here"<<'\n';
             //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
             data_key.str=Train_ID;
-            _BPT_TrainIndex.insert(data_key,pos);
+            Train_Queue.insert(data_key,order);
             //Waiting_Queue.write(Ticket::FileIO::END,data);
             //Waiting_Queue.read()
         }
@@ -287,7 +287,7 @@ namespace Backend {
                 renew=IDvec[i];
                 Waiting_Queue.erase(renew);
                 renew.str=Train_ID;
-                _BPT_TrainIndex.erase(renew);
+                Train_Queue.erase(renew);
             }
         }
         void refund(int SN,const Ticket::String<24>& name,const Ticket::String<24>& Train_ID) {
@@ -298,7 +298,7 @@ namespace Backend {
             Pending.str=name;
             Waiting_Queue.erase(Pending);
             Pending.str=Train_ID;
-            _BPT_TrainIndex.erase(Pending);
+            Train_Queue.erase(Pending);
         }
 
         /*std::vector<int> & refund(int n){
@@ -308,17 +308,17 @@ namespace Backend {
             tmp.SN = 0;
             tmp.str =Train_ID;
            // std::cerr<<"------88**"<<'\n';
-            std::vector<int>Posvec = _BPT_TrainIndex.route<Comp>(tmp);
+            std::vector<int>Posvec = Train_Queue.route<Comp>(tmp);
           //  std::cerr<<tmp.str<<' ';
             int Possz=Posvec.size();
           //  std::cerr<<Possz<<'\n';
             for(int j=0;j<Possz;j++) {
-                TrainOrdervec.push_back(Waiting_Queue.getVal(_BPT_TrainIndex.getVal(Posvec[j])));
+                TrainOrdervec.push_back(Train_Queue.getVal(Posvec[j]));
             }
         }
 
         void clean(){
-            _BPT_TrainIndex.clear();
+            Train_Queue.clear();
             Waiting_Queue.clear();
         }
     };

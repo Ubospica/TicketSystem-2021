@@ -271,7 +271,7 @@ namespace Backend {
             data_key.str = name;
             data_key.SN = SN;
             int pos=Waiting_Queue.insert(data_key, order);
-            if(pos==-1) std::cerr<<"shere"<<'\n';
+          //  if(pos==-1) std::cerr<<"shere"<<'\n';
             //std::cerr<<"here"<<'\n';
             //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
             data_key.str=Train_ID;
@@ -345,13 +345,7 @@ namespace Backend {
             BPT_KEY.str = data.get_str(order_parameter::Username);
             BPT_KEY.SN = data.get_num(order_parameter::SN);
             int pos=_BPT_Name_order.insert(BPT_KEY, data);
-            if(pos==-1) {
-                std::cerr<<"here"<<'\n';
-                return -1;
-            }
-            else{
-                return pos;
-            }
+            return pos;
             //return _BPT_order.insert(BPT_KEY, data);
         }
 

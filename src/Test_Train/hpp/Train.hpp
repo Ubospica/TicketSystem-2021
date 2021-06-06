@@ -645,7 +645,7 @@ namespace Backend {
                                         //同天离站时间小于起始离站，说明该天在发车起始以外，需要等到第一趟车
                                         diff += Start.diffMinute(time);
                                         Challenger.depart2=Start;
-                                        Challenger.Start_Date2=Start;
+                                        Challenger.Start_Date2=Start-Candidate.train_info[CentPos2].prefix_time;
                                     } else {
                                         if (!(Datetmp<time)) diff += Datetmp.diffMinute(time);
                                         else {
@@ -771,7 +771,6 @@ namespace Backend {
             seatKey.time = Datekey.getDateStr();
             int seatpos=_BPT_Seat.find(seatKey);
             if(seatpos==-1) std::cerr<<"fhere"<<'\n';
-        //    std::cout<<seatpos<<'\n';
             Seat seat=_BPT_Seat.getVal(seatpos);
         //    std::cout<<seatKey.time<<'\n';
             for (int i = sta; i <end; i++) {

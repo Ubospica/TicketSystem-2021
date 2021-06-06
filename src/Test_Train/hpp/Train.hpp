@@ -135,9 +135,6 @@ namespace Backend {
          //   Seat_Key seatKey1(Train_ID,Start_Date.getDateStr());
             int seatpos=_BPT_Seat.find(seatKey);
             Seat seatarr=_BPT_Seat.getVal(seatpos);
-       //     std::cout<<seatpos<<' '<<seatKey.time<<' '<<seatKey.train<<'\n';
-       //     std::cout<<seatKey.time<<sta<<' '<<end<<' '<<'\n';
-            // std::cout<<"__________________"<<'\n';
             for (int i = sta; i < end; i++)  {
               //  std::cout<<seatarr.seatarr[i]<<'\n';
                 seat = std::min(seat, seatarr.seatarr[i]);
@@ -333,7 +330,6 @@ namespace Backend {
                 Station station(i,pos);
                 int flag = _BPT_Station.insert(data_key, station);
                 if (flag == -1)  Error("release_train_4");
-
             }
             Seat Seatdata;
            // Seatdata.n=data.station_num;

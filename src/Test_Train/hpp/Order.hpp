@@ -314,8 +314,6 @@ namespace Backend {
           //  std::cerr<<Possz<<'\n';
             for(int j=0;j<Possz;j++) {
                 TrainOrdervec.push_back(Waiting_Queue.getVal(_BPT_TrainIndex.getVal(Posvec[j])));
-            //    std::cerr<<"------8**"<<'\n';
-            //    std::cerr<<TrainOrdervec[j].get_Date(order_parameter::Start_Date).to_string()<<'\n';
             }
         }
 

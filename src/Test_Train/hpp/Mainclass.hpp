@@ -527,8 +527,6 @@ namespace Backend {
             char type;
           //  std::cout<<'5'<<'\n';
             if (order_op.refund(Train_ID, name, nums, Success, TrainOrdervec, type)) {
-            //    std::cout<<'6'<<'\n';
-         //   std::cerr<<"type"<<type<<'\n';
                 if (type == 'P') os << '0' << '\n';
                 else {
                     Train_manager::Train data;
@@ -539,7 +537,6 @@ namespace Backend {
                                        Success.get_num(order_parameter::End_Position),
                                        Success.get_num(order_parameter::Num));
                     sz = TrainOrdervec.size();
-
                     for (int i = 0; i < sz; i++) {
                         int seat, sta, end, price;
                        // std::cerr<<"!~-"<<'\n';
@@ -554,9 +551,15 @@ namespace Backend {
                         int nums=TrainOrdervec[i].get_num(order_parameter::Num);
                         train_op.GetSeat(data, Start_Key, End_Time, Sta, End, sta, end, seat, price,
                                          nums);
+
                       //  std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
                         if (seat == -1||seat==-2) continue;
                         train_op.RenewSeat(data,Start_Time,sta,end,-nums);
+                       // std::cerr<<"------"<<'\n';
+                      //  std::cerr<<TrainOrdervec[i].get_str(order_parameter::Train_ID)<<'\n';
+                      //  std::cerr<<TrainOrdervec[i].get_str(order_parameter::Username)<<'\n';
+                      //  std::cerr<<nums<<'\n';
+                      //  std::cerr<<TrainOrdervec[i].get_num(order_parameter::SN)<<'\n';
                         OrderKey orderKeytmp;
                         orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);
                         orderKeytmp.SN = TrainOrdervec[i].get_num(order_parameter::SN);

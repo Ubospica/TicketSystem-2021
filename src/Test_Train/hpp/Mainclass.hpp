@@ -528,7 +528,7 @@ namespace Backend {
           //  std::cout<<'5'<<'\n';
             if (order_op.refund(Train_ID, name, nums, Success, TrainOrdervec, type)) {
             //    std::cout<<'6'<<'\n';
-            std::cerr<<"type"<<type<<'\n';
+         //   std::cerr<<"type"<<type<<'\n';
                 if (type == 'P') os << '0' << '\n';
                 else {
                     Train_manager::Train data;
@@ -539,8 +539,9 @@ namespace Backend {
                                        Success.get_num(order_parameter::End_Position),
                                        Success.get_num(order_parameter::Num));
                     sz = TrainOrdervec.size();
-                    int seat, sta, end, price;
+
                     for (int i = 0; i < sz; i++) {
+                        int seat, sta, end, price;
                        // std::cerr<<"!~-"<<'\n';
                         Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                         Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);

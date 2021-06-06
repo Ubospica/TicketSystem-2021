@@ -552,6 +552,7 @@ namespace Backend {
             stationKey.Station_name = Det;
             std::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             if(EndPosvec.empty()) return false;
+            std::vector<Station> Endvec;
             //std::vector<Station> Stavec;
             //一切的核心这个map Key值是尾站的所有train名， vector是尾站相同的中转站的在从中转站到尾站中车的位置
             //但由于中转站在从起点出发的火车中位置基本上与从中转站出发到尾站中的位置不一样
@@ -562,7 +563,7 @@ namespace Backend {
             int nums;
             Trans_Comp Ret;
             Ret.num = 888888888;
-            for(int i=0;i<StaPosvec.size();i++){
+          /*  for(int i=0;i<StaPosvec.size();i++){
             //    std::cerr<<"transfer_0"<<'\n';
                 Station Start=_BPT_Station.getVal(StaPosvec[i]);
                 Train train1=_BPT_Train.getVal(Start.Pos);
@@ -639,8 +640,7 @@ namespace Backend {
                         }
                     }
                 }
-            }
-            /*
+            }*/
            // std::cerr<<"transfer_0"<<'\n';
             //std::cerr<<"-----------"<<'\n';
             for (int i = 0; i < StaPosvec.size(); i++) {
@@ -665,14 +665,14 @@ namespace Backend {
                     std::vector<int> CentPosvec = _BPT_Station.route<Station_Comp>(CentKey);
                     std::vector<Station> Centvec;
                     int Centpos1 = j;
-                 *//*   for (int k = 0; k < CentPosvec.size(); k++) {
+                    for (int k = 0; k < CentPosvec.size(); k++) {
                       //  std::cout<<"-------"<<'\n';
                         if (Centvec[k].Pos == StaStation.Pos){
                             Centpos1 = Centvec[k].index;
-                            std::cerr<<Centpos1<<' '<<j<<'\n';
+                          //  std::cerr<<Centpos1<<' '<<j<<'\n';
                        //     std::cout<<Centpos1<<"\n";
                         }
-                    }*//*
+                    }
                     for (int k = 0; k < CentPosvec.size(); k++) {
                         Centvec.push_back(_BPT_Station.getVal(CentPosvec[k]));
                         if (Endmatch.count(Centvec[k].Pos)) {
@@ -707,8 +707,8 @@ namespace Backend {
                                          Candidate.train_info[CentPos2].depart_time<time)) {
                                     Trans_Comp Challenger;
                                     Challenger.Cent=data.train_info[CentPos1].station;
-                                    std::cerr<<CentPos1<<' '<<Challenger.Train_ID_Sta<<"\n";
-                                    std::cerr<<CentPos2<<' '<<Challenger.Train_ID_End<<'\n';
+                                   // std::cerr<<CentPos1<<' '<<Challenger.Train_ID_Sta<<"\n";
+                                   // std::cerr<<CentPos2<<' '<<Challenger.Train_ID_End<<'\n';
                                     Challenger.diff1=diff;
                                     Challenger.depart1=date + data.train_info[StaPos].depart_time;
                                     Challenger.sta1=StaPos;
@@ -757,7 +757,7 @@ namespace Backend {
                         }
                     }
                 }
-            }*/
+            }
             if(Ret.num==888888888) return false;
             else{
                 Ticket::Date tmp=Ret.depart1+Ret.diff1;

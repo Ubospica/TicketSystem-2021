@@ -116,7 +116,7 @@ namespace Backend {
            // std::cout << "??????????????????????????" << '\n';
            // std::cout << todo << '\n';
            // std::cerr << "OP" << '\n';
-            throw Ticket::WrongOperation();
+            //throw Ticket::WrongOperation();
         }
     }
 
@@ -238,7 +238,7 @@ namespace Backend {
         Ticket::Date Date;
         std::string tmp = cmd->top();
         cmd->pop();
-        while (1) {
+        while (true) {
             int mm = 0, dd = 0, x = 0;
             for (int i = 0; i < 2; ++i, ++x) {
                 mm *= 10;

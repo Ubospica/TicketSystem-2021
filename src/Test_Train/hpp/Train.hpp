@@ -450,7 +450,7 @@ namespace Backend {
                     //逆向查车不算
                     int StaIndex=match[stationtmp.Pos];
                     if (stationtmp.index >StaIndex )
-                        aimPosvec.push_back(std::pair<int,int>(stationtmp.Pos,StaIndex));
+                        aimPosvec.emplace_back(std::pair<int,int>(stationtmp.Pos,StaIndex));
                 } catch (NotFound) {}
             }
             //if(match.count(stationtmp.Train_SN)) aimIDvec.push_back(stationtmp.Train_SN);}
@@ -562,7 +562,6 @@ namespace Backend {
             int nums;
             Trans_Comp Ret;
             Ret.num = 888888888;
-
            // std::cerr<<"transfer_0"<<'\n';
             //std::cerr<<"-----------"<<'\n';
             map<int, std::vector<std::pair<int, int>>> Endmatch;

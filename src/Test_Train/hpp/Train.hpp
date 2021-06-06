@@ -566,17 +566,18 @@ namespace Backend {
             int nums;
             Trans_Comp Ret;
             Ret.num = 888888888;
-            map<int, std::vector<std::pair<int, int>>> Endmatch;
-            for (int i = 0; i < EndPosvec.size(); i++) {
-                Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
-                std::vector<std::pair<int, int>> tmpvec;
-                map<int, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Pos,tmpvec);
-                Endmatch.insert(valueType);
-            }
+
            // std::cerr<<"transfer_0"<<'\n';
             //std::cerr<<"-----------"<<'\n';
             for (int i = 0; i < StaPosvec.size(); i++) {
-                for(int j=0;j<EndPosvec.size();j++) Endmatch[Endvec[j].Pos].clear();
+                map<int, std::vector<std::pair<int, int>>> Endmatch;
+                for (int i = 0; i < EndPosvec.size(); i++) {
+                    Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
+                    std::vector<std::pair<int, int>> tmpvec;
+                    map<int, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Pos,tmpvec);
+                    Endmatch.insert(valueType);
+                }
+              //  for(int j=0;j<EndPosvec.size();j++) Endmatch[Endvec[j].Pos].clear();
                 //   std::cerr<<"transfer_0.5"<<'\n';
                 Station StaStation = _BPT_Station.getVal(StaPosvec[i]);
                 Train data = _BPT_Train.getVal(StaStation.Pos);
@@ -589,16 +590,17 @@ namespace Backend {
                     CentKey.Station_name = data.train_info[j].station;
                     std::vector<int> CentPosvec = _BPT_Station.route<Station_Comp>(CentKey);
                     std::vector<Station> Centvec;
-                    int Centpos1 = -1;
-                    for (int k = 0; k < CentPosvec.size(); k++) {
-                        Centvec.push_back(_BPT_Station.getVal(CentPosvec[k]));
+                    int Centpos1 = j;
+                 /*   for (int k = 0; k < CentPosvec.size(); k++) {
                       //  std::cout<<"-------"<<'\n';
                         if (Centvec[k].Pos == StaStation.Pos){
                             Centpos1 = Centvec[k].index;
+                            std::cerr<<Centpos1<<' '<<j<<'\n';
                        //     std::cout<<Centpos1<<"\n";
                         }
-                    }
+                    }*/
                     for (int k = 0; k < CentPosvec.size(); k++) {
+                        Centvec.push_back(_BPT_Station.getVal(CentPosvec[k]));
                         if (Endmatch.count(Centvec[k].Pos)) {
                             std::pair<int, int> value(Centpos1, Centvec[k].index);
                             Endmatch[Centvec[k].Pos].push_back(value);

@@ -526,6 +526,7 @@ namespace Backend {
           //  std::cout<<'5'<<'\n';
             if (order_op.refund(Train_ID, name, nums, Success, TrainOrdervec, type)) {
             //    std::cout<<'6'<<'\n';
+            std::cerr<<"type"<<type<<'\n';
                 if (type == 'P') os << '0' << '\n';
                 else {
                     Train_manager::Train data;
@@ -551,7 +552,7 @@ namespace Backend {
                         train_op.GetSeat(data, Start_Key, End_Time, Sta, End, sta, end, seat, price,
                                          nums);
                       //  std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
-                        if (seat == -1) continue;
+                        if (seat == -1||seat==-2) continue;
                         train_op.RenewSeat(data,Start_Time,sta,end,-nums);
                         OrderKey orderKeytmp;
                         orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);

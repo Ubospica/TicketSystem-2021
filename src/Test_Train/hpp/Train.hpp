@@ -778,6 +778,7 @@ namespace Backend {
             seatKey.train = data.Train_SN;
             seatKey.time = Datekey.getDateStr();
             int seatpos=_BPT_Seat.find(seatKey);
+            if(seatpos==-1) std::cerr<<"fhere"<<'\n';
         //    std::cout<<seatpos<<'\n';
             Seat seat=_BPT_Seat.getVal(seatpos);
         //    std::cout<<seatKey.time<<'\n';

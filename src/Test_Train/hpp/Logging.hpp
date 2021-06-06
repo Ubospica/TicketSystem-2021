@@ -294,7 +294,7 @@ namespace Backend {
                 return false;}
          //   std::cout<<pri<<' '<<c_pri<<'\n';
             if(c_pri<=pri){
-                std::cerr<<"pri"<<'\n';
+                //std::cerr<<"pri"<<'\n';
                 return false;}
             user u(user_name);
             u.set_pri(pri);

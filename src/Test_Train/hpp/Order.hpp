@@ -271,6 +271,7 @@ namespace Backend {
             data_key.str = name;
             data_key.SN = SN;
             int pos=Waiting_Queue.insert(data_key, order);
+            if(pos==-1) std::cerr<<"shere"<<'\n';
             //std::cerr<<"here"<<'\n';
             //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
             data_key.str=Train_ID;
@@ -344,9 +345,12 @@ namespace Backend {
         int insert(order &data) {
             OrderKey BPT_KEY;
             BPT_KEY.str = data.get_str(order_parameter::Username);
-            BPT_KEY.SN = _BPT_Name_order.getSize() + 1;
+            BPT_KEY.SN = data.get_num(order_parameter::SN);
             int pos=_BPT_Name_order.insert(BPT_KEY, data);
-            if(pos==-1) return -1;
+            if(pos==-1) {
+                std::cerr<<"here"<<'\n';
+                return -1;
+            }
             else{
                 return pos;
             }
@@ -462,8 +466,8 @@ namespace Backend {
             Order.Renew(Renewvec);
         }
 
-        void buy_ticket(const std::string &name, const std::string &train_ID, const Ticket::Date Sta_date,
-                        const Ticket::Date End_date, const Ticket::String<36> &Sta, Ticket::String<36> &Det, int &sta, int &end,
+        void buy_ticket(const std::string &name, const std::string &train_ID, const Ticket::Date & Sta_date,
+                        const Ticket::Date & End_date, const Ticket::String<36> &Sta, Ticket::String<36> &Det, int &sta, int &end,
                         int &n, int &price, bool state) {//1为queue，0为购票成功
             order data;
            /* data.set_str<25>(order_parameter::Username, name);
@@ -488,7 +492,6 @@ namespace Backend {
             else  data.change_state(state_list::Success);
             int pos = Order.insert(data);
             if (pos == -1) throw Ticket::WrongOperation("buy_ticket");
-
         }
 
         void query_order(const Ticket::String<24> &name,std::ostream& os) {
@@ -499,7 +502,6 @@ namespace Backend {
             for (int i = sz-1; i >=0 ; i--) {
                 all_order[i].print(os);
             }
-            return;
         }
 
         void clean(){

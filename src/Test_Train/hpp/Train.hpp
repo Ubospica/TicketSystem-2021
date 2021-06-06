@@ -552,7 +552,7 @@ namespace Backend {
             stationKey.Station_name = Det;
             std::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             if(EndPosvec.empty()) return false;
-            std::vector<Station> Endvec;
+
             //std::vector<Station> Stavec;
             //一切的核心这个map Key值是尾站的所有train名， vector是尾站相同的中转站的在从中转站到尾站中车的位置
             //但由于中转站在从起点出发的火车中位置基本上与从中转站出发到尾站中的位置不一样
@@ -645,10 +645,11 @@ namespace Backend {
             //std::cerr<<"-----------"<<'\n';
             for (int i = 0; i < StaPosvec.size(); i++) {
                 map<int, std::vector<std::pair<int, int>>> Endmatch;
-                for (int i = 0; i < EndPosvec.size(); i++) {
-                    Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
+                std::vector<Station> Endvec;
+                for (int j = 0; j < EndPosvec.size(); j++) {
+                    Endvec.push_back(_BPT_Station.getVal(EndPosvec[j]));
                     std::vector<std::pair<int, int>> tmpvec;
-                    map<int, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Pos,tmpvec);
+                    map<int, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[j].Pos,tmpvec);
                     Endmatch.insert(valueType);
                 }
               //  for(int j=0;j<EndPosvec.size();j++) Endmatch[Endvec[j].Pos].clear();

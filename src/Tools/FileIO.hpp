@@ -23,13 +23,161 @@ namespace Ticket {
 	 *
 	 * maintains three things : a filestream, a read&write pointer, and a flag showing whether the file is opened for the first time
 	 */
+//	class FileIONoCache {
+//	//protected:
+//	public:
+//		std::fstream fs;
+//		bool firstOpen = false;
+//		std::string name;
+//
+//	public:
+//		/**
+//		 * @brief position constants
+//		 */
+//		enum Pos {
+//			END = -1, BEG = 0,
+//		}; //CUR = -2,
+//
+//		FileIONoCache() = default;
+//
+//		/**
+//		 * constructor
+//		 * @param name file name
+//		 */
+//		explicit FileIONoCache(const std::string &name) {
+//			open(name);
+//		}
+//
+//		FileIONoCache& operator=(FileIONoCache &&another) = default;
+//
+//		void open(const std::string &name) {
+//			fs.close();
+//			fs.clear();
+//			this -> name = name;
+//			constexpr auto fl = std::ios::in | std::ios::out | std::ios::binary;
+//			fs.open(name, fl);
+//			if (!fs) {
+//				std::ofstream tmp(name);
+//				tmp.close();
+//				fs.open(name, fl);
+//				if (!fs) {
+//					throw RuntimeError("File system error");
+//				}
+//				firstOpen = true;
+//			}
+//		}
+//
+//		/**
+//		 * check if the file is opened for the first time
+//		 * @return true when is opened first; false otherwise
+//		 */
+//		bool isFirstOpen() const {
+//			return firstOpen;
+//		}
+//
+//		/**
+//		 * read value from fstream
+//		 * @tparam T
+//		 * @param pos Pos::CUR (-2) or >= 0
+//		 * @param cur value
+//		 */
+//		template <typename T>
+//		void read(int pos, T &cur) {
+//			if(pos >= 0){ //pos == CUR == -2
+//				fs.seekg(pos);
+//			}
+//			fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
+//		}
+//
+//		/**
+//		 * write value to fs
+//		 * @tparam T
+//		 * @param pos >=0 or Pos::END(-1) or Pos::CUR (-2)
+//		 * @param cur value
+//		 */
+//		template <typename T>
+//		void write(int pos, const T &cur) {
+//			if(pos >= 0){
+//				fs.seekp(pos);
+//			}
+//			else if(pos == Pos::END) {
+//				fs.seekp(0, std::ios::end);
+//			}
+////			int tmp = sizeof(cur);
+////			std::cerr << "write " << name  << ' ' << cur << ' ' << sizeof(cur) << '\n';
+////			std::cerr << "before = " << fs.tellp();
+//			fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
+////			std::cerr << " after = " << fs.tellp() << '\n';
+//		}
+//
+//		void write(int pos, void *val, int size) {
+//			if(pos >= 0){
+//				fs.seekp(pos);
+//			}
+//			else if(pos == Pos::END) {
+//				fs.seekp(0, std::ios::end);
+//			}
+//			fs.write(reinterpret_cast<const char*>(val), size);
+//		}
+//
+//		/**
+//		 * move position pointer
+//		 * @param pos >=0 or Pos::END
+//		 */
+//		void movePos(int pos) {
+//			if (pos >= 0) {
+//				fs.seekp(pos, std::ios::beg);
+//			}
+//			else if (pos == Pos::END) {
+//				fs.seekp(0, std::ios::end);
+//			}
+//		}
+//
+//		/**
+//		 * move pointer forward
+//		 * @param pos the distance that the pointer is moved forward for
+//		 */
+//		void moveForward(int pos) {
+//			fs.seekp(pos, std::ios::cur);
+//		}
+//
+//		/**
+//		 * show current pointer
+//		 * @return
+//		 */
+//		size_t tellPos() {
+//			return fs.tellp();
+//		}
+//
+//		/**
+//		 * close the fstream
+//		 */
+//		void close() {
+//			fs.close();
+//		}
+//
+//		void clear() {
+////			std::cerr << "clear\n";
+//			fs.close();
+//			constexpr auto fl1 = std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc;
+//			fs.open(name, fl1);
+//			firstOpen = true;
+////			bool tmp = fs.fail();
+//		}
+//
+//		~FileIONoCache() {
+//			fs.close();
+//		}
+//
+//	};
+	
 	class FileIONoCache {
 	//protected:
 	public:
-		std::fstream fs;
+		std::FILE *fs = nullptr;
 		bool firstOpen = false;
 		std::string name;
-		
+
 	public:
 		/**
 		 * @brief position constants
@@ -37,37 +185,36 @@ namespace Ticket {
 		enum Pos {
 			END = -1, BEG = 0,
 		}; //CUR = -2,
-		
+
 		FileIONoCache() = default;
-		
+
 		/**
 		 * constructor
 		 * @param name file name
 		 */
-		explicit FileIONoCache(const std::string &name) : name(name) {
+		explicit FileIONoCache(const std::string &name) {
 			open(name);
-//			std::vector<int> a;
 		}
-		
+
 		FileIONoCache& operator=(FileIONoCache &&another) = default;
-		
+
 		void open(const std::string &name) {
-			fs.close();
-			fs.clear();
+			if (fs != nullptr) {
+				fclose(fs);
+				clearerr(fs);
+			}
 			this -> name = name;
-			constexpr auto fl = std::ios::in | std::ios::out | std::ios::binary;
-			fs.open(name, fl);
-			if (!fs) {
-				std::ofstream tmp(name);
-				tmp.close();
-				fs.open(name, fl);
-				if (!fs) {
+			fs = fopen(name.c_str(), "rb+");
+			if (fs == nullptr) {
+				fclose(fopen(name.c_str(), "a"));
+				fs = fopen(name.c_str(), "rb+");
+				if (fs == nullptr) {
 					throw RuntimeError("File system error");
 				}
 				firstOpen = true;
 			}
 		}
-		
+
 		/**
 		 * check if the file is opened for the first time
 		 * @return true when is opened first; false otherwise
@@ -75,7 +222,7 @@ namespace Ticket {
 		bool isFirstOpen() const {
 			return firstOpen;
 		}
-		
+
 		/**
 		 * read value from fstream
 		 * @tparam T
@@ -85,11 +232,11 @@ namespace Ticket {
 		template <typename T>
 		void read(int pos, T &cur) {
 			if(pos >= 0){ //pos == CUR == -2
-				fs.seekg(pos);
+				fseek(fs, pos, SEEK_SET);
 			}
-			fs.read(reinterpret_cast<char*>(&cur), sizeof(cur));
+			fread(reinterpret_cast<void*>(&cur), sizeof(cur), 1, fs);
 		}
-		
+
 		/**
 		 * write value to fs
 		 * @tparam T
@@ -99,79 +246,81 @@ namespace Ticket {
 		template <typename T>
 		void write(int pos, const T &cur) {
 			if(pos >= 0){
-				fs.seekp(pos);
+				fseek(fs, pos, SEEK_SET);
 			}
 			else if(pos == Pos::END) {
-				fs.seekp(0, std::ios::end);
+				fseek(fs, 0, SEEK_END);
 			}
 //			int tmp = sizeof(cur);
 //			std::cerr << "write " << name  << ' ' << cur << ' ' << sizeof(cur) << '\n';
 //			std::cerr << "before = " << fs.tellp();
-			fs.write(reinterpret_cast<const char*>(&cur), sizeof(cur));
+			fwrite(reinterpret_cast<const void*>(&cur), sizeof(cur), 1, fs);
 //			std::cerr << " after = " << fs.tellp() << '\n';
 		}
-		
+
 		void write(int pos, void *val, int size) {
 			if(pos >= 0){
-				fs.seekp(pos);
+				fseek(fs, pos, SEEK_SET);
 			}
 			else if(pos == Pos::END) {
-				fs.seekp(0, std::ios::end);
+				fseek(fs, 0, SEEK_END);
 			}
-			fs.write(reinterpret_cast<const char*>(val), size);
+			fwrite(val, size, 1, fs);
 		}
-		
+
 		/**
 		 * move position pointer
 		 * @param pos >=0 or Pos::END
 		 */
 		void movePos(int pos) {
 			if (pos >= 0) {
-				fs.seekp(pos, std::ios::beg);
+				fseek(fs, pos, SEEK_CUR);
 			}
 			else if (pos == Pos::END) {
-				fs.seekp(0, std::ios::end);
+				fseek(fs, 0, SEEK_END);
 			}
 		}
-		
+
 		/**
 		 * move pointer forward
 		 * @param pos the distance that the pointer is moved forward for
 		 */
 		void moveForward(int pos) {
-			fs.seekp(pos, std::ios::cur);
+			fseek(fs, pos, SEEK_CUR);
 		}
-		
+
 		/**
 		 * show current pointer
 		 * @return
 		 */
 		size_t tellPos() {
-			return fs.tellp();
+			return ftell(fs);
 		}
-		
+
 		/**
 		 * close the fstream
 		 */
 		void close() {
-			fs.close();
+			if (fs != nullptr) {
+				fclose(fs);
+				fs = nullptr;
+			}
 		}
-		
+
 		void clear() {
 //			std::cerr << "clear\n";
-			fs.close();
-			constexpr auto fl1 = std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc;
-			fs.open(name, fl1);
+			fclose(fs);
+			fs = fopen(name.c_str(), "w+");
 			firstOpen = true;
 //			bool tmp = fs.fail();
 		}
-		
+
 		~FileIONoCache() {
-			fs.close();
+			close();
 		}
-		
+
 	};
-	
+
 	/**
 	 * FileIO with LRU cache
 	 */

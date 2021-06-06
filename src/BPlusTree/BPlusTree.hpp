@@ -37,7 +37,7 @@ namespace Ticket{
 	 * @tparam NO_VALUE_FLAG 如果是1表示Index only mode
 	 * @tparam M 块的大小，默认100
 	 */
-	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 200>
+	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 300>
 	class BPlusTree {
 	private:
 		struct Node;

@@ -313,6 +313,7 @@ namespace Backend {
         int station_num = stringtoint(cmd->top());
         cmd->pop();
         int seat_num = stringtoint(cmd->top());
+        if(seat_num==0) {os<<'-'<<'1'<<'\n';return;}
         cmd->pop();
         Ticket::String<36> Stations[station_num];
         int price[station_num];
@@ -469,7 +470,7 @@ namespace Backend {
                 Start_Date.mm = mm;*/
                 break;
             }
-            int nums = stringtoint(cmd->top());
+            long long nums = stringtoint(cmd->top());
             cmd->pop();
             Ticket::String<36> Sta = cmd->top();
             cmd->pop();
@@ -481,6 +482,7 @@ namespace Backend {
             int sta, end, seat, price;
             //Start_Date带分秒
             Train_manager::Train data;
+            if(nums==0) {os<<'-'<<'1'<<'\n';return;}
             if(train_op.GetTrain(data,train_ID)) {
                 //这里的Start_Date不带分秒
                 train_op.GetSeat(data, Start_Date, End_Date, Sta, End, sta, end, seat, price, nums);

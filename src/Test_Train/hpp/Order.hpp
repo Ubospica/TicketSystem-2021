@@ -378,7 +378,7 @@ namespace Backend {
             tmp.SN=0;
             std::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
             int sztmp = pos.size();
-            if (sztmp < n) return false;
+            if (sztmp < n||n<0) return false;
             order ordertmp;
                 ordertmp = _BPT_Name_order.getVal(pos[sztmp - n]);
                 SN=ordertmp.get_num(order_parameter::SN);
@@ -468,12 +468,8 @@ namespace Backend {
 
         void buy_ticket(const std::string &name, const std::string &train_ID, const Ticket::Date & Sta_date,
                         const Ticket::Date & End_date, const Ticket::String<36> &Sta, Ticket::String<36> &Det, int &sta, int &end,
-                        int &n, int &price, bool state) {//1为queue，0为购票成功
+                        long long &n, int &price, bool state) {//1为queue，0为购票成功
             order data;
-           /* data.set_str<25>(order_parameter::Username, name);
-            data.set_str<40>(order_parameter::Start, Sta);
-            data.set_str<40>(order_parameter::End, Det);
-            data.set_String<25>(order_parameter::Train_ID, train_ID);*/
             data.set_str(order_parameter::Username, name);
             data.set_station(order_parameter::Start, Sta);
             data.set_station(order_parameter::End, Det);

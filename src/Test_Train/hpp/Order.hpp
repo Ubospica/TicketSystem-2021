@@ -468,7 +468,7 @@ namespace Backend {
 
         void buy_ticket(const std::string &name, const std::string &train_ID, const Ticket::Date & Sta_date,
                         const Ticket::Date & End_date, const Ticket::String<36> &Sta, Ticket::String<36> &Det, int &sta, int &end,
-                        long long &n, int &price, bool state) {//1为queue，0为购票成功
+                        int n, int &price, bool state) {//1为queue，0为购票成功
             order data;
             data.set_str(order_parameter::Username, name);
             data.set_station(order_parameter::Start, Sta);

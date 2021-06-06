@@ -470,7 +470,7 @@ namespace Backend {
                 Start_Date.mm = mm;*/
                 break;
             }
-            long long nums = stringtoint(cmd->top());
+            int nums = stringtoint(cmd->top());
             cmd->pop();
             Ticket::String<36> Sta = cmd->top();
             cmd->pop();

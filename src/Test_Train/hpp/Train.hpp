@@ -67,7 +67,6 @@ namespace Backend {
             Ticket::String<6> time;
             Ticket::String<24> train;
             Seat_Key() = default;
-
             Seat_Key(const Ticket::String<24> &Train,
                      const Ticket::String<6> &Time) {
                 time = Time;

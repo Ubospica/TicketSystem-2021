@@ -42,6 +42,9 @@ namespace Ticket {
 	class WrongOperation : public ExceptionBase {
 		using ExceptionBase::ExceptionBase;
 	};
+	class End : public ExceptionBase {
+		using ExceptionBase::ExceptionBase;
+	};
 	
 	// container exception
 	class index_out_of_bound : public ExceptionBase {

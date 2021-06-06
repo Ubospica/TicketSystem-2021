@@ -1,0 +1,5 @@
+add_user -c a -u a -p b -n c -m d -g 10
+login -u a -p b
+modify_profile -c a -u a -g 10
+query_profile -c a -u a
+exit

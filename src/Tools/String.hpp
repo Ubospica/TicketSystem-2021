@@ -16,7 +16,7 @@ namespace Ticket {
 	 * @tparam LENGTH maximum length of string
 	 */
 	
-	template <size_t LENGTH = 50>
+	template <size_t LENGTH = 35>
 	struct String {
 		char data[LENGTH]{0};
 		
@@ -92,6 +92,9 @@ namespace Ticket {
 			return data[p];
 		}
 	};
+	
+	using LString = String<35>;
+	using SString = String<25>;
 	
 }
 

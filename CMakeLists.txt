@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(code)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 add_compile_options(-Ofast)
 
@@ -10,6 +10,7 @@ include_directories(src/Tools)
 include_directories(src/BPlusTree)
 
 add_executable(code src/Test_Train/hpp/main.cpp)
+add_executable(remake src/remake/main.cpp)
 
 add_subdirectory(src/Tools)
 add_subdirectory(src/BPlusTree)

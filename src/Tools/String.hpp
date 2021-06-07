@@ -92,19 +92,31 @@ namespace Ticket {
 			return data[p];
 		}
 		
-		friend size_t hash(const String &s) {
-			static const size_t base = 257, mod = (size_t) 1e16 + 61;
-			size_t res = 0;
-			for (const char *cur = s.data; *cur; ++cur) {
-				res = (res * base + (unsigned char) *cur) % mod;
-			}
-			return res;
-		}
+		template <size_t LEN>
+		friend size_t hash(const String<LEN> &s);
 	};
 	
 	using LString = String<35>;
 	using SString = String<25>;
 	
+	size_t hash (const char *s) {
+		static const size_t base = 257, mod = (size_t) 1e16 + 61;
+		size_t res = 0;
+		while (*s) {
+			res = (res * base + (unsigned char) *s) % mod;
+			++s;
+		}
+		return res;
+	}
+	
+	size_t hash (const std::string &s) {
+		return hash(s.c_str());
+	}
+	
+	template <size_t LENGTH>
+	size_t hash(const String<LENGTH> &s) {
+		return hash(s.data);
+	}
 }
 
 

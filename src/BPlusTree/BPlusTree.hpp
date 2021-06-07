@@ -15,6 +15,7 @@
 #include "Tools/Exception.hpp"
 #include "Tools/FileIO.hpp"
 #include "Tools/Utility.hpp"
+#include "Tools/String.hpp"
 
 namespace Ticket{
 	
@@ -37,9 +38,9 @@ namespace Ticket{
 	 * @tparam NO_VALUE_FLAG 如果是1表示Index only mode
 	 * @tparam M 块的大小，默认100
 	 */
-	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 400>
+	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 200>
 	class BPlusTree {
-	private:
+	protected:
 		struct Node;
 	public:
 		/**
@@ -132,7 +133,7 @@ namespace Ticket{
 		 */
 		void print ();
 	
-	private:
+	protected:
 		FileIO treeDt, valueDt;
 		int root, height, size;
 
@@ -154,6 +155,22 @@ namespace Ticket{
 			static const int POS_ROOT = 0, POS_SIZE = sizeof(root), POS_HEIGHT = sizeof(int) * 2;
 		};
 	};
+	
+//	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 200>
+//	class BPlusTree : BPlusTree<Key, Value, NO_VALUE_FLAG, M> {
+//	public:
+//		using BPlusTree::BPlusTree(const std::string&);
+//	};
+//
+//
+//	template <String, typename Value, int NO_VALUE_FLAG = 0, size_t M = 200>
+//	class BPlusTree : BPlusTree<size_t, Value, NO_VALUE_FLAG, M> {
+//	public:
+//		using BPlusTree::BPlusTree(const std::string&);
+//		template <typename Comp = std::less<Key> > int find(const String &vl) {
+//			return
+//		}
+//	};
 	
 } // namespace Bookstore
 

@@ -91,6 +91,15 @@ namespace Ticket {
 		const char& operator[] (int p) const {
 			return data[p];
 		}
+		
+		friend size_t hash(const String &s) {
+			static const size_t base = 257, mod = (size_t) 1e16 + 61;
+			size_t res = 0;
+			for (const char *cur = s.data; *cur; ++cur) {
+				res = (res * base + *cur) % mod;
+			}
+			return res;
+		}
 	};
 	
 	using LString = String<35>;

@@ -16,9 +16,8 @@ int main() {
 	using namespace Ticket;
 	using std::cin;
 	using std::cout;
-	Date a(6,7,8,10);
-	for (int i = 0; i < 40; ++i) ++a;
-	cout << a << '\n';
+	String s = "afvsffasd";
+	cout << hash(s) << '\n';
 }
 
 

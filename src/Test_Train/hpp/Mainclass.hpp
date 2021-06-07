@@ -128,15 +128,15 @@ namespace Backend {
             cmdQue->pop();
         }
         // std::cout<<"?"<<"\n";
-        if (log_op.login(tmp[0], tmp[1])) os << '0' << '\n';
+        if (log_op.login(Ticket::hash(tmp[0]), tmp[1])) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::queryprofile(Backend::Cmd_Que *cmdQue, std::ostream &os) {
-        std::string tmp[2];
+        size_t tmp[2];
         //cmdQue->print();
         for (int i = 0; i < 2; i++) {
-            tmp[i] = cmdQue->top();
+            tmp[i] = Ticket::hash(cmdQue->top());
             cmdQue->pop();
         }
         if (log_op.show_user(tmp[0], tmp[1], os)) {}
@@ -144,19 +144,19 @@ namespace Backend {
     }
 
     void Main::logout(Backend::Cmd_Que *cmdQue, std::ostream &os) {
-        if (log_op.logout(cmdQue->top())) os << '0' << '\n';
+        if (log_op.logout(Ticket::hash(cmdQue->top()))) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::modifyprofile(Backend::Cmd_Que *cmdQue, std::ostream &os) {
-        std::string c, u;
+        size_t c, u;
         std::string strs[3];
         bool kind[4];
         int pri = -1;
         //  cmdQue->print();
-        c = cmdQue->top();
+        c = Ticket::hash(cmdQue->top());
         cmdQue->pop();
-        u = cmdQue->top();
+        u = Ticket::hash(cmdQue->top());
         cmdQue->pop();
         int sz = cmdQue->size();
         for (int i = 0; i < 4; i++) kind[i] = false;
@@ -198,7 +198,7 @@ namespace Backend {
             cmdQue->pop();
         }
         int pri = stringtoint(cmdQue->top());
-        if (log_op.add_user(tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], pri)) os << '0' << '\n';
+        if (log_op.add_user(Ticket::hash(tmp[0]), tmp[1], tmp[2], tmp[3], tmp[4], pri)) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
@@ -226,7 +226,7 @@ namespace Backend {
         }
         Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
-        if (train_op.query_train(Train_ID, Date, os)) {}
+        if (train_op.query_train(hash(Train_ID), Date, os)) {}
         else os << '-' << '1' << '\n';
     }
 
@@ -295,14 +295,14 @@ namespace Backend {
     void Main::release_train(Cmd_Que *cmd, std::ostream &os) {
         Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
-        if (train_op.release_train(Train_ID)) os << '0' << '\n';
+        if (train_op.release_train(hash(Train_ID))) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
     void Main::delete_train(Cmd_Que *cmd, std::ostream &os) {
         Ticket::String<24> Train_ID = cmd->top();
         cmd->pop();
-        if (train_op.delete_train(Train_ID)) os << '0' << '\n';
+        if (train_op.delete_train(hash(Train_ID))) os << '0' << '\n';
         else os << '-' << '1' << '\n';
     }
 
@@ -445,7 +445,7 @@ namespace Backend {
        // cmd->print();
         std::string name = cmd->top();
         cmd->pop();
-        if (log_op.is_log(name)) {
+        if (log_op.is_log(Ticket::hash(name))) {
             std::string train_ID = cmd->top();
             cmd->pop();
             Ticket::Date Start_Date;
@@ -507,7 +507,7 @@ namespace Backend {
 
     void Main::query_order(Cmd_Que *cmd, std::ostream &os) {
         Ticket::String<24> name = cmd->top();
-        if (log_op.is_log(name)) {
+        if (log_op.is_log(Ticket::hash(name))) {
             order_op.query_order(cmd->top(), os);
             cmd->pop();
         } else os << '-' << '1' << '\n';
@@ -516,14 +516,13 @@ namespace Backend {
     void Main::refund_ticket(Cmd_Que *cmd, std::ostream &os) {
         Ticket::String<24> name = cmd->top();
         cmd->pop();
-        if (log_op.is_log(name)) {
+        if (log_op.is_log(Ticket::hash(name))) {
             int nums = stringtoint(cmd->top());
             cmd->pop();
             std::vector<order> TrainOrdervec;
             std::vector<OrderKey> Renewvec;
             Ticket::String<24> Train_ID;
             order Success;
-            int sz;
             char type;
           //  std::cout<<'5'<<'\n';
             if (order_op.refund(Train_ID, name, nums, Success, TrainOrdervec, type)) {
@@ -532,40 +531,6 @@ namespace Backend {
                     Train_manager::Train data;
                     train_op.GetTrain(data,Success.get_str(order_parameter::Train_ID));
                     train_op.RenewN(data,TrainOrdervec,Renewvec,Success);
-                  /*
-                    train_op.RenewSeat(data,
-                                       Success.get_Date(order_parameter::Start_Date),
-                                       Success.get_num(order_parameter::Start_Position),
-                                       Success.get_num(order_parameter::End_Position),
-                                       Success.get_num(order_parameter::Num));
-                    sz = TrainOrdervec.size();
-                    for (int i = 0; i < sz; i++) {
-                        int seat, sta, end, price;
-                       // std::cerr<<"!~-"<<'\n';
-                        Ticket::Date Start_Time = TrainOrdervec[i].get_Date(order_parameter::Start_Date);
-                        Ticket::Date End_Time = TrainOrdervec[i].get_Date(order_parameter::End_Date);
-                        Ticket::Date Start_Key(Start_Time.transToDate());
-                        Ticket::String<36> Sta = TrainOrdervec[i].get_station(order_parameter::Start);
-                      //  std::cerr<<Start_Time.to_string()<<'\n';
-                        Ticket::String<36> End = TrainOrdervec[i].get_station(order_parameter::End);
-                        sta=TrainOrdervec[i].get_num(order_parameter::Start_Position);
-                        end=TrainOrdervec[i].get_num(order_parameter::End_Position);
-                        int seatnums=TrainOrdervec[i].get_num(order_parameter::Num);
-                        train_op.GetSeat(data, Start_Key, End_Time, Sta, End, sta, end, seat, price,
-                                         seatnums);
-                      //  std::cerr<<'!'<<Train_ID<<' '<<seat<<' '<< nums<<' '<<TrainOrdervec[i].get_str(order_parameter::Username);
-                        if (seat == -1||seat==-2) continue;
-                        train_op.RenewSeat(data,Start_Time,sta,end,-seatnums);
-                       // std::cerr<<"------"<<'\n';
-                      //  std::cerr<<TrainOrdervec[i].get_str(order_parameter::Train_ID)<<'\n';
-                      //  std::cerr<<TrainOrdervec[i].get_str(order_parameter::Username)<<'\n';
-                      //  std::cerr<<nums<<'\n';
-                      //  std::cerr<<TrainOrdervec[i].get_num(order_parameter::SN)<<'\n';
-                        OrderKey orderKeytmp;
-                        orderKeytmp.str = TrainOrdervec[i].get_str(order_parameter::Username);
-                        orderKeytmp.SN = TrainOrdervec[i].get_num(order_parameter::SN);
-                        Renewvec.push_back(orderKeytmp);
-                    }*/
                     order_op.renew(Renewvec,Train_ID);
                     os << '0' << '\n';
                 }

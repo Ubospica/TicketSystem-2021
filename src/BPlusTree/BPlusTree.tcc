@@ -317,6 +317,7 @@ namespace Ticket {
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::realErase(int pos, const Key &vKey) {
+		
 		return 0;
 	}
 	

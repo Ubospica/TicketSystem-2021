@@ -96,7 +96,7 @@ namespace Ticket {
 			static const size_t base = 257, mod = (size_t) 1e16 + 61;
 			size_t res = 0;
 			for (const char *cur = s.data; *cur; ++cur) {
-				res = (res * base + *cur) % mod;
+				res = (res * base + (unsigned char) *cur) % mod;
 			}
 			return res;
 		}

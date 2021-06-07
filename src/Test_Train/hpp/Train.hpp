@@ -9,6 +9,7 @@
 #include"Time.hpp"
 #include"String.hpp"
 #include"Utility.hpp"
+#include<unordered_map>
 #include<queue>
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
@@ -432,6 +433,7 @@ namespace Backend {
             int sz = stavec.size();
             Station stationtmp;
             //起始站匹配
+            //std::
             for (int i = 0; i < sz; i++) {
                 stationtmp = _BPT_Station.getVal(stavec[i]);
                 Ticket::pair<const int, int> tmp(stationtmp.Pos, stationtmp.index);
@@ -687,6 +689,56 @@ namespace Backend {
             int pos=_BPT_Train.find(Train_ID);
             if(pos==-1) return false;
             else {data=_BPT_Train.getVal(pos);return true;}
+        }
+
+        void BuyTicekt(Train & data,Ticket::Date & Start_Date,Ticket::Date & End_Date,const Ticket::String<36> &Sta,const Ticket::String<36>End,
+                    int & sta,int & end,int &seat,int &price,int nums){
+            if(nums>data.seat) {seat=-2;return;}
+            int sz=data.station_num;
+            bool is_exist=false;
+            for (int i = 0; i < sz; i++) {
+                if (data.train_info[i].station == Sta) {
+                    is_exist=true;
+                    sta = i;
+                    break;
+                }
+            }
+            if(!is_exist) {seat=-2;return;}
+            if (data.train_info[sta].Sta_Date.cmpDate(Start_Date) > 0 ||
+                Start_Date.cmpDate(data.train_info[sta].End_Date) > 0) {
+                seat = -2;
+                return;
+            }
+            Start_Date=Start_Date+data.train_info[sta].depart_time;
+            Ticket::Date Dtmp(Start_Date);
+            Dtmp-=data.train_info[sta].prefix_time;
+            int seatpos;
+            seat = data.seat;
+            int seattmp;
+            is_exist=false;
+            Seat_Key seatKey1(data.Train_SN,Dtmp.getDateStr());
+            Seat seat1;
+            int pos=_BPT_Seat.find(seatKey1);
+            seat1=_BPT_Seat.getVal(pos);
+            for (int i = sta; i < sz; i++) {
+                if (data.train_info[i].station == End) {
+                    end = i;
+                    is_exist=true;
+                    break;
+                }
+                seat = std::min(seat, seat1.seatarr[i]);
+            }
+        //    std::cout<<sta<<' '<<end<<' '<<nums<<' '<<seat<<'\n';
+            if(!is_exist) {seat=-2;return;}
+            if(sta>=end) {seat=-2;return;}
+            if(seat<nums) seat=-1;
+            else {
+               // type = 'S';
+                for(int i=sta;i<end;i++)  seat1.seatarr[i]-=nums;
+                _BPT_Seat.modifyVal(pos,seat1);
+            }
+            End_Date = Start_Date+data.train_info[end].prefix_time-data.train_info[sta].prefix_time-data.train_info[end].stopover;
+            price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
         }
 
         void GetSeat(Train & data, Ticket::Date &Start_Date, Ticket::Date &End_Date,

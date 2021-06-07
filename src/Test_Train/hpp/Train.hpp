@@ -20,7 +20,7 @@ namespace Backend {
             size_t _key=0;
             Node *next=nullptr;
         };
-        static const int factor=79159;
+        static const int factor=66919;
         Node data[factor];
     public:
         My_Unordered_Map()=default;
@@ -62,6 +62,9 @@ namespace Backend {
             else return -1;
         }
         ~My_Unordered_Map(){
+            clear();
+        }
+        void clear(){
             Node * tmp;
             for(int i=0;i<factor;i++){
                 tmp=data[i].next;
@@ -70,6 +73,9 @@ namespace Backend {
                     delete tmp;
                     tmp=data[i].next;
                 }
+                data[i].next=nullptr;
+                data[i]._data=-1;
+                data[i]._key=0;
             }
         }
     };
@@ -591,9 +597,10 @@ namespace Backend {
             Station Start,End;Train train1,train2;
             int CentPos1,CentPos2,StaPos,EndPos;
             Trans_Comp Challenger;
+            My_Unordered_Map Match;
             for(int i=0;i<StaPosvec.size();i++){
                 //map<Ticket::String<36>,int> Match;
-                My_Unordered_Map Match;
+                Match.clear();
                 Start=_BPT_Station.getVal(StaPosvec[i]);
                 train1=_BPT_Train.getVal(Start.Pos);
                 for(int j=0;j<EndPosvec.size();j++) {

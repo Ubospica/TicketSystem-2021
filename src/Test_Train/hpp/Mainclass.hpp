@@ -484,7 +484,8 @@ namespace Backend {
             if(nums==0) {os<<'-'<<'1'<<'\n';return;}
             if(train_op.GetTrain(data,train_ID)) {
                 //这里的Start_Date不带分秒
-                train_op.GetSeat(data, Start_Date, End_Date, Sta, End, sta, end, seat, price, nums);
+                train_op.BuyTicekt(data, Start_Date, End_Date, Sta, End, sta, end, seat, price, nums);
+                //train_op.GetSeat();
                 //这里的Start_Date带分秒
                 if (seat == -2 || (seat == -1 && !state)) os << '-' << '1' << '\n';
                 else if (seat == -1 && state) {
@@ -493,7 +494,7 @@ namespace Backend {
                 } else {
                     order_op.buy_ticket(name, train_ID, Start_Date, End_Date, Sta, End, sta, end, nums, price, false);
                     //  std::cout<<train_ID<<' '<<Start_Date<<' '<<sta<<' '<<end<<'\n';
-                    train_op.RenewSeat(data, Start_Date, sta, end, -nums);
+                  //  train_op.RenewSeat(data, Start_Date, sta, end, -nums);
                     long long ans = nums * price;
                     os << ans << '\n';
                 }

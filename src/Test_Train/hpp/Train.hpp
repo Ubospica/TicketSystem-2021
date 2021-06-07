@@ -122,28 +122,16 @@ namespace Backend {
         int
         _get_seat_range(const Ticket::String<24> &Train_ID, const Ticket::Date &Start_Date, int sta,
                         int end,int sup) {
-
-            //Ticket::pair<int,int> mmdd=Start_Date.getMMDD();
             Ticket::Date Datekey(Start_Date.transToDate());
-            /*   Datekey.mm=Start_Date.mm;
-               Datekey.dd=Start_Date.dd;*/
             Seat_Key seatKey;
-            //seatKey.station = Sta;
             seatKey.train = hash(Train_ID);
-            //Ticket::String<6> Dtmp=;
             seatKey.time=Ticket::hash(Datekey.getDateStr());
             int seat = sup;
-         //   Seat_Key seatKey1(Train_ID,Start_Date.getDateStr());
             int seatpos=_BPT_Seat.find(seatKey);
             Seat seatarr=_BPT_Seat.getVal(seatpos);
-       //     std::cout<<seatpos<<' '<<seatKey.time<<' '<<seatKey.train<<'\n';
-       //     std::cout<<seatKey.time<<sta<<' '<<end<<' '<<'\n';
-            // std::cout<<"__________________"<<'\n';
             for (int i = sta; i < end; i++)  {
-              //  std::cout<<seatarr.seatarr[i]<<'\n';
                 seat = std::min(seat, seatarr.seatarr[i]);
             }
-            //  std::cout<<"__________________"<<'\n';
             return seat;
         }
 
@@ -388,7 +376,10 @@ namespace Backend {
         bool
         query_ticket(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date, char type,
                      std::ostream &os) {//type 'T'-time 'P'-price
-            Backend::map<int, int> match;
+         //   Backend::map<int, int> match;
+            const int Trainsz=sizeof(Train);
+            int Uo[20001];
+            bool Uob[20001]={0};
             std::vector<std::pair<int,int>> aimPosvec;
             Station_Key Keytmp;
             Keytmp.hashStation = hash(Sta);
@@ -400,24 +391,30 @@ namespace Backend {
             if (endvec.empty()) { return false; }
             int sz = stavec.size();
             Station stationtmp;
+            int Uindex;
             for (int i = 0; i < sz; i++) {
                 stationtmp = _BPT_Station.getVal(stavec[i]);
-                Ticket::pair<const int, int> tmp(stationtmp.Pos, stationtmp.index);
-                if (match.insert(tmp)) {}
-                else std::cerr << "query_ticket", throw std::exception();
+                Uindex=stationtmp.Pos/Trainsz;
+                Uo[Uindex]=stationtmp.index;
+                Uob[Uindex]=true;
+              //  Ticket::pair<const int, int> tmp(stationtmp.Pos, stationtmp.index);
+              //  if (match.insert(tmp)) {}
+              //  else std::cerr << "query_ticket", throw std::exception();
             }
             sz = endvec.size();
             int StaIndex;
+
             for (int i = 0; i < sz; i++) {
                 stationtmp = _BPT_Station.getVal(endvec[i]);
-                try {
-                    StaIndex=match[stationtmp.Pos];
-                    if (stationtmp.index >StaIndex )
+               // try {
+               Uindex=stationtmp.Pos/Trainsz;
+                    StaIndex=Uo[stationtmp.Pos/Trainsz];
+                    if (stationtmp.index >StaIndex&&Uob[Uindex])
                         aimPosvec.emplace_back(std::pair<int,int>(stationtmp.Pos,StaIndex));
-                } catch (NotFound) {}
+             //   } catch (NotFound) {}
             }
             //if(match.count(stationtmp.Train_SN)) aimIDvec.push_back(stationtmp.Train_SN);}
-            if (match.empty()) { return false; }
+            if (aimPosvec.empty()) { return false; }
             //    std::cout<<"------------------"<<'\n';
             std::vector<Train> Trainvec;
             //int pos;

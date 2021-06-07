@@ -431,7 +431,6 @@ namespace Backend {
             for (int i = 0; i < sz; i++) {
                 //时间判断
                 Candidate=_BPT_Train.getVal(aimPosvec[i].first);
-             //   std::cout<<Candidate.Train_SN<<' '<<' '<<Candidate.train_info[aimPosvec[i].second].Sta_Date<<' '<<date<<' '<<aimPosvec[i].second<<'\n';
                 if (Candidate.train_info[aimPosvec[i].second].Sta_Date.cmpDate(date)<=0&&date.cmpDate(Candidate.train_info[aimPosvec[i].second].End_Date)<=0) {
                     Trainvec.push_back(Candidate);
                 } else {}
@@ -531,8 +530,85 @@ namespace Backend {
             Ret.num = 888888888;
            // std::cerr<<"transfer_0"<<'\n';
             //std::cerr<<"-----------"<<'\n';
-            map<int, std::vector<std::pair<int, int>>> Endmatch;
-            for (int i = 0; i < EndPosvec.size(); i++) {
+           // map<Ticket::String<36>, int> Endmatch;
+           // const int Trainsize=sizeof(Train);
+            Station Start,End;Train train1,train2;
+            int CentPos1,CentPos2,StaPos,EndPos;
+            Trans_Comp Challenger;
+            for(int i=0;i<StaPosvec.size();i++){
+                map<Ticket::String<36>,int> Match;
+                Start=_BPT_Station.getVal(StaPosvec[i]);
+                train1=_BPT_Train.getVal(Start.Pos);
+                for(int j=0;j<EndPosvec.size();j++) {
+                    End = _BPT_Station.getVal(EndPosvec[j]);
+                    if (End.Pos != Start.Pos) {
+                        train2 = _BPT_Train.getVal(End.Pos);
+                        for (int k = 0; k < train1.station_num; k++) {
+                            map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
+                            Match.insert(p);
+                        }
+                        for (int k = 0; k < train2.station_num; k++) {
+                            if (Match.count(train2.train_info[k].station)) {
+                                CentPos1 = Match[train2.train_info[k].station];
+                                CentPos2 = k;
+                                StaPos = Start.index;
+                                EndPos = End.index;
+                                if (StaPos < CentPos1 && CentPos2 < EndPos &&
+                                    train1.train_info[StaPos].Sta_Date.cmpDate(date) <= 0 &&
+                                    date.cmpDate(train1.train_info[StaPos].End_Date)<=0) {
+                                    int diff = train1.train_info[CentPos1].prefix_time -
+                                               train1.train_info[StaPos].prefix_time -
+                                               train1.train_info[CentPos1].stopover;
+                                    Challenger.depart1 = date + train1.train_info[StaPos].depart_time;
+                                    Ticket::Date Time = Challenger.depart1 + diff;
+                                    if (!(train2.train_info[CentPos2].End_Date +
+                                          train2.train_info[CentPos2].depart_time < Time)) {
+                                        Ticket::Date StartTime = train2.train_info[CentPos2].Sta_Date +
+                                                                 train2.train_info[CentPos2].depart_time;
+                                        Ticket::Date PossiTime =
+                                                Time.transToDate() + train2.train_info[CentPos2].depart_time;
+                                        Challenger.Start_Date1 = date + train1.train_info[StaPos].depart_time -
+                                                                 train1.train_info[StaPos].prefix_time;
+                                        Challenger.Cent = train2.train_info[CentPos2].station;
+                                        Challenger.diff1 = diff;
+                                        Challenger.Train_ID_Sta = train1.Train_SN;
+                                        Challenger.Train_ID_End = train2.Train_SN;
+                                        Challenger.price1 = train1.train_info[CentPos1].prefix_price -
+                                                            train1.train_info[StaPos].prefix_price;
+                                        Challenger.price2 = train2.train_info[EndPos].prefix_price -
+                                                            train2.train_info[CentPos2].prefix_price;
+                                        Challenger.sta1 = StaPos;
+                                        Challenger.end1 = CentPos1;
+                                        Challenger.sta2 = CentPos2;
+                                        Challenger.end2 = EndPos;
+                                        Challenger.diff2 = train2.train_info[EndPos].prefix_time -
+                                                           train2.train_info[CentPos2].prefix_time -
+                                                           train2.train_info[EndPos].stopover;
+                                        if (Time < StartTime) {
+                                            diff += StartTime.diffMinute(Time);
+                                            Challenger.Start_Date2 =
+                                                    StartTime - train2.train_info[CentPos2].prefix_time;
+                                            Challenger.depart2 = StartTime;
+                                        } else {
+                                            if (!(PossiTime < Time)) {}
+                                            else ++PossiTime;
+                                            diff += PossiTime.diffMinute(Time);
+                                            Challenger.depart2 = PossiTime;
+                                            Challenger.Start_Date2 =
+                                                    PossiTime - train2.train_info[CentPos2].prefix_time;
+                                        }
+                                        diff+=Challenger.diff2;
+                                        if (type == 'P') Challenger.num = Challenger.price2 + Challenger.price1;
+                                        else Challenger.num = diff;
+                                        Ret = std::min(Ret, Challenger);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+       /*     for (int i = 0; i < EndPosvec.size(); i++) {
                 Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
                 std::vector<std::pair<int, int>> tmpvec;
                 map<int, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Pos, tmpvec);
@@ -637,7 +713,7 @@ namespace Backend {
                         }
                     }
                 }
-            }
+            }*/
             if(Ret.num==888888888) return false;
             else{
                 Ticket::Date tmp=Ret.depart1+Ret.diff1;

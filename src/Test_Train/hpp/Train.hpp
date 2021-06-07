@@ -13,7 +13,66 @@
 #include<queue>
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
-
+    class My_Unordered_Map{
+    private:
+        struct Node{
+            int _data=-1;
+            size_t _key=0;
+            Node *next=nullptr;
+        };
+        static const int factor=79159;
+        Node data[factor];
+    public:
+        My_Unordered_Map()=default;
+        void insert(size_t & tkey,int  tdata){
+            size_t index=tkey%factor;
+         //   std::cout<<"insert:"<<tkey<<'\n';
+            if(data[index]._key!=0){
+                Node * tmp=data[index].next;
+                Node * prev=&(data[index]);
+             //   std::cout<<prev->_key<<' '<<'\n';
+                while(tmp!=nullptr){
+                    prev=prev->next;
+                    tmp=tmp->next;
+                }
+                tmp=new Node;
+                tmp->next=nullptr;
+                tmp->_data=tdata;
+                tmp->_key=tkey;
+                prev->next=tmp;
+            }
+            else{
+                data[index]._data=tdata;
+                data[index]._key=tkey;
+            }
+        }
+        int GetData(size_t & tKey){
+            size_t index=tKey % factor;
+        //    std::cout<<"GetData:"<<tKey<<'\n';
+            if(data[index]._key!=0){
+                Node * tmp=&(data[index]);
+                while(tmp!=nullptr){
+                 //   std::cout<<tmp->_key<<'\n';
+               //     std::cout<<tmp->_data<<'\n';
+                    if(tmp->_key==tKey) return tmp->_data;
+                    tmp=tmp->next;
+                }
+                return -1;
+            }
+            else return -1;
+        }
+        ~My_Unordered_Map(){
+            Node * tmp;
+            for(int i=0;i<factor;i++){
+                tmp=data[i].next;
+                while(tmp!=nullptr){
+                    data[i].next=(data[i].next)->next;
+                    delete tmp;
+                    tmp=data[i].next;
+                }
+            }
+        }
+    };
     class Train_manager {
     public:
         struct Train {
@@ -533,7 +592,8 @@ namespace Backend {
             int CentPos1,CentPos2,StaPos,EndPos;
             Trans_Comp Challenger;
             for(int i=0;i<StaPosvec.size();i++){
-                map<Ticket::String<36>,int> Match;
+                //map<Ticket::String<36>,int> Match;
+                My_Unordered_Map Match;
                 Start=_BPT_Station.getVal(StaPosvec[i]);
                 train1=_BPT_Train.getVal(Start.Pos);
                 for(int j=0;j<EndPosvec.size();j++) {
@@ -541,12 +601,16 @@ namespace Backend {
                     if (End.Pos != Start.Pos) {
                         train2 = _BPT_Train.getVal(End.Pos);
                         for (int k = 0; k < train1.station_num; k++) {
-                            map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
-                            Match.insert(p);
+                           // map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
+                           // Match.insert(p);
+                           size_t hashnum=hash(train1.train_info[k].station);
+                           Match.insert(hashnum,k);
                         }
                         for (int k = 0; k < train2.station_num; k++) {
-                            if (Match.count(train2.train_info[k].station)) {
-                                CentPos1 = Match[train2.train_info[k].station];
+                            size_t hashnum=hash(train2.train_info[k].station);
+                            int data=Match.GetData(hashnum);
+                            if (data!=-1) {
+                                CentPos1 = data;
                                 CentPos2 = k;
                                 StaPos = Start.index;
                                 EndPos = End.index;

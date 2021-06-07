@@ -22,6 +22,7 @@ namespace Backend {
         };
         static const int factor=66919;
         Node data[factor];
+        std::vector<int> indexvec;
     public:
         My_Unordered_Map()=default;
         void insert(size_t & tkey,int  tdata){
@@ -42,6 +43,7 @@ namespace Backend {
                 prev->next=tmp;
             }
             else{
+                indexvec.push_back(index);
                 data[index]._data=tdata;
                 data[index]._key=tkey;
             }
@@ -66,17 +68,20 @@ namespace Backend {
         }
         void clear(){
             Node * tmp;
-            for(int i=0;i<factor;i++){
-                tmp=data[i].next;
+            int pos;
+            for(int i=0;i<indexvec.size();i++){
+                pos=indexvec[i];
+                tmp=data[pos].next;
                 while(tmp!=nullptr){
-                    data[i].next=(data[i].next)->next;
+                    data[pos].next=(data[pos].next)->next;
                     delete tmp;
-                    tmp=data[i].next;
+                    tmp=data[pos].next;
                 }
-                data[i].next=nullptr;
-                data[i]._data=-1;
-                data[i]._key=0;
+                data[pos].next=nullptr;
+                data[pos]._data=-1;
+                data[pos]._key=0;
             }
+            indexvec.clear();
         }
     };
     class Train_manager {

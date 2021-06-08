@@ -26,7 +26,7 @@ namespace Backend {
     public:
         My_Unordered_Map()=default;
         void insert(size_t & tkey,int  tdata){
-            size_t index=tkey%factor;
+            size_t index=(tkey>>16)%factor;
          //   std::cout<<"insert:"<<tkey<<'\n';
             if(data[index]._key!=0){
                 Node * tmp=data[index].next;
@@ -49,13 +49,13 @@ namespace Backend {
             }
         }
         int GetData(size_t & tKey){
-            size_t index=tKey % factor;
-        //    std::cout<<"GetData:"<<tKey<<'\n';
+            size_t index=(tKey>>16) % factor;
+          //  std::cout<<"GetData:"<<tKey<<'\n';
             if(data[index]._key!=0){
                 Node * tmp=&(data[index]);
                 while(tmp!=nullptr){
                  //   std::cout<<tmp->_key<<'\n';
-               //     std::cout<<tmp->_data<<'\n';
+                 //   std::cout<<tmp->_data<<'\n';
                     if(tmp->_key==tKey) return tmp->_data;
                     tmp=tmp->next;
                 }

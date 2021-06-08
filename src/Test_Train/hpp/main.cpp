@@ -9,7 +9,7 @@ int main(){
 //	for (int i = 1; i <= 10; ++i) {
     Backend::Main OP;
 //    其中第一个参数为输入流，第二个参数为输出流
-    OP.Run(std::cin);
+    OP.Run();
 //	}
     return 0;
 }

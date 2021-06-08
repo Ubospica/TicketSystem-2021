@@ -51,14 +51,15 @@ namespace Backend {
         order_op(_BPT_order_name,_BPT_queue_name,_BPT_Train_Index_name){};
         void OP(Backend::Cmd_Que *cmdQue);
 
-        void Run(std::istream & is){
+        void Run(){
             Cmd_Que * cmd=new Cmd_Que;
-            std::string todo;
+            char todo[1000];
             int i=0;
             try {
                 while (true) {
                     //is >> todo;
-                    getline(is,todo);
+                    scanf("%[^\n]",todo);
+                    getchar();
                     process(cmd, todo);
                   //  std::cerr<<i<<' ';
                     OP(cmd);

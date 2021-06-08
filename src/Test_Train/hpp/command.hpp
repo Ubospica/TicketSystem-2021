@@ -118,7 +118,7 @@ namespace Backend {
         delete head;
     }
 
-    void read_substr(Backend::Cmd_Que *stream, int n, std::string &command, int &pointer) {
+    void read_substr(Backend::Cmd_Que *stream, int n, char * command, int &pointer) {
         std::string parameter_list[n];
         std::string strtmp;
         char type;
@@ -137,9 +137,9 @@ namespace Backend {
         }
     }
 
-    void process(Backend::Cmd_Que *Cmd_Strm, std::string & Cmd) {
+    void process(Backend::Cmd_Que *Cmd_Strm, char * Cmd) {
         int pointer = 0;
-        int sz = Cmd.length();
+        int sz = strlen(Cmd);
         std::string tmp = "";
         ReStr(tmp, Cmd, pointer);
         Cmd_Strm->insert('!', tmp);

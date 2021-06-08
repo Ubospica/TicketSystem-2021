@@ -669,10 +669,9 @@ namespace Backend {
                         }
                         for (int k = 0; k < train2.station_num; k++) {
                            // size_t hashnum=hash(train2.train_info[k].station);
-                           // CentPos1 = -1;
-                            //Match.at(train2.train_info[k].station,CentPos1);
-                            if(Trans.count(train2.train_info[k].station)){
-                                CentPos1=Trans[train2.train_info[k].station];
+                            CentPos1 = -1;
+                            Trans.at(train2.train_info[k].station,CentPos1);
+                            if(CentPos1!=-1){
                                 CentPos2 = k;
                                 StaPos = Start.index;
                                 EndPos = End.index;
@@ -763,7 +762,7 @@ namespace Backend {
             else {data=_BPT_Train.getVal(pos);return true;}
         }
 
-        void BuyTicekt(Train & data,Ticket::Date & Start_Date,Ticket::Date & End_Date,const Ticket::String<36> &Sta,const Ticket::String<36>End,
+        void BuyTicekt(Train & data,Ticket::Date & Start_Date,Ticket::Date & End_Date,const Ticket::String<36> &Sta,const Ticket::String<36>& End,
                     int & sta,int & end,int &seat,int &price,int nums){
             if(nums>data.seat) {seat=-2;return;}
             int sz=data.station_num;

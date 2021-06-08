@@ -13,7 +13,78 @@
 #include<queue>
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
-
+/*    class My_Unordered_Map{
+    private:
+        struct Node{
+            int _data=-1;
+            size_t _key=0;
+            Node *next=nullptr;
+        };
+        static const int factor=836881;
+        Node data[factor];
+        std::vector<int> indexvec;
+    public:
+        My_Unordered_Map()=default;
+        void insert(size_t & tkey,int  tdata){
+            size_t index=(tkey>>16)%factor;
+         //   std::cout<<"insert:"<<tkey<<'\n';
+            if(data[index]._key!=0){
+                Node * tmp=data[index].next;
+                Node * prev=&(data[index]);
+             //   std::cout<<prev->_key<<' '<<'\n';
+                while(tmp!=nullptr){
+                    prev=prev->next;
+                    tmp=tmp->next;
+                }
+                tmp=new Node;
+                tmp->next=nullptr;
+                tmp->_data=tdata;
+                tmp->_key=tkey;
+                prev->next=tmp;
+            }
+            else{
+                indexvec.push_back(index);
+                data[index]._data=tdata;
+                data[index]._key=tkey;
+            }
+        }
+        int GetData(size_t & tKey){
+            size_t index=(tKey>>16) % factor;
+          //  std::cout<<"GetData:"<<tKey<<'\n';
+            if(data[index]._key!=0){
+                Node * tmp=&(data[index]);
+                while(tmp!=nullptr){
+                 //   std::cout<<tmp->_key<<'\n';
+                 //   std::cout<<tmp->_data<<'\n';
+                    if(tmp->_key==tKey) return tmp->_data;
+                    tmp=tmp->next;
+                }
+                return -1;
+            }
+            else return -1;
+        }
+        ~My_Unordered_Map(){
+            clear();
+        }
+        void clear(){
+            Node * tmp;
+            int pos;
+            for(int i=0;i<indexvec.size();i++){
+                pos=indexvec[i];
+                tmp=data[pos].next;
+                while(tmp!=nullptr){
+                    data[pos].next=(data[pos].next)->next;
+                    delete tmp;
+                    tmp=data[pos].next;
+                }
+                data[pos].next=nullptr;
+                data[pos]._data=-1;
+                data[pos]._key=0;
+            }
+            indexvec.clear();
+        }
+    };
+    My_Unordered_Map TransferCount;*/
     class Train_manager {
     public:
         struct Train {
@@ -46,7 +117,6 @@ namespace Backend {
 
     private:
 
-
         struct Station {
             int index=0;
             int Pos = 0;
@@ -65,13 +135,14 @@ namespace Backend {
         };
 
         struct Seat_Key {
-            Ticket::String<6> time;
-            Ticket::String<24> train;
+         //   Ticket::String<6> time;
+         //   Ticket::String<24> train;
+         size_t time;
+         size_t train;
             Seat_Key() = default;
-            Seat_Key(const Ticket::String<24> &Train,
-                     const Ticket::String<6> &Time) {
-                time = Time;
-                train = Train;
+            Seat_Key(size_t & hashtime,size_t & hashtrain) {
+                time = hashtime;
+                train = hashtrain;
             }
 
             bool operator==(const Seat_Key &r) const {
@@ -89,20 +160,21 @@ namespace Backend {
             int pos;
         };*/
         struct Station_Key {
-            Ticket::String<36> Station_name;
+           // Ticket::String<36> Station_name;
+           int hashStation;
             int pos = 0;
             bool operator==(const Station_Key &r) const {
-                return Station_name == r.Station_name && pos == r.pos;
+                return hashStation == r.hashStation && pos == r.pos;
             }
 
             bool operator<(const Station_Key &r) const {
-                return Station_name < r.Station_name || (Station_name == r.Station_name && pos < r.pos);
+                return hashStation < r.hashStation || (hashStation == r.hashStation && pos < r.pos);
             }
         };
 
         struct Station_Comp {
             bool operator()(const Station_Key &l, const Station_Key &r) {
-                return l.Station_name < r.Station_name;
+                return l.hashStation < r.hashStation;
             }
         };
 
@@ -112,72 +184,28 @@ namespace Backend {
         };
 
         Ticket::BPlusTree<Seat_Key,Seat> _BPT_Seat;
-        Ticket::BPlusTree<Ticket::String<24>, Train> _BPT_Train;
+        Ticket::BPlusTree<size_t, Train> _BPT_Train;
         Ticket::BPlusTree<Station_Key, Station> _BPT_Station;
-        Ticket::BPlusTree<Ticket::String<24>, char> _BPT_Rl;
+        Ticket::BPlusTree<size_t, char> _BPT_Rl;
         Ticket::FileIONoCache Count;
         int cnt = 0;
 
         int
-        _get_seat_range(const Ticket::String<24> &Train_ID, const Ticket::Date &Start_Date, int sta,
-                        int end,int sup) {
-
-            //Ticket::pair<int,int> mmdd=Start_Date.getMMDD();
+        _get_seat_range(const Ticket::String<24> &Train_ID, const Ticket::Date &Start_Date, int & sta,
+                        int & end,const int & sup) {
             Ticket::Date Datekey(Start_Date.transToDate());
-            /*   Datekey.mm=Start_Date.mm;
-               Datekey.dd=Start_Date.dd;*/
             Seat_Key seatKey;
-            //seatKey.station = Sta;
-            seatKey.train = Train_ID;
-            seatKey.time = Datekey.getDateStr();
+            seatKey.train = hash(Train_ID);
+            seatKey.time=Ticket::hash(Datekey.getDateStr());
             int seat = sup;
-         //   Seat_Key seatKey1(Train_ID,Start_Date.getDateStr());
             int seatpos=_BPT_Seat.find(seatKey);
             Seat seatarr=_BPT_Seat.getVal(seatpos);
-       //     std::cout<<seatpos<<' '<<seatKey.time<<' '<<seatKey.train<<'\n';
-       //     std::cout<<seatKey.time<<sta<<' '<<end<<' '<<'\n';
-            // std::cout<<"__________________"<<'\n';
             for (int i = sta; i < end; i++)  {
-              //  std::cout<<seatarr.seatarr[i]<<'\n';
                 seat = std::min(seat, seatarr.seatarr[i]);
             }
-            //  std::cout<<"__________________"<<'\n';
             return seat;
         }
 
-
-       /* int _get_seat_range(const Ticket::String<22> &Train_ID, const Ticket::String<36> &Sta, const Ticket::Date &Start_Date, int sta,
-                                   int end) {
-            int pos=_BPT_Train.find(Train_ID);
-            Train data=_BPT_Train.getVal(pos);
-           // Ticket::pair<int,int> mmdd=Start_Date.getMMDD();
-            Ticket::Date Datekey(Start_Date.transToDate());
-            *//*   Datekey.mm=Start_Date.mm;
-               Datekey.dd=Start_Date.dd;*//*
-            Seat_Key seatKey;
-            seatKey.station = Sta;
-            seatKey.train = data.Train_SN;
-            seatKey.time = Datekey.getDateStr()
-            Ticket::Date Datetmp = Start_Date;
-            int seatpos;
-            int seat = data.seat;
-            int seattmp;
-            // std::cout<<"__________________"<<'\n';
-            for (int i = sta; i < end; i++) {
-                seatKey.station=data.train_info[i].station;
-                seatpos = _BPT_Seat.find(seatKey);
-                seattmp = _BPT_Seat.getVal(seatpos);
-                seat = std::min(seat, seattmp);
-                Datetmp += (data.train_info[i + 1].prefix_time - data.train_info[i].prefix_time);
-                //mmdd=Datetmp.getMMDD();
-                Ticket::Date Datekey2(Datetmp.transToDate());
-                *//*      Datekey.mm = Datetmp.mm;
-                      Datekey.dd = Datetmp.dd;*//*
-                seatKey.time = Datekey2.getDateStr();
-            }
-            //  std::cout<<"__________________"<<'\n';
-            return seat;
-        }*/
         struct Comp {
             int data = 0;
             int pos = 0;
@@ -226,7 +254,8 @@ namespace Backend {
         bool add_train(const Ticket::String<24> &SN, int &stanum, int &seatnum, Ticket::String<36> *stations,
                        const int *price, const Ticket::Date &sta_time, const int *traveltime, const int *stoppovertime,
                        const Ticket::Date *saleDate, char type) {//saleDate[0]为起始,1为终结
-            if(_BPT_Train.find(SN)!=-1) return false;
+            size_t hashSN=hash(SN);
+            if(_BPT_Train.find(hashSN)!=-1) return false;
             Train data;
             //int sumtime=0;
             //Train_Key data_key;
@@ -258,18 +287,12 @@ namespace Backend {
             //seat 最后一位没有用
             data.seat = seatnum;
             //设定后面
-            //Ticket::Date Statmp,Endtmp;
-            // seatArr.rl='N';
-            //seatArr.seat_info[0]=seatnum;
+            Ticket::Date Dtmp,Dtmp2;
             for (int i = 1; i < stanum; i++) {
-                //data.seat[i]=seatnum;
                 data.train_info[i].station = stations[i];
-                //data.train_info[i].seat=seatnum;
                 data.train_info[i].prefix_price = data.train_info[i - 1].prefix_price + price[i];
                 Statmp += traveltime[i];
                 Endtmp += traveltime[i];
-                /*     data.train_info[i].arri_time.hr = Statmp.hr;
-                     data.train_info[i].arri_time.mi = Statmp.mi;*/
                 data.train_info[i].stopover = stoppovertime[i];
                 Statmp += stoppovertime[i];
                 Endtmp += stoppovertime[i];
@@ -277,28 +300,28 @@ namespace Backend {
                 Ticket::Date depatmp(0,0,hrmi.first,hrmi.second);
                 data.train_info[i].depart_time=depatmp;
                // Ticket::pair<int,int> mmdd=Statmp.getMMDD();
-                Ticket::Date Dtmp(Statmp.transToDate());
+               Dtmp=Statmp.transToDate();
                // Ticket::pair<int,int> mmdd2=Endtmp.getMMDD();
-                Ticket::Date Dtmp2(Endtmp.transToDate());
+                Dtmp2=Endtmp.transToDate();
                 data.train_info[i].Sta_Date = Dtmp;
                 data.train_info[i].End_Date = Dtmp2;
                 data.train_info[i].prefix_time =data.train_info[i - 1].prefix_time + traveltime[i] + stoppovertime[i];//
             }
-            _BPT_Train.insert(SN,data);
-            _BPT_Rl.insert(SN, 'N');
+            _BPT_Train.insert(hashSN,data);
+            _BPT_Rl.insert(hashSN, 'N');
             return true;
             //终点站,price与出发时间停留时间无用
         }
 
-        bool delete_train(const Ticket::String<24> &SN) {
+        bool delete_train(const size_t & hashSN) {
             //这里好像有点鲁棒？判断是否发售？
-            int pos = _BPT_Rl.find(SN);
+            int pos = _BPT_Rl.find(hashSN);
             if (pos == -1) return false;
             else {
                 //Seat_arr seatArr=_BPT_Seat.getVal(pos);
                 char flag = _BPT_Rl.getVal(pos);
                 if (flag == 'N') {
-                    if (_BPT_Rl.erase(SN)==1&& _BPT_Train.erase(SN)==1) return true;
+                    if (_BPT_Rl.erase(hashSN)==1&& _BPT_Train.erase(hashSN)==1) return true;
                     else {
                         std::cerr<<"heher7"<<'\n';
                         Error("delete_train_2");
@@ -313,12 +336,12 @@ namespace Backend {
             }
         }
 
-        bool release_train(const Ticket::String<24> &SN) {
-            int pos = _BPT_Train.find(SN);
+        bool release_train(const size_t & hashSN) {
+            int pos = _BPT_Train.find(hashSN);
             //Otmp_pos为第二key为0的位置
             Station_Key data_key;
             if (pos == -1) return false;
-            int rl_pos = _BPT_Rl.find(SN);
+            int rl_pos = _BPT_Rl.find(hashSN);
             if (rl_pos == -1) {
                 std::cerr<<"heher5"<<'\n';
                 Error("release_train_2");}//std::cerr<<"release_train_2",throw std::exception();
@@ -327,29 +350,37 @@ namespace Backend {
             _BPT_Rl.modifyVal(rl_pos, 'Y');
             Train data = _BPT_Train.getVal(pos);
             data_key.pos = ++cnt;
+            int posflag;
+            Station station;
             for (int i = 0; i < data.station_num; i++) {
-                data_key.Station_name = data.train_info[i].station;
-                Station station(i,pos);
-                int posflag = _BPT_Station.insert(data_key, station);
+                data_key.hashStation = hash(data.train_info[i].station);
+               station.index=i;
+               station.Pos=pos;
+                posflag = _BPT_Station.insert(data_key, station);
                 if (posflag == -1)  Error("release_train_4");
             }
             Seat Seatdata;
            // Seatdata.n=data.station_num;
             for(int i=0;i<data.station_num;i++) Seatdata.seatarr[i]=data.seat;
+            size_t hashtrain,hashtime;
+            Seat_Key seatKey;
             for (Ticket::Date tmp=data.start_day; data.start_day.cmpDate(tmp) <= 0 &&
                    tmp.cmpDate(data.end_day) <= 0; ++tmp) {
-                Seat_Key seatKey(SN,tmp.getDateStr());
+               hashtrain=hashSN;
+               hashtime=Ticket::hash(tmp.getDateStr());
+                seatKey.time=hashtime;
+                seatKey.train=hashtrain;
                 _BPT_Seat.insert(seatKey,Seatdata);
             }
             return true;
             //_BPT_Train.modifyVal(pos,data);
         }
 
-        bool query_train(const Ticket::String<24> &SN, const Ticket::Date &tDate, std::ostream &os) {
-            int pos = _BPT_Train.find(SN);
+        bool query_train(const size_t & hashSN, const Ticket::Date &tDate, std::ostream &os) {
+            int pos = _BPT_Train.find(hashSN);
             if (pos == -1) return false;
             else {
-                int Rlpos = _BPT_Rl.find(SN);
+                int Rlpos = _BPT_Rl.find(hashSN);
                 if (Rlpos == -1) {
                     std::cerr<<"hehe2"<<'\n';
                     Error("query_train");}
@@ -362,7 +393,7 @@ namespace Backend {
                     Ticket::Date cal;
                     Ticket::Date Datetmp(data.start_time);
                     cal = tDate + Datetmp;
-                    os << SN << ' ' << data.type << '\n';
+                    os << data.Train_SN << ' ' << data.type << '\n';
                     os << data.train_info[0].station << ' ' << "xx-xx xx:xx ->" << ' ' << cal << ' '
                        << data.train_info[0].prefix_price << ' ' << data.seat << '\n';
                     for (int i = 1; i < sz - 1; i++) {
@@ -382,12 +413,12 @@ namespace Backend {
                 //    Ticket::pair<int,int> mmdd=tDate.getMMDD();
                     Ticket::Date Datekey(tDate.transToDate());
                     Seat_Key seatKey;
-                    seatKey.train=SN;
-                    seatKey.time=tDate.getDateStr();
+                    seatKey.train=hashSN;
+                    seatKey.time=Ticket::hash(tDate.getDateStr());
                     int SeatPos=_BPT_Seat.find(seatKey);
                     Seat Seatdata=_BPT_Seat.getVal(SeatPos);
                     cal = tDate + Datetmp;
-                    os << SN << ' ' << data.type << '\n';
+                    os << data.Train_SN << ' ' << data.type << '\n';
                     os << data.train_info[0].station << ' ' << "xx-xx xx:xx ->" << ' ' << cal << ' '
                        << data.train_info[0].prefix_price << ' '
                        << Seatdata.seatarr[0] << '\n';
@@ -416,46 +447,45 @@ namespace Backend {
         bool
         query_ticket(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date, char type,
                      std::ostream &os) {//type 'T'-time 'P'-price
-            Backend::map<int, int> match;
+         //   Backend::map<int, int> match;
+            const int Trainsz=sizeof(Train);
+            int Uo[20001];
+            bool Uob[20001]={0};
             std::vector<std::pair<int,int>> aimPosvec;
             Station_Key Keytmp;
-            Keytmp.Station_name = Sta;
+            Keytmp.hashStation = hash(Sta);
             Keytmp.pos = 0;
-            //先得到起始位置
             std::vector<int> stavec = _BPT_Station.route<Station_Comp>(Keytmp);
-            //首站不存在
             if (stavec.empty()) { return false; }
-            Keytmp.Station_name = Det;
-            //终止位置
+            Keytmp.hashStation = hash(Det);
             std::vector<int> endvec = _BPT_Station.route<Station_Comp>(Keytmp);
-            //尾站不存在
             if (endvec.empty()) { return false; }
             int sz = stavec.size();
             Station stationtmp;
-            //起始站匹配
-            //std::
+            int Uindex;
             for (int i = 0; i < sz; i++) {
                 stationtmp = _BPT_Station.getVal(stavec[i]);
-                Ticket::pair<const int, int> tmp(stationtmp.Pos, stationtmp.index);
-                //    os<<stationtmp.Train_SN<<' '<<stationtmp.Train_pos<<' '<<'\n';
-                if (match.insert(tmp)) {}
-                else std::cerr << "query_ticket", throw std::exception();
+                Uindex=stationtmp.Pos/Trainsz;
+                Uo[Uindex]=stationtmp.index;
+                Uob[Uindex]=true;
+              //  Ticket::pair<const int, int> tmp(stationtmp.Pos, stationtmp.index);
+              //  if (match.insert(tmp)) {}
+              //  else std::cerr << "query_ticket", throw std::exception();
             }
-            //   os<<"----------------------"<<'\n';
             sz = endvec.size();
-            //将结尾站符合要求的车塞进去
+            int StaIndex;
+
             for (int i = 0; i < sz; i++) {
                 stationtmp = _BPT_Station.getVal(endvec[i]);
-                //小心逆向查车，小心车没释放
-                try {
-                    //逆向查车不算
-                    int StaIndex=match[stationtmp.Pos];
-                    if (stationtmp.index >StaIndex )
+               // try {
+               Uindex=stationtmp.Pos/Trainsz;
+                    StaIndex=Uo[stationtmp.Pos/Trainsz];
+                    if (stationtmp.index >StaIndex&&Uob[Uindex])
                         aimPosvec.emplace_back(std::pair<int,int>(stationtmp.Pos,StaIndex));
-                } catch (NotFound) {}
+             //   } catch (NotFound) {}
             }
             //if(match.count(stationtmp.Train_SN)) aimIDvec.push_back(stationtmp.Train_SN);}
-            if (match.empty()) { return false; }
+            if (aimPosvec.empty()) { return false; }
             //    std::cout<<"------------------"<<'\n';
             std::vector<Train> Trainvec;
             //int pos;
@@ -465,10 +495,10 @@ namespace Backend {
             /*       DateKey.dd = date.dd;
                    DateKey.mm = date.mm;*/
             //std::cout<<"-------------"<<'\n';
+            Train Candidate;
             for (int i = 0; i < sz; i++) {
                 //时间判断
-                Train Candidate=_BPT_Train.getVal(aimPosvec[i].first);
-             //   std::cout<<Candidate.Train_SN<<' '<<' '<<Candidate.train_info[aimPosvec[i].second].Sta_Date<<' '<<date<<' '<<aimPosvec[i].second<<'\n';
+                Candidate=_BPT_Train.getVal(aimPosvec[i].first);
                 if (Candidate.train_info[aimPosvec[i].second].Sta_Date.cmpDate(date)<=0&&date.cmpDate(Candidate.train_info[aimPosvec[i].second].End_Date)<=0) {
                     Trainvec.push_back(Candidate);
                 } else {}
@@ -476,12 +506,13 @@ namespace Backend {
             sz = Trainvec.size();
             Comp arr[sz];
             std::pair<int, int> pospair[sz];
-            int tmp_seat_pos;
+          //  int tmp_seat_pos;
             if (type == 'T') {
+                int station_num;
                 for (int i = 0; i < sz; i++) {
                     arr[i].ID = Trainvec[i].Train_SN;
                     arr[i].pos = i;
-                    int station_num = Trainvec[i].station_num;
+                    station_num = Trainvec[i].station_num;
                     for (int j = 0; j < station_num; j++)
                         if (Sta == Trainvec[i].train_info[j].station) {
                             pospair[i].first = j;
@@ -498,10 +529,11 @@ namespace Backend {
                     //    std::cout<<arr[i].data<<' '<<arr[i].ID<<'\n';
                 }
             } else if (type == 'P') {
+                int station_num;
                 for (int i = 0; i < sz; i++) {
                     arr[i].ID = Trainvec[i].Train_SN;
                     arr[i].pos = i;
-                    int station_num = Trainvec[i].station_num;
+                    station_num = Trainvec[i].station_num;
                     for (int j = 0; j < station_num; j++)
                         if (Sta == Trainvec[i].train_info[j].station) {
                             pospair[i].first = j;
@@ -517,17 +549,18 @@ namespace Backend {
                 }
             } else std::cerr << "query_ticket", throw std::exception();
             std::sort(arr, arr + sz);
-            Ticket::Date Dtmp;
+            Ticket::Date Dtmp, DateKey2;
             os << sz << '\n';
+            int seat,diff,Trainpos;
             for (int i = 0; i < sz; i++) {
-                int Trainpos = arr[i].pos;
+                Trainpos = arr[i].pos;
                 Dtmp = date + Trainvec[Trainpos].train_info[pospair[Trainpos].first].depart_time;
-                Ticket::Date DateKey2=Dtmp-Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_time;
+                DateKey2=Dtmp-Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_time;
                // std::cout<<'-'<<DateKey<<'\n';
-                int seat = _get_seat_range(Trainvec[Trainpos].Train_SN, DateKey2, pospair[Trainpos].first,
+                seat = _get_seat_range(Trainvec[Trainpos].Train_SN, DateKey2, pospair[Trainpos].first,
                                            pospair[Trainpos].second,Trainvec[Trainpos].seat);
                 os << arr[i].ID << ' ' << Sta << ' ' << Dtmp << ' ' << '-' << '>' << ' ';
-                int diff = Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_time -
+                diff = Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].second].stopover;
                 Dtmp += diff;
@@ -538,18 +571,18 @@ namespace Backend {
             return true;
         }
 
-        bool query_transfer(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date,
+        bool query_transfer(const Ticket::String<36> & Sta, const Ticket::String<36> &Det, const Ticket::Date &date,
                             char type, std::ostream &os) {
             //为什么感觉时间处理这么麻烦?
             //先记住我在每一个info里存的prefix_time
             //都是该站离站时间到第一个站的离站时间
             //由于中间存在停靠，所以需要做额外的加减处理
             Station_Key stationKey;
-            stationKey.Station_name = Sta;
+            stationKey.hashStation = hash(Sta);
             stationKey.pos = 0;
             std::vector<int> StaPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             if(StaPosvec.empty()) return false;
-            stationKey.Station_name = Det;
+            stationKey.hashStation = hash(Det);
             std::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             if(EndPosvec.empty()) return false;
             //std::vector<Station> Stavec;
@@ -565,107 +598,85 @@ namespace Backend {
             Ret.num = 888888888;
            // std::cerr<<"transfer_0"<<'\n';
             //std::cerr<<"-----------"<<'\n';
-            map<int, std::vector<std::pair<int, int>>> Endmatch;
-            for (int i = 0; i < EndPosvec.size(); i++) {
-                Endvec.push_back(_BPT_Station.getVal(EndPosvec[i]));
-                std::vector<std::pair<int, int>> tmpvec;
-                map<int, std::vector<std::pair<int, int>>>::value_type valueType(Endvec[i].Pos, tmpvec);
-                Endmatch.insert(valueType);
-            }
-            for (int i = 0; i < StaPosvec.size(); i++) {
-                for(int j=0;j<EndPosvec.size();j++) Endmatch[Endvec[j].Pos].clear();
-                //   std::cerr<<"transfer_0.5"<<'\n';
-                Station StaStation = _BPT_Station.getVal(StaPosvec[i]);
-                Train data = _BPT_Train.getVal(StaStation.Pos);
-                int statnum = data.station_num;
-                //遍历起始站的每一辆车车的每一个节点
-                for (int j = StaStation.index; j < statnum; j++) {
-                    //遍历该节点的每一辆车，并将其插入map中
-                    Station_Key CentKey;
-                    CentKey.pos = 0;
-                    CentKey.Station_name = data.train_info[j].station;
-                    std::vector<int> CentPosvec = _BPT_Station.route<Station_Comp>(CentKey);
-                    std::vector<Station> Centvec;
-                    int Centpos1 = j;
-                    for (int k = 0; k < CentPosvec.size(); k++) {
-                        Centvec.push_back(_BPT_Station.getVal(CentPosvec[k]));
-                        if (Endmatch.count(Centvec[k].Pos)) {
-                            std::pair<int, int> value(Centpos1, Centvec[k].index);
-                            Endmatch[Centvec[k].Pos].push_back(value);
+           // map<Ticket::String<36>, int> Endmatch;
+           // const int Trainsize=sizeof(Train);
+            Station Start,End;Train train1,train2;
+            int CentPos1,CentPos2,StaPos,EndPos,diff;
+            Ticket::Date Time,PossiTime,StartTime;
+            Trans_Comp Challenger;
+            //My_Unordered_Map Match;
+            map<Ticket::String<36>,int> Match;
+            for(int i=0;i<StaPosvec.size();i++){
+                Match.clear();
+                Start=_BPT_Station.getVal(StaPosvec[i]);
+                for(int j=0;j<EndPosvec.size();j++) {
+                    End = _BPT_Station.getVal(EndPosvec[j]);
+                    if (End.Pos != Start.Pos) {
+                        train1=_BPT_Train.getVal(Start.Pos);
+                        train2 = _BPT_Train.getVal(End.Pos);
+                        for (int k = 0; k < train1.station_num; k++) {
+                            map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
+                            Match.insert(p);
+                          // size_t hashnum=hash(train1.train_info[k].station);
+                           //TransferCount.insert(hashnum,k);
                         }
-                    }
-                }
-                for (int j = 0; j < Endvec.size(); j++) {
-                    if (StaStation.Pos != Endvec[j].Pos) {//换乘的不是同一辆车
-                          //   std::cerr<<"transfer_1"<<'\n';
-                        Train Candidate = _BPT_Train.getVal(Endvec[j].Pos);
-                        std::vector<std::pair<int, int>> CentTrainpos = Endmatch[Endvec[j].Pos];
-                        for (int k = 0; k < CentTrainpos.size(); k++) {
-                                    //     std::cerr<<"transfer_1.5"<<'\n';
-                            int StaPos = StaStation.index;
-                            int CentPos1 = CentTrainpos[k].first;
-                            int CentPos2 = CentTrainpos[k].second;
-                            int EndPos = Endvec[j].index;
-                                   //     std::cerr<<StaPos<<' '<<CentPos1<<' '<<CentPos2<<' '<<EndPos<<'\n';
-                                   //     std::cerr<<data.train_info[StaPos].Sta_Date<<' '<<date<<' '<<data.train_info[StaPos].End_Date<<'\n';
-                            if (StaPos < CentPos1 && CentPos2 < EndPos &&
-                                data.train_info[StaPos].Sta_Date.cmpDate(date) <= 0 &&
-                                date.cmpDate(data.train_info[StaPos].End_Date)<=0) {//查询的始发时间合法//保证正向
-                                int diff = data.train_info[CentPos1].prefix_time -
-                                           data.train_info[StaPos].prefix_time-data.train_info[CentPos1].stopover;
-                                //time表示中转站时间
-                                Ticket::Date time = date + data.train_info[StaPos].depart_time+ diff;
-                                //只要到达中转时间小于最晚离开时间即可
-                                  //           std::cerr<<"transfer_2"<<'\n';
-                                if (!(Candidate.train_info[CentPos2].End_Date +
-                                         Candidate.train_info[CentPos2].depart_time<time)) {
-                                    Trans_Comp Challenger;
-                                    Challenger.Cent=data.train_info[CentPos1].station;
-                                 //   std::cerr<<CentPos1<<' '<<Challenger.Train_ID_Sta<<"\n";
-                                 //   std::cerr<<CentPos2<<' '<<Challenger.Train_ID_End<<'\n';
-                                    Challenger.diff1=diff;
-                                    Challenger.depart1=date + data.train_info[StaPos].depart_time;
-                                    Challenger.sta1=StaPos;
-                                    Challenger.end1=CentPos1;
-                                    Challenger.sta2=CentPos2;
-                                    Challenger.end2=EndPos;
-                                    Challenger.Start_Date1=date + data.train_info[StaPos].depart_time-data.train_info[StaPos].prefix_time;
-                                    Challenger.price1=data.train_info[CentPos1].prefix_price-data.train_info[StaPos].prefix_price;
-                                    Challenger.price2=Candidate.train_info[EndPos].prefix_price-Candidate.train_info[CentPos2].prefix_price;
-                                    Ticket::Date Timetmp = Candidate.train_info[CentPos2].depart_time;
-                                    //Datetmp表示该车到站同天的离站时间
-                                    Ticket::Date Datetmp(time.transToDate()+Timetmp);
-                                    //Start表示该车最早离站时间
-                                    Ticket::Date Start(Candidate.train_info[CentPos2].Sta_Date+Timetmp);
-                                    if (Datetmp < Start) {
-                                        //同天离站时间小于起始离站，说明该天在发车起始以外，需要等到第一趟车
-                                        diff += Start.diffMinute(time);
-                                        Challenger.depart2=Start;
-                                        Challenger.Start_Date2=Start-Candidate.train_info[CentPos2].prefix_time;
-                                    } else {
-                                        if (!(Datetmp<time)) diff += Datetmp.diffMinute(time);
-                                        else {
-                                            //同天离站时间小于到站时间，那么要多等一天
-                                            ++Datetmp;
-                                            diff += Datetmp.diffMinute(time);
+                        for (int k = 0; k < train2.station_num; k++) {
+                           // size_t hashnum=hash(train2.train_info[k].station);
+                            CentPos1 = -1;
+                            Match.at(train2.train_info[k].station,CentPos1);
+                            if (CentPos1!=-1) {
+                                CentPos2 = k;
+                                StaPos = Start.index;
+                                EndPos = End.index;
+                                if (StaPos < CentPos1 && CentPos2 < EndPos &&
+                                    train1.train_info[StaPos].Sta_Date.cmpDate(date) <= 0 &&
+                                    date.cmpDate(train1.train_info[StaPos].End_Date)<=0) {
+                                    diff = train1.train_info[CentPos1].prefix_time -
+                                               train1.train_info[StaPos].prefix_time -
+                                               train1.train_info[CentPos1].stopover;
+                                    Challenger.depart1 = date + train1.train_info[StaPos].depart_time;
+                                    Time = Challenger.depart1 + diff;
+                                    if (!(train2.train_info[CentPos2].End_Date +
+                                          train2.train_info[CentPos2].depart_time < Time)) {
+                                        StartTime = train2.train_info[CentPos2].Sta_Date +
+                                                                 train2.train_info[CentPos2].depart_time;
+                                        PossiTime =
+                                                Time.transToDate() + train2.train_info[CentPos2].depart_time;
+                                        Challenger.Start_Date1 = date + train1.train_info[StaPos].depart_time -
+                                                                 train1.train_info[StaPos].prefix_time;
+                                        Challenger.Cent = train2.train_info[CentPos2].station;
+                                        Challenger.diff1 = diff;
+                                        Challenger.Train_ID_Sta = train1.Train_SN;
+                                        Challenger.Train_ID_End = train2.Train_SN;
+                                        Challenger.price1 = train1.train_info[CentPos1].prefix_price -
+                                                            train1.train_info[StaPos].prefix_price;
+                                        Challenger.price2 = train2.train_info[EndPos].prefix_price -
+                                                            train2.train_info[CentPos2].prefix_price;
+                                        Challenger.sta1 = StaPos;
+                                        Challenger.end1 = CentPos1;
+                                        Challenger.sta2 = CentPos2;
+                                        Challenger.end2 = EndPos;
+                                        Challenger.diff2 = train2.train_info[EndPos].prefix_time -
+                                                           train2.train_info[CentPos2].prefix_time -
+                                                           train2.train_info[EndPos].stopover;
+                                        if (Time < StartTime) {
+                                            diff += StartTime.diffMinute(Time);
+                                            Challenger.Start_Date2 =
+                                                    StartTime - train2.train_info[CentPos2].prefix_time;
+                                            Challenger.depart2 = StartTime;
+                                        } else {
+                                            if (!(PossiTime < Time)) {}
+                                            else ++PossiTime;
+                                            diff += PossiTime.diffMinute(Time);
+                                            Challenger.depart2 = PossiTime;
+                                            Challenger.Start_Date2 =
+                                                    PossiTime - train2.train_info[CentPos2].prefix_time;
                                         }
-                                        Challenger.depart2=Datetmp;
-                                        Challenger.Start_Date2=Datetmp-Candidate.train_info[CentPos2].prefix_time;
+                                        diff+=Challenger.diff2;
+                                        if (type == 'P') Challenger.num = Challenger.price2 + Challenger.price1;
+                                        else Challenger.num = diff;
+                                        Ret = std::min(Ret, Challenger);
                                     }
-                                    Challenger.diff2=Candidate.train_info[EndPos].prefix_time -
-                                                     Candidate.train_info[CentPos2].prefix_time -
-                                                     Candidate.train_info[EndPos].stopover;
-                                    if (type == 'P') {
-                                        nums = Challenger.price1+Challenger.price2;
-                                    }
-                                    else {
-                                        diff += Challenger.diff2;
-                                        nums = diff;
-                                    }
-                                    Challenger.num = nums;
-                                    Challenger.Train_ID_End = Candidate.Train_SN;
-                                    Challenger.Train_ID_Sta = data.Train_SN;
-                                    Ret = std::min(Challenger, Ret);
                                 }
                             }
                         }
@@ -685,8 +696,8 @@ namespace Backend {
             return true;
         }
 
-        bool GetTrain(Train & data,const Ticket::String<24> & Train_ID){
-            int pos=_BPT_Train.find(Train_ID);
+        bool GetTrain(Train & data,const Ticket::String<24> & ID){
+            int pos=_BPT_Train.find(hash(ID));
             if(pos==-1) return false;
             else {data=_BPT_Train.getVal(pos);return true;}
         }
@@ -716,7 +727,9 @@ namespace Backend {
             seat = data.seat;
             int seattmp;
             is_exist=false;
-            Seat_Key seatKey1(data.Train_SN,Dtmp.getDateStr());
+            size_t hashtrain=hash(data.Train_SN);
+            size_t hashtime=Ticket::hash(Dtmp.getDateStr());
+            Seat_Key seatKey1(hashtime,hashtrain);
             Seat seat1;
             int pos=_BPT_Seat.find(seatKey1);
             seat1=_BPT_Seat.getVal(pos);
@@ -740,91 +753,6 @@ namespace Backend {
             End_Date = Start_Date+data.train_info[end].prefix_time-data.train_info[sta].prefix_time-data.train_info[end].stopover;
             price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
         }
-
-        void GetSeat(Train & data, Ticket::Date &Start_Date, Ticket::Date &End_Date,
-                     const Ticket::String<36> &Sta, const Ticket::String<36> &End, int &sta, int &end, int &seat, int &price,
-                     int nums) {
-           // int pos = _BPT_Train.find(Train_ID);
-            if(nums>data.seat) {seat=-2;return;}
-            int sz = data.station_num;
-            bool is_exist=false;
-            for (int i = 0; i < sz; i++) {
-                if (data.train_info[i].station == Sta) {
-                    is_exist=true;
-                    sta = i;
-                    break;
-                }
-            }
-            if(!is_exist) {seat=-2;return;}
-            //  std::cerr<<'4'<<'\n';
-            //std::cout<<Start_Date.timeCnt<<"\n";
-            //std::cout<<Start_Date.to_string()<<' '<<data.train_info[sta].Sta_Date.to_string()<<' '<<data.train_info[sta].End_Date.to_string();
-            if (data.train_info[sta].Sta_Date.cmpDate(Start_Date) > 0 ||
-                Start_Date.cmpDate(data.train_info[sta].End_Date) > 0) {
-                seat = -2;
-                return;
-            }
-            //此时Start_Date 不含分秒
-            //Ticket::Date Stmp();
-        //    Seat_Key seatKey;
-       //     seatKey.train = data.Train_SN;
-       //     seatKey.time = Start_Date.getDateStr();
-            Start_Date=Start_Date+data.train_info[sta].depart_time;
-         //   std::cout<<seatKey.time<<"\n";
-            Ticket::Date Dtmp(Start_Date);
-            Dtmp-=data.train_info[sta].prefix_time;
-         //   std::cout<<Dtmp<<"\n";
-            //mmdd=Start_Date.getMMDD();
-            //Ticket::Date Datetmp = Start_Date;
-            int seatpos;
-            seat = data.seat;
-            int seattmp;
-            //    std::cerr<<'1'<<'\n';
-            //  std::cerr<<nums<<'\n';
-            is_exist=false;
-            Seat_Key seatKey1(data.Train_SN,Dtmp.getDateStr());
-            Seat seat1;
-            int pos=_BPT_Seat.find(seatKey1);
-           // std::cout<<pos<<'\n';
-            seat1=_BPT_Seat.getVal(pos);
-         //   for(int i=0;i<sz;i++) std::cout<<seat1.seatarr[i]<<'\n';
-            for (int i = sta; i < sz; i++) {
-                if (data.train_info[i].station == End) {
-                    end = i;
-                    is_exist=true;
-                    break;
-                }
-                //       std::cerr<<'2'<<'\n';
-                seat = std::min(seat, seat1.seatarr[i]);
-            }
-            //   std::cerr<<'3'<<'\n';
-            //   std::cerr<<data.station_num<<' '<<end<<"\n";
-            if(!is_exist) {seat=-2;return;}
-            if(sta>=end) {seat=-2;return;}
-            if(seat<nums) seat=-1;
-            End_Date = Start_Date+data.train_info[end].prefix_time-data.train_info[sta].prefix_time-data.train_info[end].stopover;
-            price = data.train_info[end].prefix_price - data.train_info[sta].prefix_price;
-        }
-
-        void RenewSeat(Train & data, const Ticket::Date &Sta_Time,
-                       int sta,int end, int devi) {
-            int sz = data.station_num;
-            //这里Sta_Time包含分秒
-            Ticket::Date Datetmp = Sta_Time-data.train_info[sta].prefix_time;
-            Ticket::Date Datekey=(Datetmp.transToDate());
-            Seat_Key seatKey;
-            seatKey.train = data.Train_SN;
-            seatKey.time = Datekey.getDateStr();
-            int seatpos=_BPT_Seat.find(seatKey);
-           // if(seatpos==-1) std::cerr<<"fhere"<<'\n';
-            Seat seat=_BPT_Seat.getVal(seatpos);
-        //    std::cout<<seatKey.time<<'\n';
-            for (int i = sta; i <end; i++) {
-                seat.seatarr[i]+=devi;
-            }
-            _BPT_Seat.modifyVal(seatpos, seat);
-        }
-
         ~Train_manager() {
             Count.write(Count.BEG, cnt);
             Count.close();
@@ -843,12 +771,12 @@ namespace Backend {
            // int aimPos=_BPT_Train.find(Success.get_str(order_parameter::Train_ID));
            // Train Aim=_BPT_Train.getVal(aimPos);
             Seat_Key seatKey;
-            seatKey.train=Success.get_str(order_parameter::Train_ID);
+            seatKey.train=hash(Success.get_str(order_parameter::Train_ID));
             int sta=Success.get_num(order_parameter::Start_Position);
             int end=Success.get_num(order_parameter::End_Position);
             int devi=Success.get_num(order_parameter::Num);
             Ticket::Date StartTime=Success.get_Date(order_parameter::Start_Date)-Aim.train_info[sta].prefix_time;
-            seatKey.time=StartTime.getDateStr();
+            seatKey.time=Ticket::hash(StartTime.getDateStr());
             int pos=_BPT_Seat.find(seatKey);
             Seat seat=_BPT_Seat.getVal(pos);
             for(int i=sta;i<end;i++) seat.seatarr[i]+=devi;
@@ -856,9 +784,10 @@ namespace Backend {
             int endtmp;
             OrderKey orderKey;
             int num;
+            Ticket::Date Timetmp;
             for(int i=0;i<TrainOrdervec.size();i++){
                 statmp=TrainOrdervec[i].get_num(order_parameter::Start_Position);
-                Ticket::Date Timetmp=TrainOrdervec[i].get_Date(order_parameter::Start_Date);
+                Timetmp=TrainOrdervec[i].get_Date(order_parameter::Start_Date);
                 Timetmp-=Aim.train_info[statmp].prefix_time;
              //  std::cout<<Timetmp<<' '<<StartTime<<'\n';
              //   TrainOrdervec[i].print(std::cout);
@@ -870,7 +799,7 @@ namespace Backend {
                 if(seattmp<num) continue;
                 for(int j=statmp;j<endtmp;j++) seat.seatarr[j]-=num;
                 orderKey.SN=TrainOrdervec[i].get_num(order_parameter::SN);
-                orderKey.str=TrainOrdervec[i].get_str(order_parameter::Username);
+                orderKey.hashstr=hash(TrainOrdervec[i].get_str(order_parameter::Username));
                 Renewvec.push_back(orderKey);
             }
             _BPT_Seat.modifyVal(pos,seat);

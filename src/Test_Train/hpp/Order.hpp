@@ -273,7 +273,7 @@ namespace Backend {
             OrderKey data_key;
             data_key.hashstr =hash(name);
             data_key.SN = SN;
-            int pos=Waiting_Queue.insert(data_key, order);
+            Waiting_Queue.insert(data_key, order);
           //  if(pos==-1) std::cerr<<"shere"<<'\n';
             //std::cerr<<"here"<<'\n';
             //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
@@ -286,10 +286,11 @@ namespace Backend {
         void Renew(std::vector<OrderKey> &IDvec,const Ticket::String<24> & Train_ID) {//返回位置 first 为位置 second 为票数
             int sz = IDvec.size();
             OrderKey renew;
+            size_t hashID=hash(Train_ID);
             for(int i=0;i<sz;i++) {
                 renew=IDvec[i];
                 Waiting_Queue.erase(renew);
-                renew.hashstr=hash(Train_ID);
+                renew.hashstr=hashID;
                 Train_Queue.erase(renew);
             }
         }
@@ -430,8 +431,7 @@ namespace Backend {
         ~BPT_order() = default;
 
     };
-
-
+    
 
     class Order_op {
     private:

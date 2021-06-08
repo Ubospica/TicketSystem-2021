@@ -200,8 +200,11 @@ namespace Backend {
             int seat = sup;
             int seatpos=_BPT_Seat.find(seatKey);
             Seat seatarr=_BPT_Seat.getVal(seatpos);
-            for (int i = sta; i < end; i++)  {
-                seat = std::min(seat, seatarr.seatarr[i]);
+           int  mid=(sta+end-1)>>1;
+            int len=mid-sta;
+            for (int i = 0; i <= len; i++)  {
+                seat = std::min(seat, seatarr.seatarr[sta+i]);
+                seat=std::min(seat,seatarr.seatarr[end-1-i]);
             }
             return seat;
         }
@@ -362,14 +365,13 @@ namespace Backend {
             Seat Seatdata;
            // Seatdata.n=data.station_num;
             for(int i=0;i<data.station_num;i++) Seatdata.seatarr[i]=data.seat;
-            size_t hashtrain,hashtime;
+            size_t hashtime;
             Seat_Key seatKey;
             for (Ticket::Date tmp=data.start_day; data.start_day.cmpDate(tmp) <= 0 &&
                    tmp.cmpDate(data.end_day) <= 0; ++tmp) {
-               hashtrain=hashSN;
                hashtime=Ticket::hash(tmp.getDateStr());
                 seatKey.time=hashtime;
-                seatKey.train=hashtrain;
+                seatKey.train=hashSN;
                 _BPT_Seat.insert(seatKey,Seatdata);
             }
             return true;
@@ -723,9 +725,7 @@ namespace Backend {
             Start_Date=Start_Date+data.train_info[sta].depart_time;
             Ticket::Date Dtmp(Start_Date);
             Dtmp-=data.train_info[sta].prefix_time;
-            int seatpos;
             seat = data.seat;
-            int seattmp;
             is_exist=false;
             size_t hashtrain=hash(data.Train_SN);
             size_t hashtime=Ticket::hash(Dtmp.getDateStr());
@@ -785,6 +785,9 @@ namespace Backend {
             OrderKey orderKey;
             int num;
             Ticket::Date Timetmp;
+            int seattmp;
+            int midtmp;
+            int lentmp;
             for(int i=0;i<TrainOrdervec.size();i++){
                 statmp=TrainOrdervec[i].get_num(order_parameter::Start_Position);
                 Timetmp=TrainOrdervec[i].get_Date(order_parameter::Start_Date);
@@ -793,8 +796,14 @@ namespace Backend {
              //   TrainOrdervec[i].print(std::cout);
                 if(Timetmp.timeCnt!=StartTime.timeCnt) continue;
                 endtmp=TrainOrdervec[i].get_num(order_parameter::End_Position);
-                int seattmp=Aim.seat;
-                for(int j=statmp;j<endtmp;j++) seattmp=std::min(seattmp,seat.seatarr[j]);
+                seattmp=Aim.seat;
+               // for(int j=statmp;j<endtmp;j++) seattmp=std::min(seattmp,seat.seatarr[j]);
+               midtmp=(statmp+endtmp-1)>>1;
+               lentmp=midtmp-statmp;
+               for(int j=0;j<=lentmp;j++){
+                   seattmp=std::min(seattmp,seat.seatarr[statmp+j]);
+                   seattmp=std::min(seattmp,seat.seatarr[endtmp-1-j]);
+               }
                 num=TrainOrdervec[i].get_num(order_parameter::Num);
                 if(seattmp<num) continue;
                 for(int j=statmp;j<endtmp;j++) seat.seatarr[j]-=num;

@@ -100,7 +100,7 @@ namespace Ticket {
 	using SString = String<25>;
 	
 	size_t hash (const char *s) {
-		static const size_t base = 257, mod = (size_t) 1e13 + 61;
+		static const size_t base = 257, mod = (size_t) 1e9 + 61;
 		size_t res = 0;
 		while (*s) {
 			res = (res * base + (unsigned char) *s) % mod;

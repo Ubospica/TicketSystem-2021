@@ -444,7 +444,7 @@ namespace Backend {
 
                     printf("%s",&(data.Train_SN));printf(" %c\n",data.type);
                     printf("%s",&(data.train_info[0].station));printf(" xx-xx xx:xx -> %s",strtmp.c_str());
-                    printf(" %d",data.train_info[0].prefix_price);printf(" %d\n",data.seat);
+                    printf(" %d",data.train_info[0].prefix_price);printf(" %d\n",Seatdata.seatarr[0]);
                 /*    os << data.Train_SN << ' ' << data.type << '\n';
                     os << data.train_info[0].station << ' ' << "xx-xx xx:xx ->" << ' ' << cal << ' '
                        << data.train_info[0].prefix_price << ' '

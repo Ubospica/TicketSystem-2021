@@ -20,7 +20,7 @@ namespace Backend {
             size_t _key=0;
             Node *next=nullptr;
         };
-        static const int factor=66919;
+        static const int factor=2000003;
         Node data[factor];
         std::vector<int> indexvec;
     public:
@@ -602,7 +602,7 @@ namespace Backend {
             Station Start,End;Train train1,train2;
             int CentPos1,CentPos2,StaPos,EndPos;
             Trans_Comp Challenger;
-            My_Unordered_Map Match;
+            static My_Unordered_Map Match;
             for(int i=0;i<StaPosvec.size();i++){
                 //map<Ticket::String<36>,int> Match;
                 Match.clear();

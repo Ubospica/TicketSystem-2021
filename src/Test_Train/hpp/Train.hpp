@@ -20,7 +20,7 @@ namespace Backend {
             size_t _key=0;
             Node *next=nullptr;
         };
-        static const int factor=2000003;
+        static const int factor=1000003;
         Node data[factor];
         std::vector<int> indexvec;
     public:

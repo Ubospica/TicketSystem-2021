@@ -4,6 +4,7 @@
 #include "String.hpp"
 #include "map.hpp"
 #include "BPlusTree.hpp"
+#include<fstream>
 //#include "Logging.hpp"
 //#include<iostream>
 #include"Exception.hpp"
@@ -45,7 +46,7 @@ namespace Backend {
 
         bool passwd_match(const Ticket::String<35> & password);
 
-        void print(std::ostream & os);
+        void print();
 
         ~user()=default;
     };
@@ -87,9 +88,9 @@ namespace Backend {
 
         bool logout(const size_t & username);
 
-        bool show_user(const size_t & op_name,const size_t & username,std::ostream & os);
+        bool show_user(const size_t & op_name,const size_t & username);
 
-        bool modify(const size_t & op_name,const bool * kind,const size_t & change,std::string * strs,int pri,std::ostream & os);//0 是密码 1是名字 2是邮箱 3是权限
+        bool modify(const size_t & op_name,const bool * kind,const size_t & change,std::string * strs,int pri);//0 是密码 1是名字 2是邮箱 3是权限
 
         bool add_user(const size_t & op_name,const Ticket::String<24> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri);
 
@@ -167,8 +168,12 @@ namespace Backend {
         return password==passwd;
     }
 
-    void user::print(std::ostream & os) {
-        os<<username<<' '<<name<<' '<<mailAddr<<' '<<privilege<<'\n';
+    void user::print() {
+        printf("%s",&username);
+        printf(" %s",&name);
+        printf(" %s",&mailAddr);
+        printf(" %d\n",privilege);
+        //os<<username<<' '<<name<<' '<<mailAddr<<' '<<privilege<<'\n';
         //return os;
     }
     /*std::ostream & operator<<(std::ostream& os,const user& u){
@@ -234,7 +239,7 @@ namespace Backend {
         return _logging_list.erase(username);
     }
 
-    bool Log_op::show_user(const size_t & hashopname,const size_t & hashusername,std::ostream & os){
+    bool Log_op::show_user(const size_t & hashopname,const size_t & hashusername){
         int op_pri;
         user tmp;
         try{
@@ -245,12 +250,12 @@ namespace Backend {
         if(op_pri<tmp.get_privilege()) return false;
         if(op_pri==tmp.get_privilege()&&hashopname!=hashusername) return false;
         else {
-            tmp.print(os);
+            tmp.print();
             return true;
         }
     }
 
-    bool Log_op::modify(const size_t & hashopname,const bool * kind,const size_t & hashchange,std::string * strs,int pri,std::ostream & os){
+    bool Log_op::modify(const size_t & hashopname,const bool * kind,const size_t & hashchange,std::string * strs,int pri){
         int op_pri;
         //int tmp_pri;
         user tmp;
@@ -279,7 +284,7 @@ namespace Backend {
             }
             //   std::cout<<'?'<<'\n';
             op_user.modify_user(tmp);
-            tmp.print(os);
+            tmp.print();
             return true;
         }
         else return false;

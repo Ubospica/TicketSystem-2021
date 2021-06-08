@@ -3,6 +3,7 @@
 #include "String.hpp"
 #include"Exception.hpp"
 #include"BPlusTree.hpp"
+#include<fstream>
 //#include"Linear_List.hpp"
 //#include"Mainclass.cpp"
 #include "FileIO.hpp"
@@ -228,24 +229,34 @@ namespace Backend {
 
         }*/
 
-        void print(std::ostream & os) {
+        void print() {
             //Date.
-            os << '[';
+          //  os << '[';
+            printf("%c",'[');
             switch (_state) {
                 case (state_list::Refund):
-                    os << "refunded";
+                  //  os << "refunded";
+                    printf("%s","refunded");
                     break;
                 case (state_list::Success):
-                    os << "success";
+                  //  os << "success";
+                    printf("%s","success");
                     break;
                 case (state_list::Pending):
-                    os << "pending";
+                    printf("%s","pending");
+                    //  os << "pending";
                     break;
                 default:
                     throw Ticket::WrongOperation();
             }
-            os << ']' <<' '<<train_ID<< ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< Det << ' '<<End_date<< ' '
-                      <<price<<' '<< ticket_num << '\n';
+            std::string tmp=Sta_date.to_string();
+     printf("%c",']');printf(" %s",&train_ID);printf(" %s",&Sta);printf(" %s",tmp.c_str());
+     printf(" -> %s",&Det);
+     tmp=End_date.to_string();
+     printf(" %s",tmp.c_str());
+     printf( " %d",price);printf(" %d\n",ticket_num);
+     //      os << ']' <<' '<<train_ID<< ' ' << Sta << ' ' << Sta_date <<' '<< '-' << '>' <<' '<< Det << ' '<<End_date<< ' '
+      //                <<price<<' '<< ticket_num << '\n';
         }
 
         state_list &State() {
@@ -485,13 +496,14 @@ namespace Backend {
             if (pos == -1) throw Ticket::WrongOperation("buy_ticket");
         }
 
-        void query_order(const Ticket::String<24> &name,std::ostream& os) {
+        void query_order(const Ticket::String<24> &name) {
             std::vector<order> all_order = Order.query(name);
             //try{ all_order=Order.query(name);}catch(NotFound){return 0;}
             int sz = all_order.size();
-            os<<sz<<'\n';
+            printf("%d\n",sz);
+            //os<<sz<<'\n';
             for (int i = sz-1; i >=0 ; i--) {
-                all_order[i].print(os);
+                all_order[i].print();
             }
         }
 

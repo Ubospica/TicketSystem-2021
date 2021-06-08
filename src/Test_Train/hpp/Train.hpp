@@ -2,6 +2,7 @@
 #define BACKEND_TRAIN_HPP
 
 #include<iostream>
+#include<fstream>
 #include"BPlusTree.hpp"
 #include"map.hpp"
 #include<vector>
@@ -91,7 +92,7 @@ namespace Backend {
             return hash(key);
         }
     };*/
-    std::map<Ticket::String<36>,int> Trans;
+//    std::map<Ticket::String<36>,int> Trans;
    // std::unordered_map<Ticket::String<36>,int,HashFund> Trans;
     class Train_manager {
     public:
@@ -386,7 +387,7 @@ namespace Backend {
             //_BPT_Train.modifyVal(pos,data);
         }
 
-        bool query_train(const size_t & hashSN, const Ticket::Date &tDate, std::ostream &os) {
+        bool query_train(const size_t & hashSN, const Ticket::Date &tDate) {
             int pos = _BPT_Train.find(hashSN);
             if (pos == -1) return false;
             else {
@@ -403,20 +404,31 @@ namespace Backend {
                     Ticket::Date cal;
                     Ticket::Date Datetmp(data.start_time);
                     cal = tDate + Datetmp;
-                    os << data.Train_SN << ' ' << data.type << '\n';
+                    std::string strtmp=cal.to_string();
+                    printf("%s",&(data.Train_SN));printf(" %c\n",data.type);
+                    printf("%s",&(data.train_info[0].station));printf(" xx-xx xx:xx -> %s",strtmp.c_str());
+                    printf(" %d",data.train_info[0].prefix_price);printf(" %d\n",data.seat);
+                /*    os << data.Train_SN << ' ' << data.type << '\n';
                     os << data.train_info[0].station << ' ' << "xx-xx xx:xx ->" << ' ' << cal << ' '
-                       << data.train_info[0].prefix_price << ' ' << data.seat << '\n';
+                       << data.train_info[0].prefix_price << ' ' << data.seat << '\n';*/
                     for (int i = 1; i < sz - 1; i++) {
                         cal += data.train_info[i].prefix_time - data.train_info[i - 1].prefix_time -
                                data.train_info[i].stopover;
-                        os << data.train_info[i].station << ' ' << cal << ' ' << '-' << '>' << ' ';
-                        cal += data.train_info[i].stopover;
-                        os << cal << ' ' << data.train_info[i].prefix_price << ' ' << data.seat << '\n';
+                        strtmp=cal.to_string();
+                        printf("%s",&(data.train_info[i].station));printf(" %s",strtmp.c_str());
+                        cal += data.train_info[i].stopover;strtmp=cal.to_string();
+                        printf(" -> %s",strtmp.c_str());printf(" %d",data.train_info[i].prefix_price);
+                        printf(" %d\n",data.seat);
+                     /*   os << data.train_info[i].station << ' ' << cal << ' ' << '-' << '>' << ' ';
+                        os << cal << ' ' << data.train_info[i].prefix_price << ' ' << data.seat << '\n';*/
                     }
                     cal += data.train_info[sz - 1].prefix_time - data.train_info[sz - 2].prefix_time -
                            data.train_info[sz - 1].stopover;
-                    os << data.train_info[sz - 1].station << ' ' << cal << ' ' << "-> xx-xx xx:xx" << ' '
-                       << data.train_info[sz - 1].prefix_price << ' ' << 'x' << '\n';
+                    strtmp=cal.to_string();
+                    printf("%s",&(data.train_info[sz-1].station));printf(" %s",strtmp.c_str());
+                    printf(" -> xx-xx xx:xx %d",data.train_info[sz-1].prefix_price);printf(" x\n");
+                  /*  os << data.train_info[sz - 1].station << ' ' << cal << ' ' << "-> xx-xx xx:xx" << ' '
+                       << data.train_info[sz - 1].prefix_price << ' ' << 'x' << '\n';*/
                 } else if (flag == 'Y') {
                     Ticket::Date cal;
                     Ticket::Date Datetmp(data.start_time);
@@ -428,22 +440,37 @@ namespace Backend {
                     int SeatPos=_BPT_Seat.find(seatKey);
                     Seat Seatdata=_BPT_Seat.getVal(SeatPos);
                     cal = tDate + Datetmp;
-                    os << data.Train_SN << ' ' << data.type << '\n';
+                    std::string strtmp=cal.to_string();
+
+                    printf("%s",&(data.Train_SN));printf(" %c\n",data.type);
+                    printf("%s",&(data.train_info[0].station));printf(" xx-xx xx:xx -> %s",strtmp.c_str());
+                    printf(" %d",data.train_info[0].prefix_price);printf(" %d\n",data.seat);
+                /*    os << data.Train_SN << ' ' << data.type << '\n';
                     os << data.train_info[0].station << ' ' << "xx-xx xx:xx ->" << ' ' << cal << ' '
                        << data.train_info[0].prefix_price << ' '
-                       << Seatdata.seatarr[0] << '\n';
+                       << Seatdata.seatarr[0] << '\n';*/
                     for (int i = 1; i < sz - 1; i++) {
-                        cal += data.train_info[i].prefix_time - data.train_info[i - 1].prefix_time -
+                     /*   cal += data.train_info[i].prefix_time - data.train_info[i - 1].prefix_time -
                                data.train_info[i].stopover;
                         os << data.train_info[i].station << ' ' << cal << ' ' << '-' << '>' << ' ';
                         cal += data.train_info[i].stopover;
                         os << cal << ' ' << data.train_info[i].prefix_price << ' '
-                           << Seatdata.seatarr[i] << '\n';
+                           << Seatdata.seatarr[i] << '\n';*/
+                        cal += data.train_info[i].prefix_time - data.train_info[i - 1].prefix_time -
+                               data.train_info[i].stopover;
+                        strtmp=cal.to_string();
+                        printf("%s",&(data.train_info[i].station));printf(" %s",strtmp.c_str());
+                        cal += data.train_info[i].stopover;strtmp=cal.to_string();
+                        printf(" -> %s",strtmp.c_str());printf(" %d",data.train_info[i].prefix_price);
+                        printf(" %d\n",Seatdata.seatarr[i]);
                     }
                     cal += data.train_info[sz - 1].prefix_time - data.train_info[sz - 2].prefix_time -
                            data.train_info[sz - 1].stopover;
-                    os << data.train_info[sz - 1].station << ' ' << cal << ' ' << "-> xx-xx xx:xx" << ' '
-                       << data.train_info[sz - 1].prefix_price << ' ' << 'x' << '\n';
+                  /*  os << data.train_info[sz - 1].station << ' ' << cal << ' ' << "-> xx-xx xx:xx" << ' '
+                       << data.train_info[sz - 1].prefix_price << ' ' << 'x' << '\n';*/
+                  strtmp=cal.to_string();
+                    printf("%s",&(data.train_info[sz-1].station));printf(" %s",strtmp.c_str());
+                    printf(" -> xx-xx xx:xx %d",data.train_info[sz-1].prefix_price);printf(" x\n");
                 } else {
                     std::cerr<<"heher"<<'\n';
                     throw Ticket::SyntaxError();
@@ -455,8 +482,7 @@ namespace Backend {
         }
 
         bool
-        query_ticket(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date, char type,
-                     std::ostream &os) {//type 'T'-time 'P'-price
+        query_ticket(const Ticket::String<36> &Sta, const Ticket::String<36> &Det, const Ticket::Date &date, char type) {//type 'T'-time 'P'-price
          //   Backend::map<int, int> match;
             const int Trainsz=sizeof(Train);
             int Uo[20001];
@@ -560,8 +586,10 @@ namespace Backend {
             } else std::cerr << "query_ticket", throw std::exception();
             std::sort(arr, arr + sz);
             Ticket::Date Dtmp, DateKey2;
-            os << sz << '\n';
-            int seat,diff,Trainpos;
+            printf("%d\n",sz);
+            //os << sz << '\n';
+            int seat,diff,Trainpos,diffprice;
+            std::string tmp;
             for (int i = 0; i < sz; i++) {
                 Trainpos = arr[i].pos;
                 Dtmp = date + Trainvec[Trainpos].train_info[pospair[Trainpos].first].depart_time;
@@ -569,21 +597,28 @@ namespace Backend {
                // std::cout<<'-'<<DateKey<<'\n';
                 seat = _get_seat_range(Trainvec[Trainpos].Train_SN, DateKey2, pospair[Trainpos].first,
                                            pospair[Trainpos].second,Trainvec[Trainpos].seat);
-                os << arr[i].ID << ' ' << Sta << ' ' << Dtmp << ' ' << '-' << '>' << ' ';
+                tmp=Dtmp.to_string();
+                printf("%s",&(arr[i].ID));printf(" %s",&(Sta));
+                printf(" %s",tmp.c_str());
+                //os << arr[i].ID << ' ' << Sta << ' ' << Dtmp << ' ' << '-' << '>' << ' ';
                 diff = Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_time -
                            Trainvec[Trainpos].train_info[pospair[Trainpos].second].stopover;
                 Dtmp += diff;
-                os << Det << ' ' << Dtmp << ' '<< Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
-                                                  - Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_price << ' ' << seat
-                   << '\n';
+                tmp=Dtmp.to_string();
+                printf(" -> %s",&Det);printf(" %s",tmp.c_str());
+                diffprice=Trainvec[Trainpos].train_info[pospair[Trainpos].second].prefix_price
+                          - Trainvec[Trainpos].train_info[pospair[Trainpos].first].prefix_price;
+                printf(" %d",diffprice);printf(" %d\n",seat);
+              /*  os << Det << ' ' << Dtmp << ' '<<  << ' ' << seat
+                   << '\n';*/
             }
             return true;
         }
 
 
         bool query_transfer(const Ticket::String<36> & Sta, const Ticket::String<36> &Det, const Ticket::Date &date,
-                            char type, std::ostream &os) {
+                            char type) {
             //为什么感觉时间处理这么麻烦?
             //先记住我在每一个info里存的prefix_time
             //都是该站离站时间到第一个站的离站时间
@@ -609,7 +644,7 @@ namespace Backend {
             Ret.num = 888888888;
            // std::cerr<<"transfer_0"<<'\n';
             //std::cerr<<"-----------"<<'\n';
-           // map<Ticket::String<36>, int> Endmatch;
+            map<Ticket::String<36>, int> Trans;
            // const int Trainsize=sizeof(Train);
             Station Start,End;Train train1,train2;
             int CentPos1,CentPos2,StaPos,EndPos,diff;
@@ -625,9 +660,9 @@ namespace Backend {
                         train1=_BPT_Train.getVal(Start.Pos);
                         train2 = _BPT_Train.getVal(End.Pos);
                         for (int k = 0; k < train1.station_num; k++) {
-                            Trans.insert(std::make_pair(train1.train_info[k].station,k));
-                           /* map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
-                            Match.insert(p);*/
+                          //  Trans.insert(std::make_pair(train1.train_info[k].station,k));
+                            map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
+                            Trans.insert(p);
                           //  Trans.insert(std::pair<Ticket::String<36>,int>(train1.train_info[k].station,k));
                           // size_t hashnum=hash(train1.train_info[k].station);
                            //TransferCount.insert(hashnum,k);
@@ -698,13 +733,26 @@ namespace Backend {
             }
             if(Ret.num==888888888) return false;
             else{
+                std::string strtmp;
                 Ticket::Date tmp=Ret.depart1+Ret.diff1;
                 int seat=_get_seat_range(Ret.Train_ID_Sta,Ret.Start_Date1,Ret.sta1,Ret.end1,100001);
-                os<<Ret.Train_ID_Sta<<' '<<Sta<<' '<<Ret.depart1<<' '<<'-'<<'>'<<' '<<Ret.Cent<<' '<<tmp<<' '<<Ret.price1<<' '<<seat<<'\n';
+                printf("%s",&(Ret.Train_ID_Sta));printf(" %s",&Sta);
+                strtmp=Ret.depart1.to_string();
+                printf(" %s",strtmp.c_str());printf(" -> %s",&(Ret.Cent));
+                strtmp=tmp.to_string();
+                printf(" %s",strtmp.c_str());printf(" %d",Ret.price1);
+                printf( " %d\n",seat);
+             //   os<<Ret.Train_ID_Sta<<' '<<Sta<<' '<<Ret.depart1<<' '<<'-'<<'>'<<' '<<Ret.Cent<<' '<<tmp<<' '<<Ret.price1<<' '<<seat<<'\n';
                 Ticket::Date tmp2=Ret.depart2+Ret.diff2;
                 //   std::cerr<<Ret.depart2<<" "<<Ret.diff2<<'\n';
                 seat=_get_seat_range(Ret.Train_ID_End,Ret.Start_Date2,Ret.sta2,Ret.end2,100001);
-                os<<Ret.Train_ID_End<<' '<<Ret.Cent<<' '<<Ret.depart2<<' '<<'-'<<'>'<<' '<<Det<<' '<<tmp2<<' '<<Ret.price2<<' '<<seat<<'\n';
+                printf("%s",&(Ret.Train_ID_End));printf(" %s",&(Ret.Cent));
+                strtmp=Ret.depart2.to_string();
+                printf(" %s",strtmp.c_str());printf(" -> %s",&Det);
+                strtmp=tmp2.to_string();
+                printf(" %s",strtmp.c_str());printf(" %d",Ret.price2);
+                printf( " %d\n",seat);
+              //  os<<Ret.Train_ID_End<<' '<<Ret.Cent<<' '<<Ret.depart2<<' '<<'-'<<'>'<<' '<<Det<<' '<<tmp2<<' '<<Ret.price2<<' '<<seat<<'\n';
             }
             return true;
         }

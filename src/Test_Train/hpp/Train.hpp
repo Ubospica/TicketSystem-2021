@@ -624,9 +624,9 @@ namespace Backend {
                         }
                         for (int k = 0; k < train2.station_num; k++) {
                            // size_t hashnum=hash(train2.train_info[k].station);
-                            CentPos1 = -1;
+                            CentPos1 = 127;
                             Match.at(train2.train_info[k].station,CentPos1);
-                            if (CentPos1!=-1) {
+                            if (CentPos1!=127) {
                                 CentPos2 = k;
                                 StaPos = Start.index;
                                 EndPos = End.index;

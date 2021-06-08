@@ -9,7 +9,7 @@
 #include"Time.hpp"
 #include"String.hpp"
 #include"Utility.hpp"
-#include<unordered_map>
+#include<map>
 #include<queue>
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
@@ -85,13 +85,14 @@ namespace Backend {
         }
     };
     My_Unordered_Map TransferCount;*/
-    struct HashFund{
+/*    struct HashFund{
         template<size_t size>
         size_t operator()(const Ticket::String<size> & key)const{
             return hash(key);
         }
-    };
-    std::unordered_map<Ticket::String<36>,int,HashFund> Trans;
+    };*/
+    std::map<Ticket::String<36>,int> Trans;
+   // std::unordered_map<Ticket::String<36>,int,HashFund> Trans;
     class Train_manager {
     public:
 
@@ -624,9 +625,10 @@ namespace Backend {
                         train1=_BPT_Train.getVal(Start.Pos);
                         train2 = _BPT_Train.getVal(End.Pos);
                         for (int k = 0; k < train1.station_num; k++) {
+                            Trans.insert(std::make_pair(train1.train_info[k].station,k));
                            /* map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
                             Match.insert(p);*/
-                            Trans.insert(std::pair<Ticket::String<36>,int>(train1.train_info[k].station,k));
+                          //  Trans.insert(std::pair<Ticket::String<36>,int>(train1.train_info[k].station,k));
                           // size_t hashnum=hash(train1.train_info[k].station);
                            //TransferCount.insert(hashnum,k);
                         }

@@ -20,7 +20,7 @@ namespace Backend {
             size_t _key=0;
             Node *next=nullptr;
         };
-        static const int factor=1000003;
+        static const int factor=836881;
         Node data[factor];
         std::vector<int> indexvec;
     public:
@@ -84,6 +84,7 @@ namespace Backend {
             indexvec.clear();
         }
     };
+    My_Unordered_Map TransferCount;
     class Train_manager {
     public:
         struct Train {
@@ -602,10 +603,10 @@ namespace Backend {
             Station Start,End;Train train1,train2;
             int CentPos1,CentPos2,StaPos,EndPos;
             Trans_Comp Challenger;
-            static My_Unordered_Map Match;
+            //My_Unordered_Map Match;
             for(int i=0;i<StaPosvec.size();i++){
                 //map<Ticket::String<36>,int> Match;
-                Match.clear();
+                TransferCount.clear();
                 Start=_BPT_Station.getVal(StaPosvec[i]);
                 train1=_BPT_Train.getVal(Start.Pos);
                 for(int j=0;j<EndPosvec.size();j++) {
@@ -616,11 +617,11 @@ namespace Backend {
                            // map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
                            // Match.insert(p);
                            size_t hashnum=hash(train1.train_info[k].station);
-                           Match.insert(hashnum,k);
+                           TransferCount.insert(hashnum,k);
                         }
                         for (int k = 0; k < train2.station_num; k++) {
                             size_t hashnum=hash(train2.train_info[k].station);
-                            int data=Match.GetData(hashnum);
+                            int data=TransferCount.GetData(hashnum);
                             if (data!=-1) {
                                 CentPos1 = data;
                                 CentPos2 = k;

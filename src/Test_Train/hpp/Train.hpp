@@ -13,7 +13,7 @@
 #include<queue>
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
-    class My_Unordered_Map{
+/*    class My_Unordered_Map{
     private:
         struct Node{
             int _data=-1;
@@ -84,7 +84,7 @@ namespace Backend {
             indexvec.clear();
         }
     };
-    My_Unordered_Map TransferCount;
+    My_Unordered_Map TransferCount;*/
     class Train_manager {
     public:
         struct Train {
@@ -604,9 +604,9 @@ namespace Backend {
             int CentPos1,CentPos2,StaPos,EndPos;
             Trans_Comp Challenger;
             //My_Unordered_Map Match;
+            map<Ticket::String<36>,int> Match;
             for(int i=0;i<StaPosvec.size();i++){
-                //map<Ticket::String<36>,int> Match;
-                TransferCount.clear();
+                Match.clear();
                 Start=_BPT_Station.getVal(StaPosvec[i]);
                 train1=_BPT_Train.getVal(Start.Pos);
                 for(int j=0;j<EndPosvec.size();j++) {
@@ -614,16 +614,15 @@ namespace Backend {
                     if (End.Pos != Start.Pos) {
                         train2 = _BPT_Train.getVal(End.Pos);
                         for (int k = 0; k < train1.station_num; k++) {
-                           // map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
-                           // Match.insert(p);
-                           size_t hashnum=hash(train1.train_info[k].station);
-                           TransferCount.insert(hashnum,k);
+                            map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
+                            Match.insert(p);
+                          // size_t hashnum=hash(train1.train_info[k].station);
+                           //TransferCount.insert(hashnum,k);
                         }
                         for (int k = 0; k < train2.station_num; k++) {
-                            size_t hashnum=hash(train2.train_info[k].station);
-                            int data=TransferCount.GetData(hashnum);
-                            if (data!=-1) {
-                                CentPos1 = data;
+                           // size_t hashnum=hash(train2.train_info[k].station);
+                            if (Match.count(train2.train_info[k].station)) {
+                                CentPos1 = Match[train2.train_info[k].station];
                                 CentPos2 = k;
                                 StaPos = Start.index;
                                 EndPos = End.index;

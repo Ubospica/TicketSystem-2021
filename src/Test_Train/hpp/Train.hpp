@@ -85,8 +85,16 @@ namespace Backend {
         }
     };
     My_Unordered_Map TransferCount;*/
+    struct HashFund{
+        template<size_t size>
+        size_t operator()(const Ticket::String<size> & key)const{
+            return hash(key);
+        }
+    };
+    std::unordered_map<Ticket::String<36>,int,HashFund> Trans;
     class Train_manager {
     public:
+
         struct Train {
             //private:
             Ticket::String<24> Train_SN;
@@ -154,6 +162,7 @@ namespace Backend {
             }
 
         };
+
 
         /*struct Train_Key{
             Ticket::String Train_SN;
@@ -571,6 +580,7 @@ namespace Backend {
             return true;
         }
 
+
         bool query_transfer(const Ticket::String<36> & Sta, const Ticket::String<36> &Det, const Ticket::Date &date,
                             char type, std::ostream &os) {
             //为什么感觉时间处理这么麻烦?
@@ -605,9 +615,8 @@ namespace Backend {
             Ticket::Date Time,PossiTime,StartTime;
             Trans_Comp Challenger;
             //My_Unordered_Map Match;
-            map<Ticket::String<36>,int> Match;
             for(int i=0;i<StaPosvec.size();i++){
-                Match.clear();
+                Trans.clear();
                 Start=_BPT_Station.getVal(StaPosvec[i]);
                 for(int j=0;j<EndPosvec.size();j++) {
                     End = _BPT_Station.getVal(EndPosvec[j]);
@@ -615,16 +624,18 @@ namespace Backend {
                         train1=_BPT_Train.getVal(Start.Pos);
                         train2 = _BPT_Train.getVal(End.Pos);
                         for (int k = 0; k < train1.station_num; k++) {
-                            map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
-                            Match.insert(p);
+                           /* map<Ticket::String<36>, int>::value_type p(train1.train_info[k].station, k);
+                            Match.insert(p);*/
+                            Trans.insert(std::pair<Ticket::String<36>,int>(train1.train_info[k].station,k));
                           // size_t hashnum=hash(train1.train_info[k].station);
                            //TransferCount.insert(hashnum,k);
                         }
                         for (int k = 0; k < train2.station_num; k++) {
                            // size_t hashnum=hash(train2.train_info[k].station);
-                            CentPos1 = -1;
-                            Match.at(train2.train_info[k].station,CentPos1);
-                            if (CentPos1!=-1) {
+                           // CentPos1 = -1;
+                            //Match.at(train2.train_info[k].station,CentPos1);
+                            if(Trans.count(train2.train_info[k].station)){
+                                CentPos1=Trans[train2.train_info[k].station];
                                 CentPos2 = k;
                                 StaPos = Start.index;
                                 EndPos = End.index;

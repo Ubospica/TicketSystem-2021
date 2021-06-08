@@ -601,7 +601,8 @@ namespace Backend {
            // map<Ticket::String<36>, int> Endmatch;
            // const int Trainsize=sizeof(Train);
             Station Start,End;Train train1,train2;
-            int CentPos1,CentPos2,StaPos,EndPos;
+            int CentPos1,CentPos2,StaPos,EndPos,diff;
+            Ticket::Date Time,PossiTime,StartTime;
             Trans_Comp Challenger;
             //My_Unordered_Map Match;
             map<Ticket::String<36>,int> Match;
@@ -621,24 +622,25 @@ namespace Backend {
                         }
                         for (int k = 0; k < train2.station_num; k++) {
                            // size_t hashnum=hash(train2.train_info[k].station);
-                            if (Match.count(train2.train_info[k].station)) {
-                                CentPos1 = Match[train2.train_info[k].station];
+                            CentPos1 = -1;
+                            Match.at(train2.train_info[k].station,CentPos1);
+                            if (CentPos1!=-1) {
                                 CentPos2 = k;
                                 StaPos = Start.index;
                                 EndPos = End.index;
                                 if (StaPos < CentPos1 && CentPos2 < EndPos &&
                                     train1.train_info[StaPos].Sta_Date.cmpDate(date) <= 0 &&
                                     date.cmpDate(train1.train_info[StaPos].End_Date)<=0) {
-                                    int diff = train1.train_info[CentPos1].prefix_time -
+                                    diff = train1.train_info[CentPos1].prefix_time -
                                                train1.train_info[StaPos].prefix_time -
                                                train1.train_info[CentPos1].stopover;
                                     Challenger.depart1 = date + train1.train_info[StaPos].depart_time;
-                                    Ticket::Date Time = Challenger.depart1 + diff;
+                                    Time = Challenger.depart1 + diff;
                                     if (!(train2.train_info[CentPos2].End_Date +
                                           train2.train_info[CentPos2].depart_time < Time)) {
-                                        Ticket::Date StartTime = train2.train_info[CentPos2].Sta_Date +
+                                        StartTime = train2.train_info[CentPos2].Sta_Date +
                                                                  train2.train_info[CentPos2].depart_time;
-                                        Ticket::Date PossiTime =
+                                        PossiTime =
                                                 Time.transToDate() + train2.train_info[CentPos2].depart_time;
                                         Challenger.Start_Date1 = date + train1.train_info[StaPos].depart_time -
                                                                  train1.train_info[StaPos].prefix_time;

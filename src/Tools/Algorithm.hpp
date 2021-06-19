@@ -28,15 +28,16 @@ namespace Ticket {
 		}
 	};
 	
+	template <typename T>
+	void swap(T &lhs, T &rhs) {
+		T tmp = std::move(lhs);
+		lhs = std::move(rhs);
+		rhs = std::move(tmp);
+	}
+	
 	class Algorithm {
 	public:
-		template <typename T>
-		static void swap(T &lhs, T &rhs) {
-			T tmp = std::move(lhs);
-			lhs = std::move(rhs);
-			rhs = std::move(tmp);
-		}
-		
+	
 	private:
 		template <typename T, typename Comp>
 		static const T& _median(const T &a, const T &b, const T &c, Comp cmp) {

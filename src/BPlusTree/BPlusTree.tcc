@@ -426,7 +426,7 @@ namespace Ticket {
 						eraseInternal(posInStk - 1, sta, sta[posInStk - 1].first.second + 1);
 					}
 				}
-			}//update prev&next!!!
+			}
 			else if (node.prev != -1) {
 				Node prev;
 				treeDt.read(node.prev, prev);
@@ -728,4 +728,6 @@ namespace Ticket {
 		print(root);
 		std::cerr<<"\n\n";
 	}
+	
+	
 }

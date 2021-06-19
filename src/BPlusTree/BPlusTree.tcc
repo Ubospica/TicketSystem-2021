@@ -1,6 +1,7 @@
 
 //author: ubospica
 //source: http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/3-index/B-tree=delete.html
+//  https://blog.csdn.net/Fmuma/article/details/80287924
 
 
 
@@ -629,9 +630,9 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
 	auto BPlusTree<Key, Value, NO_VALUE_FLAG, M>::route(const Key &val) ->
-	std::vector<int> {
+	vector<int> {
 		Comp cmp;
-		std::vector<int> res;
+		vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
 		if (pos0.first == -1) {
 			return res;

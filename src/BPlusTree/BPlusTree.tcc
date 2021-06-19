@@ -1,4 +1,9 @@
 
+//author: ubospica
+//source: http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/3-index/B-tree=delete.html
+
+
+
 #include "BPlusTree.hpp"
 
 #include <iostream>
@@ -57,6 +62,13 @@ namespace Ticket {
 		treeDt.write(FileIO::END, newRt);
 	}
 	
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::newNodePos() {
+		treeDt.movePos(FileIO::END);
+		return treeDt.tellPos();
+	}
+	
 	//returns node in the index
 	//(-1, 0) if not found
 	//(pos, p) if found; the val should be node[pos].vSon[p]
@@ -82,6 +94,33 @@ namespace Ticket {
 			}
 		}
 	}
+	
+	//leaf:pl no-leaf:pl + 1
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	template <typename Comp>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::findStack (int pos,
+			const Key &vKey, StackType &sta) {
+		Node cur;
+		treeDt.read(pos, cur);
+		if (cur.cnt == 0) {
+			return -1;
+		}
+		int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey, Comp()) - cur.vKey;
+		sta.push_back(make_pair(make_pair(pos, pl - 1), cur));
+		if (!cur.isLeaf) { //simple node
+			return findStack<Comp>(cur.son[pl], vKey, sta);
+		}
+		else {
+			if (pl == 0 || Comp()(cur.vKey[pl - 1], vKey)) {
+				return -1;
+			}
+			else {
+				return 1;
+			}
+		}
+	}
+	
+	
 	
 	//-1 if not found
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
@@ -131,7 +170,7 @@ namespace Ticket {
 				if (cur.son[pl] >= 0) {
 					return -1;
 				}
-				else {
+				else {//fake erase
 					cur.son[pl] = vSon;
 					treeDt.write(pos, cur);
 					vSon = -1;
@@ -159,9 +198,8 @@ namespace Ticket {
 					std::memcpy(newNd.son, cur.son + M / 2, newNd.cnt * sizeof(int));
 					cur.cnt = M / 2;
 					
-					treeDt.movePos(FileIO::END);
-					int newP = treeDt.tellPos();
-					treeDt.write(FileIO::END, newNd);
+					int newP = newNodePos();
+					treeDt.write(newP, newNd);
 					
 					if (cur.next != -1) {
 						Node nextNd;
@@ -179,9 +217,8 @@ namespace Ticket {
 						Node newRoot{1, 1, 0, -1, -1, {newNd.vKey[0]}, {pos, newP}};
 						//treeDt.seekp(0, std::ios::end);
 						//root = treeDt.tellp();
-						treeDt.movePos(FileIO::END);
-						root = treeDt.tellPos();
-						treeDt.write(FileIO::END, newRoot);
+						root = newNodePos();
+						treeDt.write(root, newRoot);
 						treeDt.write(pos, cur);
 						++height;
 						vSon = -1;
@@ -212,30 +249,35 @@ namespace Ticket {
 					return 1;
 				}
 				else {
-					Node newNd {M - M / 2 - 1, 0, 0};
+					Node newNd {M - M / 2 - 1, 0, 0, pos, cur.next};
 					//1-M 1-m/2, m/2+2-m
 					//vkey:0 - m/2-1, m/2, m/2+1 - m-1
 					//son: 0, m/2; m/2+1-m
 					std::memcpy(newNd.vKey, cur.vKey + M / 2 + 1, newNd.cnt * sizeof(Key));
 					std::memcpy(newNd.son, cur.son + M / 2 + 1, (newNd.cnt + 1) * sizeof(int));
 					cur.cnt = M / 2;
+					
+					int newP = newNodePos();
+					treeDt.write(newP, newNd);
+					
+					if (cur.next != -1) {
+						Node nextNd;
+						treeDt.read(cur.next, nextNd);
+						nextNd.prev = newP;
+						treeDt.write(cur.next, nextNd);
+					}
+					cur.next = newP;
+					
 					if (!cur.isRoot) {
 						treeDt.write(pos, cur);
-						treeDt.movePos(FileIO::END);
-						int newP = treeDt.tellPos();
-						treeDt.write(FileIO::END, newNd);
 						vKey = cur.vKey[cur.cnt];
 						vSon = newP;
 					} else {
 						cur.isRoot = 0;
 						treeDt.write(pos, cur);
-						Node newRoot{1, 1, 0, -1, -1, {cur.vKey[cur.cnt]}, {pos}}; //
-						treeDt.movePos(FileIO::END);
-						int newP = treeDt.tellPos();
-						newRoot.son[1] = newP;
-						treeDt.write(FileIO::END, newNd);
-						root = treeDt.tellPos();
-						treeDt.write(FileIO::END, newRoot);
+						Node newRoot{1, 1, 0, -1, -1, {cur.vKey[cur.cnt]}, {pos, newP}}; //
+						root = newNodePos();
+						treeDt.write(root, newRoot);
 						++height;
 						vSon = -1;
 					}
@@ -276,55 +318,312 @@ namespace Ticket {
 		}
 	}
 	
-	
-	
-	// an idiotic & easily-implemented version
-	// cuz i cannot erase the data (RValve) in "Data.dat"
-	// so erasing index only is useless
+//
+//
+//	// an idiotic & easily-implemented version
+//	// cuz i cannot erase the data (RValve) in "Data.dat"
+//	// so erasing index only is useless
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(int pos, const Key &vKey) {
+//		Node cur;
+//		treeDt.read(pos, cur);
+//		if (cur.cnt == 0) {
+//			return -1;
+//		}
+//		int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey) - cur.vKey;
+//		if (!cur.isLeaf) { //simple node
+//			return erase(cur.son[pl], vKey);
+//		}
+//		else {
+//			if (pl == 0 || cur.vKey[pl - 1] != vKey || cur.son[pl - 1] == -1) {
+//				return -1;
+//			}
+//			else {
+//				cur.son[pl - 1] = -1;
+//				treeDt.write(pos, cur);
+//				return 1;
+//			}
+//		}
+//	}
+//
+//	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+//	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(const Key &vl) {
+//		if (erase(root, vl) == 1) {
+//			--size;
+//			return 1;
+//		}
+//		else {
+//			return -1;
+//		}
+//	}
+//
+	//vKey:
+	//erase: vKey[pl], son[pl + 1]
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(int pos, const Key &vKey) {
-		Node cur;
-		treeDt.read(pos, cur);
-		if (cur.cnt == 0) {
-			return -1;
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::eraseInternal(int posInStk, StackType &sta, int pl) {
+		auto &pos = sta[posInStk].first.first;
+		auto &node = sta[posInStk].second;
+		//vkey: 0 - node.cnt - 1
+		//son: 0 - node.cnt
+		for (int i = pl; i < node.cnt - 1; ++i) {
+			node.vKey[i] = node.vKey[i + 1];
+			node.son[i + 1] = node.son[i + 2];
 		}
-		int pl = std::upper_bound(cur.vKey, cur.vKey + cur.cnt, vKey) - cur.vKey;
-		if (!cur.isLeaf) { //simple node
-			return erase(cur.son[pl], vKey);
+		--node.cnt;
+		if (node.cnt >= M / 2 - 1 || node.isRoot) {
+			treeDt.write(pos, node);
+			return;
 		}
 		else {
-			if (pl == 0 || cur.vKey[pl - 1] != vKey || cur.son[pl - 1] == -1) {
-				return -1;
-			}
-			else {
-				cur.son[pl - 1] = -1;
-				treeDt.write(pos, cur);
-				return 1;
+			auto &faPos = sta[posInStk - 1].first.first;
+			auto &faPl = sta[posInStk - 1].first.second;
+			auto &fa = sta[posInStk - 1].second;
+			if (node.next != -1) {
+				Node next;
+				treeDt.read(node.next, next);
+				if (next.cnt > M / 2 - 1) {
+					node.vKey[node.cnt] = fa.vKey[faPl + 1];
+					node.son[node.cnt + 1] = next.son[0];
+					fa.vKey[faPl + 1] = next.vKey[0];
+					for (int i = 0; i < next.cnt - 1; ++i) {
+						next.vKey[i] = next.vKey[i + 1];
+						next.son[i] = next.son[i + 1];
+					}
+					next.son[next.cnt - 1] = next.son[next.cnt];
+					++node.cnt;
+					--next.cnt;
+					
+					treeDt.write(pos, node);
+					treeDt.write(node.next, next);
+					treeDt.write(faPos, fa);
+				}
+				else { //merge
+					node.vKey[node.cnt] = fa.vKey[faPl + 1];
+					node.son[node.cnt + 1] = next.son[0];
+					++node.cnt;
+					for (int i = 0; i < next.cnt; ++i) {
+						node.vKey[node.cnt] = next.vKey[i];
+						node.son[node.cnt + 1] = next.son[i + 1];
+						++node.cnt;
+					}
+					
+					if (next.next != -1) {
+						Node nnext;
+						treeDt.read(next.next, nnext);
+						next.prev = pos;
+						treeDt.write(next.next, nnext);
+					}
+					node.next = next.next;
+					
+					if (fa.cnt == 1) {
+						root = pos;
+						--height;
+						node.isRoot = 1;
+						treeDt.write(pos, node);
+					}
+					else {
+						treeDt.write(pos, node);
+						eraseInternal(posInStk - 1, sta, sta[posInStk - 1].first.second + 1);
+					}
+				}
+			}//update prev&next!!!
+			else if (node.prev != -1) {
+				Node prev;
+				treeDt.read(node.prev, prev);
+				if (prev.cnt > M / 2 - 1) {
+					for (int i = node.cnt - 1; i >= 0; --i) {
+						node.vKey[i + 1] = node.vKey[i];
+						node.son[i + 2] = node.son[i + 1];
+					}
+					node.son[1] = node.son[0];// !!
+					node.vKey[0] = fa.vKey[faPl];
+					node.son[0] = prev.son[prev.cnt];
+					fa.vKey[faPl] = prev.vKey[prev.cnt - 1];
+					++node.cnt;
+					--prev.cnt;
+					
+					treeDt.write(pos, node);
+					treeDt.write(node.prev, prev);
+					treeDt.write(faPos, fa);
+				}
+				else {
+					prev.vKey[prev.cnt] = fa.vKey[faPl];
+					prev.son[prev.cnt + 1] = node.son[0];
+					++prev.cnt;
+					for (int i = 0; i < node.cnt; ++i) {
+						prev.vKey[prev.cnt] = node.vKey[i];
+						prev.son[prev.cnt + 1] = node.son[i + 1];
+						++prev.cnt;
+					}
+					
+					if (node.next != -1) {
+						Node next;
+						treeDt.read(node.next, next);
+						next.prev = node.prev;
+						treeDt.write(node.next, next);
+					}
+					prev.next = node.next;
+					
+					
+					if (fa.cnt == 1) {
+						root = node.prev;
+						--height;
+						prev.isRoot = 1;
+						treeDt.write(node.prev, prev);
+					}
+					else {
+						treeDt.write(node.prev, prev);
+						eraseInternal(posInStk - 1, sta, sta[posInStk - 1].first.second);
+					}
+				}
 			}
 		}
 	}
 	
+	
+
+	//x return -1 when dont need to erase node in parent node
+	//x otherwise return the index to be removed
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::eraseLeaf(int posInStk, StackType &sta) {
+		auto &pos = sta[posInStk].first.first;
+		auto &pl = sta[posInStk].first.second;
+		auto &node = sta[posInStk].second;
+		for (int i = pl; i < node.cnt - 1; ++i) {
+			node.vKey[i] = node.vKey[i + 1];
+			node.son[i] = node.son[i + 1];
+		}
+		--node.cnt;
+		if (node.cnt >= M / 2 - 1 || node.isRoot) {//at least half full
+			treeDt.write(pos, node);
+			return;
+		}
+		else {
+			if (node.next != -1) {
+				Node next;
+				treeDt.read(node.next, next);
+				if (next.cnt > M / 2 - 1) {
+					node.vKey[node.cnt] = next.vKey[0];
+					node.son[node.cnt] = next.son[0];
+					++node.cnt;
+					for (int i = 0; i < next.cnt - 1; ++i) {
+						next.vKey[i] = next.vKey[i + 1];
+						next.son[i] = next.son[i + 1];
+					}
+					--next.cnt;
+					Node &fa = sta[posInStk - 1].second;
+					fa.vKey[sta[posInStk - 1].first.second + 1] = next.vKey[0];
+					
+					treeDt.write(sta[posInStk - 1].first.first, fa);
+					treeDt.write(node.next, next);
+					treeDt.write(pos, node);
+					return;
+				}
+				else { // merge
+					for (int i = 0; i < next.cnt; ++i) {
+						node.vKey[node.cnt] = next.vKey[i];
+						node.son[node.cnt] = next.son[i];
+						++node.cnt;
+					}
+					
+					//delete next
+					
+					if (next.next != -1) {
+						Node nnext;
+						treeDt.read(next.next, nnext);
+						next.prev = pos;
+						treeDt.write(next.next, nnext);
+					}
+					node.next = next.next;
+					
+					if (sta[posInStk - 1].second.cnt == 1) { //new root
+						//erase root
+						root = pos;
+						--height;
+						node.isRoot = 1;
+						treeDt.write(pos, node);
+						return;
+					}
+					else {
+						treeDt.write(pos, node);
+						eraseInternal(posInStk - 1, sta, sta[posInStk - 1].first.second + 1);
+					}
+				}
+			}
+			else if (node.prev != -1) {
+				Node prev;
+				treeDt.read(node.prev, prev);
+				if (prev.cnt > M / 2 - 1) {
+					for (int i = node.cnt - 1; i >= 0; --i) {
+						node.vKey[i + 1] = node.vKey[i];
+						node.son[i + 1] = node.son[i];
+					}
+					node.vKey[0] = prev.vKey[prev.cnt - 1];
+					node.son[0] = prev.son[prev.cnt - 1];
+					++node.cnt;
+					--prev.cnt;
+					Node &fa = sta[posInStk - 1].second;
+					fa.vKey[sta[posInStk - 1].first.second] = node.vKey[0];
+					
+					treeDt.write(sta[posInStk - 1].first.first, fa);
+					treeDt.write(node.prev, prev);
+					treeDt.write(pos, node);
+					return;
+				}
+				else { // merge
+					for (int i = 0; i < node.cnt; ++i) {
+						prev.vKey[prev.cnt] = node.vKey[i];
+						prev.son[prev.cnt] = node.son[i];
+						++prev.cnt;
+					}
+					
+					if (node.next != -1) {
+						Node next;
+						treeDt.read(node.next, next);
+						next.prev = node.prev;
+						treeDt.write(node.next, next);
+					}
+					prev.next = node.next;
+					
+					//delete prev
+					if (sta[posInStk - 1].second.cnt == 1) {
+						root = node.prev;
+						--height;
+						prev.isRoot = 1;
+						treeDt.write(node.prev, prev);
+						return;
+					}
+					else {
+						treeDt.write(node.prev, prev);
+						eraseInternal(posInStk - 1, sta, sta[posInStk - 1].first.second);
+					}
+				}
+			}
+		}
+	}
+
+
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::eraseIndex(const Key &vl) {
+		StackType sta;
+		if (findStack(root, vl, sta) == -1) {
+			return -1;
+		}
+		//found
+		--size;
+		eraseLeaf(sta.size() - 1, sta);
+		return 1;
+	}
+	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::erase(const Key &vl) {
-		if (erase(root, vl) == 1) {
-			--size;
+		if (eraseIndex(vl) == 1) {
+			//erase value
 			return 1;
 		}
 		else {
 			return -1;
 		}
-	}
-	
-	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::realErase(int pos, const Key &vKey) {
-		
-		return 0;
-	}
-	
-	
-	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::realErase(const Key &vl) {
-		return 0;
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>

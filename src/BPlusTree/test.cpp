@@ -32,7 +32,7 @@ struct Comp1{
 int main() {
 //	freopen("Test2.in", "r", stdin);
 	using namespace std;
-	BPlusTree<String, int, 0, 3> bps("ww");
+	BPlusTree<String, int, 0, 6> bps("ww");
 	int o, v;
 	String s;
 	cout<<boolalpha;
@@ -51,8 +51,12 @@ int main() {
 			else cout << "Not found\n";
 		}
 		else if (o == 3) {
+//			std::cerr << "before:\n";
+//			bps.print();
 			cin>>s;
+//			std::cerr << "erase " << s << '\n';
 			cout << bps.erase(s) << '\n';
+//			std::cerr << "after:\n";
 //			bps.print();
 		}
 		else if (o == 4) {

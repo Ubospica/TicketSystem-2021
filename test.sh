@@ -13,3 +13,5 @@ time sh -c '
   cmake-build-debug/code < data/basic_6/9.in > a.out;
   cmake-build-debug/code < data/basic_6/10.in > a.out;
 '
+
+diff

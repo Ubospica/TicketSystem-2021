@@ -38,7 +38,7 @@ namespace Ticket{
 	 * @tparam NO_VALUE_FLAG 如果是1表示Index only mode
 	 * @tparam M 块的大小，默认100
 	 */
-	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 200>
+	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 4>
 	class BPlusTree {
 	protected:
 		struct Node;
@@ -93,9 +93,9 @@ namespace Ticket{
 		 * @return 删除成功返回1，否则（如vl不存在）返回-1； （-1是为了和其他函数保持一致）
 		 */
 		int erase(const Key &vl);
-		int realErase(const Key &vl);
+		int eraseIndex(const Key &vl);
 		/**
-		 * 模糊查找：可以先不使用，之后可能改接口（类似stl）
+		 * 模糊查找
 		 *
 		 * 传入Comp运算符（Comp需要是比<弱的比较函数），然后返回所有在Comp意义下等于val的值
 		 * @tparam Comp 重载小于号。Comp需要是一个仿函数类
@@ -143,12 +143,21 @@ namespace Ticket{
 //		template <typename T> inline void write(int pos, const T &cur, FileIO &fs);
 //		template <typename T> inline void write(int pos, const T &cur);
 		
+		int newNodePos();
 		void init();
+		
+		
 		template <typename Comp = std::less<Key> > int find(int pos, const Key &vKey);
 		template <typename Comp = std::less<Key> > pair<int, int> findIndex(int pos, const Key &vKey);
+		
+		using StackType = std::vector<pair<pair<int, int>, Node>>;
+		template <typename Comp = std::less<Key>> int findStack (int pos, const Key &vKey, StackType &sta);
+		
 		int insert(int pos, Key &vKey, int &vSon);
-		int erase(int pos, const Key &vKey);
-		int realErase(int pos, const Key &vKey);
+		
+		void eraseLeaf(int posInStk, StackType &sta);
+		void eraseInternal(int posInStk, StackType &sta, int pl);
+		
 		
 		struct Pos {
 //			static const int END = -1, CUR = -2;

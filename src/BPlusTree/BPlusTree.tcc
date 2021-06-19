@@ -629,9 +629,9 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
 	auto BPlusTree<Key, Value, NO_VALUE_FLAG, M>::route(const Key &val) ->
-	std::vector<int> {
+	vector<int> {
 		Comp cmp;
-		std::vector<int> res;
+		vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
 		if (pos0.first == -1) {
 			return res;
@@ -659,7 +659,7 @@ namespace Ticket {
 				pos0.second = cur.cnt - 1;
 			}
 		}
-		std::reverse(res.begin(), res.end());
+		reverse(res.begin(), res.end());
 		return res;
 	}
 	

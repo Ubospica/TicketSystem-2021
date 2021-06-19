@@ -9,13 +9,13 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <vector>
 #include <cstring>
 
 #include "Tools/Exception.hpp"
 #include "Tools/FileIO.hpp"
 #include "Tools/Utility.hpp"
 #include "Tools/String.hpp"
+#include "Tools/Vector.hpp"
 
 namespace Ticket{
 	
@@ -38,7 +38,7 @@ namespace Ticket{
 	 * @tparam NO_VALUE_FLAG 如果是1表示Index only mode
 	 * @tparam M 块的大小，默认100
 	 */
-	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 4>
+	template <typename Key, typename Value, int NO_VALUE_FLAG = 0, size_t M = 400>
 	class BPlusTree {
 	protected:
 		struct Node;
@@ -111,7 +111,7 @@ namespace Ticket{
 		 * auto res = bpt.route<Comp>(make_pair(1,0)); //查找所有第一维是1的值
 		 * @endcode
 		 */
-		template <typename Comp = std::less<Key> > std::vector<int> route(const Key &val);
+		template <typename Comp = std::less<Key> > vector<int> route(const Key &val);
 		
 		/**
 		 * @return size of keys in bpt
@@ -150,7 +150,7 @@ namespace Ticket{
 		template <typename Comp = std::less<Key> > int find(int pos, const Key &vKey);
 		template <typename Comp = std::less<Key> > pair<int, int> findIndex(int pos, const Key &vKey);
 		
-		using StackType = std::vector<pair<pair<int, int>, Node>>;
+		using StackType = vector<pair<pair<int, int>, Node>>;
 		template <typename Comp = std::less<Key>> int findStack (int pos, const Key &vKey, StackType &sta);
 		
 		int insert(int pos, Key &vKey, int &vSon);

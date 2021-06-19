@@ -6,10 +6,10 @@
 #define TICKETSYSTEM_2021_VECTOR_HPP
 
 #include "Exception.hpp"
+#include "Algorithm.hpp"
 
 #include <cstddef>
 #include <iterator>
-#include <vector>
 
 namespace Ticket {
 	
@@ -394,6 +394,16 @@ namespace Ticket {
 			erase(end() - 1);
 		}
 	};
+	
+	template <typename Iter>
+	void reverse(Iter begin, Iter end) {
+		while (begin != end) {
+			--end;
+			if (begin == end) break;
+			swap(*begin, *end);
+			++begin;
+		}
+	}
 	
 }
 

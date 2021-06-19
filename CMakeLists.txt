@@ -8,7 +8,7 @@ project(code)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#add_compile_options(-Ofast)
+add_compile_options(-Ofast)
 
 include_directories(src/)
 include_directories(src/Tools)

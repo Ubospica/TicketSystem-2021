@@ -1,16 +1,17 @@
 #ifndef BACKEND_TRAIN_HPP
 #define BACKEND_TRAIN_HPP
 
-#include<iostream>
-#include"BPlusTree.hpp"
-#include"map.hpp"
-#include<vector>
-#include"Exception.hpp"
-#include"Time.hpp"
-#include"String.hpp"
-#include"Utility.hpp"
-#include<unordered_map>
-#include<queue>
+#include <iostream>
+#include <unordered_map>
+#include <queue>
+
+#include "BPlusTree.hpp"
+#include "map.hpp"
+#include "Exception.hpp"
+#include "Time.hpp"
+#include "String.hpp"
+#include "Utility.hpp"
+#include "Tools/Vector.hpp"
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
 /*    class My_Unordered_Map{
@@ -22,7 +23,7 @@ namespace Backend {
         };
         static const int factor=836881;
         Node data[factor];
-        std::vector<int> indexvec;
+        Ticket::vector<int> indexvec;
     public:
         My_Unordered_Map()=default;
         void insert(size_t & tkey,int  tdata){
@@ -450,14 +451,14 @@ namespace Backend {
             const int Trainsz=sizeof(Train);
             int Uo[20001];
             bool Uob[20001]={0};
-            std::vector<std::pair<int,int>> aimPosvec;
+            Ticket::vector<std::pair<int,int>> aimPosvec;
             Station_Key Keytmp;
             Keytmp.hashStation = hash(Sta);
             Keytmp.pos = 0;
-            std::vector<int> stavec = _BPT_Station.route<Station_Comp>(Keytmp);
+            Ticket::vector<int> stavec = _BPT_Station.route<Station_Comp>(Keytmp);
             if (stavec.empty()) { return false; }
             Keytmp.hashStation = hash(Det);
-            std::vector<int> endvec = _BPT_Station.route<Station_Comp>(Keytmp);
+            Ticket::vector<int> endvec = _BPT_Station.route<Station_Comp>(Keytmp);
             if (endvec.empty()) { return false; }
             int sz = stavec.size();
             Station stationtmp;
@@ -480,13 +481,13 @@ namespace Backend {
                Uindex=stationtmp.Pos/Trainsz;
                     StaIndex=Uo[stationtmp.Pos/Trainsz];
                     if (stationtmp.index >StaIndex&&Uob[Uindex])
-                        aimPosvec.emplace_back(std::pair<int,int>(stationtmp.Pos,StaIndex));
+                        aimPosvec.push_back(std::pair<int,int>(stationtmp.Pos,StaIndex));//emplace back
              //   } catch (NotFound) {}
             }
             //if(match.count(stationtmp.Train_SN)) aimIDvec.push_back(stationtmp.Train_SN);}
             if (aimPosvec.empty()) { return false; }
             //    std::cout<<"------------------"<<'\n';
-            std::vector<Train> Trainvec;
+            Ticket::vector<Train> Trainvec;
             //int pos;
             sz = aimPosvec.size();
             //把Train取出来
@@ -579,13 +580,13 @@ namespace Backend {
             Station_Key stationKey;
             stationKey.hashStation = hash(Sta);
             stationKey.pos = 0;
-            std::vector<int> StaPosvec = _BPT_Station.route<Station_Comp>(stationKey);
+            Ticket::vector<int> StaPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             if(StaPosvec.empty()) return false;
             stationKey.hashStation = hash(Det);
-            std::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
+            Ticket::vector<int> EndPosvec = _BPT_Station.route<Station_Comp>(stationKey);
             if(EndPosvec.empty()) return false;
-            //std::vector<Station> Stavec;
-            std::vector<Station> Endvec;
+            //Ticket::vector<Station> Stavec;
+            Ticket::vector<Station> Endvec;
             //一切的核心这个map Key值是尾站的所有train名， vector是尾站相同的中转站的在从中转站到尾站中车的位置
             //但由于中转站在从起点出发的火车中位置基本上与从中转站出发到尾站中的位置不一样
             //所以用pair来存，其中first是在从起点出发的火车中的位置，second是站在转乘的火车中的位置
@@ -766,7 +767,7 @@ namespace Backend {
             Count.clear();
         }
 
-        void RenewN(Train & Aim,std::vector<order> & TrainOrdervec,std::vector<OrderKey> & Renewvec,order & Success ){
+        void RenewN(Train & Aim,Ticket::vector<order> & TrainOrdervec,Ticket::vector<OrderKey> & Renewvec,order & Success ){
            // int aimPos=_BPT_Train.find(Success.get_str(order_parameter::Train_ID));
            // Train Aim=_BPT_Train.getVal(aimPos);
             Seat_Key seatKey;

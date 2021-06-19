@@ -6,6 +6,7 @@
 #include"Order.hpp"
 #include"Train.hpp"
 #include"Logging.hpp"
+#include "Tools/Vector.hpp"
 namespace Backend {
     class Main {
     private:
@@ -519,8 +520,8 @@ namespace Backend {
         if (log_op.is_log(Ticket::hash(name))) {
             int nums = stringtoint(cmd->top());
             cmd->pop();
-            std::vector<order> TrainOrdervec;
-            std::vector<OrderKey> Renewvec;
+            Ticket::vector<order> TrainOrdervec;
+            Ticket::vector<OrderKey> Renewvec;
             Ticket::String<24> Train_ID;
             order Success;
             char type;

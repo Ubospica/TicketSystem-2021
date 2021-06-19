@@ -173,9 +173,9 @@ namespace Ticket {
      * FileIO with LRU cache
      */
     class FileIO : public FileIONoCache {
-         public:
-         	using FileIONoCache::FileIONoCache;
-         };
+    public:
+        using FileIONoCache::FileIONoCache;
+    };
 
    /* protected:
         struct CacheNode {
@@ -185,10 +185,10 @@ namespace Ticket {
             CacheNode() = default;
             explicit CacheNode(void *value, int pos, int size) : value(value), pos(pos), size(size) {}
             ~CacheNode() {
-//				if (value != nullptr) {
-//					operator delete(value);
-//					value = nullptr;
-//				}
+                //				if (value != nullptr) {
+                //					operator delete(value);
+                //					value = nullptr;
+                //				}
             }
             friend std::ostream& operator << (std::ostream &os, CacheNode one) {
                 os << one.value;
@@ -244,7 +244,7 @@ namespace Ticket {
         template <typename T>
         void read(int pos, T &cur)  {
             int realPos = pos;
-//			if (pos < 0) realPos = fs.tellg();
+            //			if (pos < 0) realPos = fs.tellg();
             auto it = cacheIndex.find(realPos);
             if (it == cacheIndex.end()) {
                 //not found
@@ -257,15 +257,15 @@ namespace Ticket {
                 cur = *static_cast<T*>((it -> second -> value).value);
                 _moveCache(it -> second);
             }
-//			cache.print();
+            //			cache.print();
         }
 
-        *//**
-         * write value to fs
-         * @tparam T
-         * @param pos >=0 or Pos::END(-1) or Pos::CUR (-2)
-         * @param cur value
-         *//*
+        *
+        * write value to fs
+        * @tparam T
+        * @param pos >=0 or Pos::END(-1) or Pos::CUR (-2)
+        * @param cur value
+
         template <typename T>
         void write(int pos, const T &cur) {
             int realPos = pos;

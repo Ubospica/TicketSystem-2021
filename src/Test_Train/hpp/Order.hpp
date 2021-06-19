@@ -14,17 +14,20 @@ namespace Backend {
     // BPT_order order_op;
 
     // std::ofstream & operator<<(order & o,ofstream & os);
+//    template<size_t Length>
+   // size_t hash(const Ticket::String<Length> & str){};
     struct OrderKey{
-        Ticket::String<24> str;
+        size_t hashstr;
+      //  Ticket::String<24> str;
         int SN=0;
         bool operator<(const OrderKey & r)const{
-            return str<r.str||(str==r.str&&SN<r.SN);
+            return hashstr<r.hashstr||(hashstr==r.hashstr&&SN<r.SN);
         }
         bool operator==(const OrderKey & r)const{
-            return str==r.str&&SN==r.SN;
+            return hashstr==r.hashstr&&SN==r.SN;
         }
         bool operator!=(const OrderKey & r)const{
-            return str!=r.str||SN!=r.SN;
+            return hashstr!=r.hashstr||SN!=r.SN;
         }
     };
     enum class order_parameter {
@@ -258,7 +261,7 @@ namespace Backend {
     private:
         struct Comp {
             bool operator()(const OrderKey &l,const OrderKey &r)const {
-                return l.str < r.str;
+                return l.hashstr < r.hashstr;
             }
         };
         Ticket::BPlusTree<OrderKey, order> Waiting_Queue;//记
@@ -268,13 +271,13 @@ namespace Backend {
 
         void insert(const Ticket::String<24> &name,const Ticket::String<24> & Train_ID, int SN, order &order) {
             OrderKey data_key;
-            data_key.str = name;
+            data_key.hashstr =hash(name);
             data_key.SN = SN;
-            int pos=Waiting_Queue.insert(data_key, order);
+            Waiting_Queue.insert(data_key, order);
           //  if(pos==-1) std::cerr<<"shere"<<'\n';
             //std::cerr<<"here"<<'\n';
             //std::cerr<<data_key.str<<' '<<data_key.SN<<' '<<Train_ID<<' '<<pos<<'\n';
-            data_key.str=Train_ID;
+            data_key.hashstr=hash(Train_ID);
             Train_Queue.insert(data_key,order);
             //Waiting_Queue.write(Ticket::FileIO::END,data);
             //Waiting_Queue.read()
@@ -283,10 +286,11 @@ namespace Backend {
         void Renew(std::vector<OrderKey> &IDvec,const Ticket::String<24> & Train_ID) {//返回位置 first 为位置 second 为票数
             int sz = IDvec.size();
             OrderKey renew;
+            size_t hashID=hash(Train_ID);
             for(int i=0;i<sz;i++) {
                 renew=IDvec[i];
                 Waiting_Queue.erase(renew);
-                renew.str=Train_ID;
+                renew.hashstr=hashID;
                 Train_Queue.erase(renew);
             }
         }
@@ -295,9 +299,9 @@ namespace Backend {
             //erase会失败吗?
             OrderKey Pending;
             Pending.SN=SN;
-            Pending.str=name;
+            Pending.hashstr=hash(name);
             Waiting_Queue.erase(Pending);
-            Pending.str=Train_ID;
+            Pending.hashstr=hash(Train_ID);
             Train_Queue.erase(Pending);
         }
 
@@ -306,7 +310,7 @@ namespace Backend {
         void GetPending(const Ticket::String<24> & Train_ID, std::vector<order> & TrainOrdervec) {
             OrderKey tmp;
             tmp.SN = 0;
-            tmp.str =Train_ID;
+            tmp.hashstr =hash(Train_ID);
            // std::cerr<<"------88**"<<'\n';
             std::vector<int>Posvec = Train_Queue.route<Comp>(tmp);
           //  std::cerr<<tmp.str<<' ';
@@ -328,7 +332,7 @@ namespace Backend {
         //int _order_num;
         struct Comp {
             bool operator()(const OrderKey &a, const OrderKey &b)const {
-                return a.str < b.str;
+                return a.hashstr < b.hashstr;
             }
         };
         Ticket::BPlusTree<OrderKey, order> _BPT_Name_order;//SN=0为总数，SN=n时为位置
@@ -342,7 +346,7 @@ namespace Backend {
         }*/
         int insert(order &data) {
             OrderKey BPT_KEY;
-            BPT_KEY.str = data.get_str(order_parameter::Username);
+            BPT_KEY.hashstr = hash(data.get_str(order_parameter::Username));
             BPT_KEY.SN = data.get_num(order_parameter::SN);
             int pos=_BPT_Name_order.insert(BPT_KEY, data);
             return pos;
@@ -351,7 +355,7 @@ namespace Backend {
 
         std::vector<order> query(const Ticket::String<24> &user_name) {
             OrderKey tmp;
-            tmp.str = user_name;
+            tmp.hashstr = hash(user_name);
             tmp.SN = 0;
             std::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
             std::vector<order> ret;
@@ -366,7 +370,7 @@ namespace Backend {
         bool refund(const Ticket::String<24> &name, int n, order & Success,
                     OrderKey & Pending,Ticket::String<24> & Train_ID,char & type,int & SN) {
             OrderKey tmp;
-            tmp.str=name;
+            tmp.hashstr=hash(name);
             tmp.SN=0;
             std::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
             int sztmp = pos.size();
@@ -389,7 +393,7 @@ namespace Backend {
                     }
                     case (state_list::Pending): {
                         OrderKey PeKey;
-                        PeKey.str=name;
+                        PeKey.hashstr=hash(name);
                         PeKey.SN=ordertmp.get_num(order_parameter::SN);
                         Pending=PeKey;
                         ordertmp.change_state(state_list::Refund);
@@ -427,7 +431,6 @@ namespace Backend {
         ~BPT_order() = default;
 
     };
-
 
 
     class Order_op {

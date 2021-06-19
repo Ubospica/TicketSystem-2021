@@ -52,13 +52,13 @@ namespace Backend {
 
     class BPT_insert_user{
     private:
-        Ticket::BPlusTree<Ticket::String<24>,user> _BPT_user;
+        Ticket::BPlusTree<size_t,user> _BPT_user;
     public:
         explicit BPT_insert_user(std::string & filename):_BPT_user(filename){};
 
         bool add_user(user & data);
 
-        user find_user(const Ticket::String<24> & username);
+        user find_user(const size_t & username);
 
         //void erase_user(const Ticket::String<25> & username);
 
@@ -76,22 +76,22 @@ namespace Backend {
         BPT_insert_user op_user;
         //、、不需要记登陆者
         //int 为privilege
-        Backend::map<Ticket::String<24>,int> _logging_list;
+        Backend::map<size_t,int> _logging_list;
 
     public:
         explicit Log_op(std::string  & filename):op_user(filename){};
 
-        bool is_log(const Ticket::String<24> & username);
+        bool is_log(const size_t & username);
 
-        bool login(const Ticket::String<24> & user_name,const Ticket::String<35> & passwd);
+        bool login(const size_t & user_name,const Ticket::String<35> & passwd);
 
-        bool logout(const Ticket::String<24> & username);
+        bool logout(const size_t & username);
 
-        bool show_user(const Ticket::String<24> & op_name,const Ticket::String<24> & username,std::ostream & os);
+        bool show_user(const size_t & op_name,const size_t & username,std::ostream & os);
 
-        bool modify(const Ticket::String<24> & op_name,const bool * kind,const Ticket::String<24> & change,std::string * strs,int pri,std::ostream & os);//0 是密码 1是名字 2是邮箱 3是权限
+        bool modify(const size_t & op_name,const bool * kind,const size_t & change,std::string * strs,int pri,std::ostream & os);//0 是密码 1是名字 2是邮箱 3是权限
 
-        bool add_user(const Ticket::String<24> & op_name,const Ticket::String<24> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri);
+        bool add_user(const size_t & op_name,const Ticket::String<24> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri);
 
         void clean();
 
@@ -178,15 +178,15 @@ namespace Backend {
 
     bool BPT_insert_user::add_user(user & data){
         //std::cout<<data.get_username()<<' '<<'\n';
-        if(_BPT_user.insert(data.get_user_name(),data)==-1) return false;
+        if(_BPT_user.insert(hash(data.get_user_name()),data)==-1) return false;
         else {
            // std::cout<<_BPT_user.insert(data.get_username(),data);
             return true;
         }
     }
 
-    user BPT_insert_user::find_user(const Ticket::String<24> & username){
-        int pos=_BPT_user.find(username);
+    user BPT_insert_user::find_user(const size_t & hashusername){
+        int pos=_BPT_user.find(hashusername);
         if(pos==-1) throw NotFound();
         return _BPT_user.getVal(pos);
     }
@@ -197,7 +197,7 @@ namespace Backend {
     }
 */
     void BPT_insert_user::modify_user(const user& Nuser){
-        int pos=_BPT_user.find(Nuser.get_user_name());
+        int pos=_BPT_user.find(hash(Nuser.get_user_name()));
         _BPT_user.modifyVal(pos,Nuser);
     }
 
@@ -209,20 +209,20 @@ namespace Backend {
         _BPT_user.clear();
     }
 
-    bool Log_op::is_log(const Ticket::String<24> & username){return _logging_list.count(username);}
+    bool Log_op::is_log(const size_t & hashusername){return _logging_list.count(hashusername);}
 
-    bool Log_op::login(const Ticket::String<24> & user_name,const Ticket::String<35> & passwd){
+    bool Log_op::login(const size_t & hashuser_name,const Ticket::String<35> & passwd){
         user tmp;
         // int tmp_pri;
         try {
             //op_pri = _logging_list[op_name];
             // tmp_pri = _logging_list[user_name];
-            tmp=op_user.find_user(user_name);
+            tmp=op_user.find_user(hashuser_name);
         }catch(NotFound){return false;}
         //if(op_pri<tmp.get_privilege()) return false;
         if(tmp.passwd_match(passwd)) {
-            if(is_log(user_name)) return false;
-            Backend::map<Ticket::String<24>,int>::value_type p(user_name,tmp.get_privilege());
+            if(is_log(hashuser_name)) return false;
+            Backend::map<size_t,int>::value_type p(hashuser_name,tmp.get_privilege());
            // std::cout<<tmp.get_privilege()<<'?'<<"\n";
             _logging_list.insert(p);
             return true;
@@ -230,43 +230,43 @@ namespace Backend {
         return false;
     }
 
-    bool Log_op::logout(const Ticket::String<24> & username){
+    bool Log_op::logout(const size_t & username){
         return _logging_list.erase(username);
     }
 
-    bool Log_op::show_user(const Ticket::String<24> & op_name,const Ticket::String<24> & username,std::ostream & os){
+    bool Log_op::show_user(const size_t & hashopname,const size_t & hashusername,std::ostream & os){
         int op_pri;
         user tmp;
         try{
-            op_pri=_logging_list[op_name];
-            tmp=op_user.find_user(username);
+            op_pri=_logging_list[hashopname];
+            tmp=op_user.find_user(hashusername);
         }catch(NotFound){return false;}
        // std::cout<<'?'<<'\n';
         if(op_pri<tmp.get_privilege()) return false;
-        if(op_pri==tmp.get_privilege()&&op_name!=username) return false;
+        if(op_pri==tmp.get_privilege()&&hashopname!=hashusername) return false;
         else {
             tmp.print(os);
             return true;
         }
     }
 
-    bool Log_op::modify(const Ticket::String<24> & op_name,const bool * kind,const Ticket::String<24> & change,std::string * strs,int pri,std::ostream & os){
+    bool Log_op::modify(const size_t & hashopname,const bool * kind,const size_t & hashchange,std::string * strs,int pri,std::ostream & os){
         int op_pri;
         //int tmp_pri;
         user tmp;
      //   std::cout<<_logging_list["root"]<<"\n";
         //std::cout
      //   std::cout<<_logging_list.size()<<"\n";
-        if(_logging_list.count(op_name)) {
+        if(_logging_list.count(hashopname)) {
            // std::cout<<'?'<<'\n';
             try {
-                op_pri = _logging_list[op_name];
+                op_pri = _logging_list[hashopname];
                 //tmp_pri = _logging_list[change];
-                tmp=op_user.find_user(change);
+                tmp=op_user.find_user(hashchange);
             }catch(NotFound){return false;}
           //  std::cout<<op_pri<<' '<<tmp.get_privilege()<<' '<<op_name<<' '<<change<<"\n";
             if(op_pri<tmp.get_privilege()) return false;
-            if(op_pri==tmp.get_privilege()&&op_name!=change) return false;
+            if(op_pri==tmp.get_privilege()&&hashopname!=hashchange) return false;
             //std::cout<<op_pri<<"\n";
       //      std::cout<<'?'<<'\n';
             if (kind[0]) tmp.set_str(user_parameter::Passwd, strs[0]);
@@ -274,7 +274,7 @@ namespace Backend {
             if (kind[2]) tmp.set_str(user_parameter::MailAddr, strs[2]);
             if (kind[3]) {
                 if(op_pri<=pri) return false;
-                if(is_log(change)) _logging_list[change]=pri;
+                if(is_log(hashchange)) _logging_list[hashchange]=pri;
                 tmp.set_pri(pri);
             }
             //   std::cout<<'?'<<'\n';
@@ -285,11 +285,11 @@ namespace Backend {
         else return false;
     }//0 是密码 1是名字 2是邮箱 3是权限
 
-    bool Log_op::add_user(const Ticket::String<24> & op_name,const Ticket::String<24> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri){
-        if(_logging_list.count(op_name)) {
+    bool Log_op::add_user(const size_t & hashopname,const Ticket::String<24> & user_name,const std::string & password,const std::string & name,const std::string & mailAddr,const int & pri){
+        if(_logging_list.count(hashopname)) {
             //判断权限
             int c_pri;
-            try {c_pri = _logging_list[op_name];}catch(NotFound){
+            try {c_pri = _logging_list[hashopname];}catch(NotFound){
                 return false;}
          //   std::cout<<pri<<' '<<c_pri<<'\n';
             if(c_pri<=pri){

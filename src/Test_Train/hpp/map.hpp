@@ -214,6 +214,7 @@ namespace Backend {
         ~map() {
             if(_size) _clear(_root_of_tree);
             delete _end;
+         //   std::cout<<"delete"<<'\n';
         }
         T & operator[](const Key &key) {
             bool is_insert;
@@ -251,6 +252,11 @@ namespace Backend {
         bool count(const Key &key) const {
             const _AVLNode* _judge=_find(key);
             return _judge==nullptr? 0:1;
+        }
+         void at(const Key & key,T & data){
+            const _AVLNode * tmp;
+            tmp=_find(key);
+            if(tmp!=nullptr) data=tmp->_data->second;
         }
     };
 }

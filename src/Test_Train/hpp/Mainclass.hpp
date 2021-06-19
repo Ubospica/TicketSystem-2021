@@ -520,8 +520,8 @@ namespace Backend {
         if (log_op.is_log(Ticket::hash(name))) {
             int nums = stringtoint(cmd->top());
             cmd->pop();
-            Ticket::vector<order> TrainOrdervec;
-            Ticket::vector<OrderKey> Renewvec;
+            std::vector<order> TrainOrdervec;
+            std::vector<OrderKey> Renewvec;
             Ticket::String<24> Train_ID;
             order Success;
             char type;

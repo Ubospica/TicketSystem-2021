@@ -100,7 +100,7 @@ namespace Ticket{
 		 * 传入Comp运算符（Comp需要是比<弱的比较函数），然后返回所有在Comp意义下等于val的值
 		 * @tparam Comp 重载小于号。Comp需要是一个仿函数类
 		 * @param val
-		 * @return 一个vector，保存所有模糊查找的结果
+		 * @return 一个std::vector，保存所有模糊查找的结果
 		 * @par Example
 		 * @code
 		 * struct Comp {
@@ -111,7 +111,7 @@ namespace Ticket{
 		 * auto res = bpt.route<Comp>(make_pair(1,0)); //查找所有第一维是1的值
 		 * @endcode
 		 */
-		template <typename Comp = std::less<Key> > vector<int> route(const Key &val);
+		template <typename Comp = std::less<Key> > std::vector<int> route(const Key &val);
 		
 		/**
 		 * @return size of keys in bpt
@@ -132,6 +132,8 @@ namespace Ticket{
 		 * 打印整棵树
 		 */
 		void print ();
+		
+		void backup();
 	
 	protected:
 		FileIO treeDt, valueDt;
@@ -150,7 +152,7 @@ namespace Ticket{
 		template <typename Comp = std::less<Key> > int find(int pos, const Key &vKey);
 		template <typename Comp = std::less<Key> > pair<int, int> findIndex(int pos, const Key &vKey);
 		
-		using StackType = vector<pair<pair<int, int>, Node>>;
+		using StackType = std::vector<pair<pair<int, int>, Node>>;
 		template <typename Comp = std::less<Key>> int findStack (int pos, const Key &vKey, StackType &sta);
 		
 		int insert(int pos, Key &vKey, int &vSon);

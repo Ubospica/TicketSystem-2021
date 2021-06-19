@@ -426,7 +426,7 @@ namespace Ticket {
 						eraseInternal(posInStk - 1, sta, sta[posInStk - 1].first.second + 1);
 					}
 				}
-			}//update prev&next!!!
+			}
 			else if (node.prev != -1) {
 				Node prev;
 				treeDt.read(node.prev, prev);
@@ -629,9 +629,9 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	template <typename Comp>
 	auto BPlusTree<Key, Value, NO_VALUE_FLAG, M>::route(const Key &val) ->
-	vector<int> {
+	std::vector<int> {
 		Comp cmp;
-		vector<int> res;
+		std::vector<int> res;
 		auto pos0 = findIndex<Comp>(root, val);
 		if (pos0.first == -1) {
 			return res;
@@ -659,7 +659,7 @@ namespace Ticket {
 				pos0.second = cur.cnt - 1;
 			}
 		}
-		reverse(res.begin(), res.end());
+		std::reverse(res.begin(), res.end());
 		return res;
 	}
 	
@@ -728,4 +728,6 @@ namespace Ticket {
 		print(root);
 		std::cerr<<"\n\n";
 	}
+	
+	
 }

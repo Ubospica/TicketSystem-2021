@@ -12,6 +12,7 @@
 #include "String.hpp"
 #include "Utility.hpp"
 #include "Tools/Vector.hpp"
+#include "Tools/Algorithm.hpp"
 namespace Backend {
 #define Error(x) throw Ticket::WrongOperation(x)
 /*    class My_Unordered_Map{
@@ -548,7 +549,8 @@ namespace Backend {
                                   Trainvec[i].train_info[pospair[i].first].prefix_price;
                 }
             } else std::cerr << "query_ticket", throw std::exception();
-            std::sort(arr, arr + sz);
+            Ticket::Algorithm algorithm;
+            algorithm.sort(arr, arr + sz);
             Ticket::Date Dtmp, DateKey2;
             os << sz << '\n';
             int seat,diff,Trainpos;

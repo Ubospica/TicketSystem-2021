@@ -14,7 +14,7 @@ namespace Ticket {
 	 * @param targetname
 	 * @param inputname
 	 */
-	void compress(const std::string &targetdir, const std::string &targetname, const std::string inputname) {
+	void compress(const std::string &targetdir, const std::string &targetname, const std::string &inputname) {
 		char command[200];
 		sprintf(command, "mkdir -p %s", targetdir.c_str());
 		system(command);
@@ -27,11 +27,11 @@ namespace Ticket {
 	 * @param targetname
 	 * @param inputname
 	 */
-	void decompress(const std::string &targetdir, const std::string &targetname, const std::string outputdir) {
+	void decompress(const std::string &targetdir, const std::string &targetname, const std::string &outputdir) {
 		char command[200];
 		sprintf(command, "mkdir -p %s", outputdir.c_str());
 		system(command);
-		sprintf(command, "tar -xjf %s/%s.tar.bz2 %s -C %s", targetdir.c_str(), targetname.c_str(), outputdir);
+		sprintf(command, "tar -xjf %s/%s.tar.bz2 %s -C %s", targetdir.c_str(), targetname.c_str(), outputdir.c_str());
 		system(command);
 	}
 }

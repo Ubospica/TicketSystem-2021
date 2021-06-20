@@ -31,6 +31,7 @@ namespace Ticket {
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::BPlusTree(const std::string& name) {
 		treeDt.open(name + "Index.dat");
+		trashBin.open(name + "trash.dat");
 		if (treeDt.isFirstOpen()) {
 			init();
 		}
@@ -38,6 +39,7 @@ namespace Ticket {
 			treeDt.read(Pos::POS_ROOT, root);
 			treeDt.read(Pos::POS_SIZE, size);
 			treeDt.read(Pos::POS_HEIGHT, height);
+			trashBin.read(FileIO::BEG, trashCnt);
 		}
 		
 		if (!NO_VALUE_FLAG) {
@@ -50,6 +52,7 @@ namespace Ticket {
 		treeDt.write(Pos::POS_ROOT, root);
 		treeDt.write(Pos::POS_SIZE, size);
 		treeDt.write(Pos::POS_HEIGHT, height);
+		trashBin.write(FileIO::BEG, trashCnt);
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
@@ -61,13 +64,29 @@ namespace Ticket {
 		treeDt.write(Pos::POS_HEIGHT, height);
 		Node newRt {0, 1, 1};
 		treeDt.write(FileIO::END, newRt);
+		trashCnt = 0;
+		trashBin.write(FileIO::BEG, trashCnt);
 	}
 	
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::newNodePos() {
-		treeDt.movePos(FileIO::END);
-		return treeDt.tellPos();
+		if (trashCnt == 0) {
+			treeDt.movePos(FileIO::END);
+			return treeDt.tellPos();
+		}
+		else {
+			int res;
+			trashBin.read(trashCnt * sizeof(int), res);
+			--trashCnt;
+			return res;
+		}
+	}
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::trashNode(int pos) {
+		++trashCnt;
+		trashBin.write(trashCnt, pos);
 	}
 	
 	//returns node in the index
@@ -416,7 +435,10 @@ namespace Ticket {
 					}
 					node.next = next.next;
 					
+					trashNode(node.next);
+					
 					if (fa.cnt == 1) {
+						trashNode(root);
 						root = pos;
 						--height;
 						node.isRoot = 1;
@@ -464,9 +486,11 @@ namespace Ticket {
 						treeDt.write(node.next, next);
 					}
 					prev.next = node.next;
+					trashNode(pos);
 					
 					
 					if (fa.cnt == 1) {
+						trashNode(root);
 						root = node.prev;
 						--height;
 						prev.isRoot = 1;
@@ -536,9 +560,10 @@ namespace Ticket {
 						treeDt.write(next.next, nnext);
 					}
 					node.next = next.next;
+					trashNode(node.next);
 					
 					if (sta[posInStk - 1].second.cnt == 1) { //new root
-						//erase root
+						trashNode(root);
 						root = pos;
 						--height;
 						node.isRoot = 1;
@@ -585,9 +610,11 @@ namespace Ticket {
 						treeDt.write(node.next, next);
 					}
 					prev.next = node.next;
+					trashNode(pos);
 					
 					//delete prev
 					if (sta[posInStk - 1].second.cnt == 1) {
+						trashNode(root);
 						root = node.prev;
 						--height;
 						prev.isRoot = 1;
@@ -660,7 +687,7 @@ namespace Ticket {
 				pos0.second = cur.cnt - 1;
 			}
 		}
-		std::reverse(res.begin(), res.end());
+		Ticket::reverse(res.begin(), res.end());
 		return res;
 	}
 	

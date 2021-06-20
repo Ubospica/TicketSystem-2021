@@ -136,8 +136,8 @@ namespace Ticket{
 		void backup();
 	
 	protected:
-		FileIO treeDt, valueDt;
-		int root, height, size;
+		FileIO treeDt, valueDt, trashBin;
+		int root, height, size, trashCnt;
 
 //		template <typename T> inline void read(int pos, T &cur, FileIO &fs);
 //		template <typename T> inline void read(int pos, T &cur);
@@ -146,6 +146,8 @@ namespace Ticket{
 //		template <typename T> inline void write(int pos, const T &cur);
 		
 		int newNodePos();
+		void trashNode(int pos);
+		
 		void init();
 		
 		

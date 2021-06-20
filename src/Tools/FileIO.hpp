@@ -133,7 +133,7 @@ namespace Ticket {
          * move pointer forward
          * @param pos the distance that the pointer is moved forward for
          */
-        void moveForward(int pos) {
+        void moveFromCurrent(int pos) {
             fseek(fs, pos, SEEK_CUR);
         }
 

@@ -99,7 +99,6 @@ namespace Ticket {
 		 * @param beg
 		 * @param end
 		 * @param cmp
-		 *
 		 */
 		template <typename Iter,
 				typename Comp = less<typename iterator_traits<Iter>::value_type>>

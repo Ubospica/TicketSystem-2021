@@ -284,7 +284,7 @@ namespace Backend {
             //Waiting_Queue.read()
         }
 
-        void Renew(std::vector<OrderKey> &IDvec,const Ticket::String<24> & Train_ID) {//返回位置 first 为位置 second 为票数
+        void Renew(Ticket::vector<OrderKey> &IDvec,const Ticket::String<24> & Train_ID) {//返回位置 first 为位置 second 为票数
             int sz = IDvec.size();
             OrderKey renew;
             size_t hashID=hash(Train_ID);
@@ -306,14 +306,14 @@ namespace Backend {
             Train_Queue.erase(Pending);
         }
 
-        /*std::vector<int> & refund(int n){
+        /*Ticket::vector<int> & refund(int n){
         }*/
-        void GetPending(const Ticket::String<24> & Train_ID, std::vector<order> & TrainOrdervec) {
+        void GetPending(const Ticket::String<24> & Train_ID, Ticket::vector<order> & TrainOrdervec) {
             OrderKey tmp;
             tmp.SN = 0;
             tmp.hashstr =hash(Train_ID);
            // std::cerr<<"------88**"<<'\n';
-            std::vector<int>Posvec = Train_Queue.route<Comp>(tmp);
+            Ticket::vector<int>Posvec = Train_Queue.route<Comp>(tmp);
           //  std::cerr<<tmp.str<<' ';
             int Possz=Posvec.size();
           //  std::cerr<<Possz<<'\n';
@@ -354,12 +354,12 @@ namespace Backend {
             //return _BPT_order.insert(BPT_KEY, data);
         }
 
-        std::vector<order> query(const Ticket::String<24> &user_name) {
+        Ticket::vector<order> query(const Ticket::String<24> &user_name) {
             OrderKey tmp;
             tmp.hashstr = hash(user_name);
             tmp.SN = 0;
-            std::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
-            std::vector<order> ret;
+            Ticket::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
+            Ticket::vector<order> ret;
             int sz = pos.size();
             for (int i = 0; i < sz; i++) {
                 ret.push_back(_BPT_Name_order.getVal(pos[i]));
@@ -373,7 +373,7 @@ namespace Backend {
             OrderKey tmp;
             tmp.hashstr=hash(name);
             tmp.SN=0;
-            std::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
+            Ticket::vector<int> pos = _BPT_Name_order.route<Comp>(tmp);
             int sztmp = pos.size();
             if (sztmp < n||n<0) return false;
             order ordertmp;
@@ -413,7 +413,7 @@ namespace Backend {
             return _BPT_Name_order.getSize();
         }
 
-        void Renew(std::vector<OrderKey> & Renewvec) {
+        void Renew(Ticket::vector<OrderKey> & Renewvec) {
             int sz = Renewvec.size();
             order tmp;
             int pos;
@@ -441,7 +441,7 @@ namespace Backend {
     public:
         explicit Order_op(const std::string & order,const std::string & queue,const std::string & TrainIndex):Order(order),Que(queue,TrainIndex){};
 
-        bool refund(Ticket::String<24> & Train_ID,const Ticket::String<24> & name, int n,order & Success ,std::vector<order> & TrainOrdervec,char & type) {
+        bool refund(Ticket::String<24> & Train_ID,const Ticket::String<24> & name, int n,order & Success ,Ticket::vector<order> & TrainOrdervec,char & type) {
             OrderKey Pending;
            // Ticket::String<25> Trainvec;
            int SN;
@@ -453,7 +453,7 @@ namespace Backend {
             else return false;
         }
 
-        void renew(std::vector<OrderKey> & Renewvec,const Ticket::String<24> & Train_ID) {
+        void renew(Ticket::vector<OrderKey> & Renewvec,const Ticket::String<24> & Train_ID) {
             //将空余票更新后，回到这里,传入更新的火车及其票数
             //再传出订单中的order
             //(?)
@@ -487,7 +487,7 @@ namespace Backend {
         }
 
         void query_order(const Ticket::String<24> &name,std::ostream& os) {
-            std::vector<order> all_order = Order.query(name);
+            Ticket::vector<order> all_order = Order.query(name);
             //try{ all_order=Order.query(name);}catch(NotFound){return 0;}
             int sz = all_order.size();
             os<<sz<<'\n';

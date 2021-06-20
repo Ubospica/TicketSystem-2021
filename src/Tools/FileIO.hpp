@@ -130,7 +130,7 @@ namespace Ticket {
         }
 
         /**
-         * move pointer forward
+         * move pointer forward/backward
          * @param pos the distance that the pointer is moved forward for
          */
         void moveFromCurrent(int pos) {

@@ -133,11 +133,16 @@ namespace Ticket{
 		 */
 		void print ();
 		
-		void backup();
+		/**
+		 * backup to backup/*.tar.bz2
+		 * and recover from backup/*.tar.bzr
+		 */
+		int backup();
+		void recover(int cnt);
 	
 	protected:
 		FileIO treeDt, valueDt, trashBin;
-		int root, height, size, trashCnt;
+		int root, height, size, trashCnt, backupCnt = 0;
 
 //		template <typename T> inline void read(int pos, T &cur, FileIO &fs);
 //		template <typename T> inline void read(int pos, T &cur);
@@ -149,6 +154,9 @@ namespace Ticket{
 		void trashNode(int pos);
 		
 		void init();
+		
+		void readStatus();
+		void writeStatus();
 		
 		
 		template <typename Comp = std::less<Key> > int find(int pos, const Key &vKey);

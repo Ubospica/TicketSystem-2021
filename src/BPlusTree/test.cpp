@@ -87,6 +87,9 @@ int main() {
 		else if (o == 6) {
 			return 0;
 		}
+		else if (o == 7) {
+			bps.backup();
+		}
 	}
 }
 

@@ -8,7 +8,8 @@
 #include "BPlusTree.hpp"
 
 #include <iostream>
-#include <vector>
+#include <filesystem>
+#include "Tools/Compress.hpp"
 #include "Tools/Utility.hpp"
 
 namespace Ticket {
@@ -36,10 +37,7 @@ namespace Ticket {
 			init();
 		}
 		else {
-			treeDt.read(Pos::POS_ROOT, root);
-			treeDt.read(Pos::POS_SIZE, size);
-			treeDt.read(Pos::POS_HEIGHT, height);
-			trashBin.read(FileIO::BEG, trashCnt);
+			readStatus();
 		}
 		
 		if (!NO_VALUE_FLAG) {
@@ -49,6 +47,21 @@ namespace Ticket {
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
 	BPlusTree<Key, Value, NO_VALUE_FLAG, M>::~BPlusTree() {
+		writeStatus();
+	}
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::init() {
+		root = sizeof(root) * 3;
+		height = size = 0;
+		trashCnt = 0;
+		writeStatus(); // for the first time
+		Node newRt {0, 1, 1};
+		treeDt.write(FileIO::END, newRt);
+	}
+	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::writeStatus() {
 		treeDt.write(Pos::POS_ROOT, root);
 		treeDt.write(Pos::POS_SIZE, size);
 		treeDt.write(Pos::POS_HEIGHT, height);
@@ -56,16 +69,11 @@ namespace Ticket {
 	}
 	
 	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
-	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::init() {
-		root = sizeof(root) * 3;
-		height = size = 0;
-		treeDt.write(Pos::POS_ROOT, root);
-		treeDt.write(Pos::POS_SIZE, size);
-		treeDt.write(Pos::POS_HEIGHT, height);
-		Node newRt {0, 1, 1};
-		treeDt.write(FileIO::END, newRt);
-		trashCnt = 0;
-		trashBin.write(FileIO::BEG, trashCnt);
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::readStatus() {
+		treeDt.read(Pos::POS_ROOT, root);
+		treeDt.read(Pos::POS_SIZE, size);
+		treeDt.read(Pos::POS_HEIGHT, height);
+		trashBin.read(FileIO::BEG, trashCnt);
 	}
 	
 	
@@ -757,5 +765,21 @@ namespace Ticket {
 		std::cerr<<"\n\n";
 	}
 	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	int BPlusTree<Key, Value, NO_VALUE_FLAG, M>::backup () {
+		writeStatus();
+		char backupName[20];
+		sprintf(backupName, "backup%d", backupCnt);
+		compress("./backup", backupName, treeDt.name + " " + valueDt.name + " " + trashBin.name);
+		++backupCnt;
+		return backupCnt;
+	}
 	
+	template <typename Key, typename Value, int NO_VALUE_FLAG, size_t M>
+	void BPlusTree<Key, Value, NO_VALUE_FLAG, M>::recover (int cnt) {
+		char backupName[20];
+		sprintf(backupName, "backup%d", cnt);
+		decompress("./backup", backupName, ".");
+		readStatus();
+	}
 }
